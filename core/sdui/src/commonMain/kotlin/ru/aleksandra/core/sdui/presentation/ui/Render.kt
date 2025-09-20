@@ -1,5 +1,6 @@
-package ru.aleksandra.core.sdui
+package ru.aleksandra.core.sdui.presentation.ui
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,6 +13,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.IconButton
@@ -22,6 +24,10 @@ import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import ru.aleksandra.core.sdui.presentation.model.Action
+import ru.aleksandra.core.sdui.presentation.model.DividerProperties
+import ru.aleksandra.core.sdui.presentation.model.ModifierProperties
+import ru.aleksandra.core.sdui.presentation.model.SDUIComponent
 
 //TODO: Добавить обработку изображений для Image и Icon, Iconbutton и Floatingactionbutton
 
@@ -42,18 +48,26 @@ fun Render(
     is SDUIComponent.LazyColumn -> SDUILazyColumn(component)
     is SDUIComponent.LazyRow -> SDUILazyRow(component)
     is SDUIComponent.OutlinedButton -> SDUIOutlinedButton(component)
-    is SDUIComponent.Row -> SDUIRow(component)
+    is SDUIComponent.Row -> SDUIRow(component, handleAction)
     is SDUIComponent.Scaffold -> SDUIScaffold(component)
     is SDUIComponent.Spacer -> SDUISpacer(component)
     is SDUIComponent.Surface -> SDUISurface(component)
     is SDUIComponent.Text -> SDUIText(component)
     is SDUIComponent.TextField -> SDUITextField(component)
+    is SDUIComponent.Checkbox -> SDUICheckbox(component) { handleAction(component.action) }
+    is SDUIComponent.BottomBar -> SDUIBottomBar(component)
     is Nothing -> {}
 }
 
 @Composable
+fun SDUIBottomBar(model: SDUIComponent.BottomBar) {
+    model.children.forEach {
+        Render(it)
+    }
+}
+
+@Composable
 fun SDUITextField(model: SDUIComponent.TextField) {
-    // Placeholder for TextField implementation
     Text(
         text = "TextField: ${model.hint}",
         modifier = buildModifier(model.modifier)
@@ -182,10 +196,10 @@ fun SDUIColumn(model: SDUIComponent.Column) {
 }
 
 @Composable
-fun SDUIRow(model: SDUIComponent.Row) {
+fun SDUIRow(model: SDUIComponent.Row, handleAction: (Action) -> Unit) {
     Row {
         model.children.forEach { child ->
-            Render(child)
+            Render(child) { handleAction(child.action) }
         }
     }
 }
@@ -211,24 +225,40 @@ fun SDUIButton(model: SDUIComponent.Button, handleAction: () -> Unit) {
 }
 
 @Composable
-fun buildModifier(modifierProperties: ModifierProperties?): Modifier {
+fun SDUICheckbox(model: SDUIComponent.Checkbox, handleAction: () -> Unit) {
+    Checkbox(
+        checked = model.isChecked,
+        onCheckedChange = { handleAction() }
+    )
 
-    //TODO: Убрать padding 0.dp после отладки
+}
+
+@Composable
+fun buildModifier(modifierProperties: List<ModifierProperties>): Modifier {
     var modifier = Modifier.padding(0.dp)
-    modifierProperties?.let { properties ->
-        properties.padding?.let {
-            modifier = modifier.padding(
-                start = it.start.dp,
-                top = it.top.dp,
-                end = it.end.dp,
-                bottom = it.bottom.dp
-            )
-        }
-        properties.height?.let {
-            modifier = modifier.height(it.dp)
-        }
-        properties.width?.let {
-            modifier = modifier.width(it.dp)
+
+    modifierProperties.forEach { property ->
+        when (property) {
+            is ModifierProperties.Clickable -> {
+                modifier = modifier.clickable(property.value) {}
+            }
+
+            is ModifierProperties.Height -> {
+                modifier = modifier.height(property.value.dp)
+            }
+
+            is ModifierProperties.Padding -> {
+                modifier = modifier.padding(
+                    start = property.value.start.dp,
+                    top = property.value.top.dp,
+                    end = property.value.end.dp,
+                    bottom = property.value.bottom.dp
+                )
+            }
+
+            is ModifierProperties.Width -> {
+                modifier = modifier.width(property.value.dp)
+            }
         }
     }
 

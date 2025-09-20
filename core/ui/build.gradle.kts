@@ -55,9 +55,7 @@ kotlin {
             }
         }
     }
-}
 
-kotlin {
     androidLibrary {
         experimentalProperties["android.experimental.kmp.enableAndroidResources"] = true
     }

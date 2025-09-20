@@ -1,94 +1,121 @@
-package ru.aleksandra.core.sdui
+package ru.aleksandra.core.sdui.presentation.model
 
 import androidx.compose.ui.text.TextStyle
 
 sealed class SDUIComponent(
-    open val modifier: ModifierProperties? = null
+    open val modifier: List<ModifierProperties> = emptyList(),
+    open val action: Action = Action.None
 ) {
     // Text components
     data class Text(
-        override val modifier: ModifierProperties?,
+        override val modifier: List<ModifierProperties>,
         val value: String,
         val style: TextStyle
     ) : SDUIComponent()
 
     data class TextField(
-        override val modifier: ModifierProperties?,
+        override val modifier: List<ModifierProperties>,
         val hint: String,
         val value: String,
     ) : SDUIComponent()
 
     // Button components
     data class Button(
-        override val modifier: ModifierProperties?,
+        override val modifier: List<ModifierProperties>,
         val title: String,
-        val action: Action
+        override val action: Action
     ) : SDUIComponent()
 
     data class OutlinedButton(
-        override val modifier: ModifierProperties?,
+        override val modifier: List<ModifierProperties>,
         val title: String,
-        val action: Action
+        override val action: Action
     ) : SDUIComponent()
 
     data class IconButton(
-        override val modifier: ModifierProperties?,
+        override val modifier: List<ModifierProperties>,
         val iconUrl: String,
-        val action: Action
+        override val action: Action
     ) : SDUIComponent()
 
     data class FloatingActionButton(
-        override val modifier: ModifierProperties?,
+        override val modifier: List<ModifierProperties>,
         val iconUrl: String,
-        val action: Action
+        override val action: Action
     ) : SDUIComponent()
 
     // Layout components
     data class Column(
-        override val modifier: ModifierProperties?,
+        override val modifier: List<ModifierProperties>,
         val children: List<SDUIComponent>
     ) : SDUIComponent()
 
-    data class Row(override val modifier: ModifierProperties?, val children: List<SDUIComponent>) :
+    data class Row(
+        override val modifier: List<ModifierProperties>,
+        val children: List<SDUIComponent>
+    ) :
         SDUIComponent()
 
-    data class Box(override val modifier: ModifierProperties?, val children: List<SDUIComponent>) :
+    data class Box(
+        override val modifier: List<ModifierProperties>,
+        val children: List<SDUIComponent>
+    ) :
         SDUIComponent()
 
     data class LazyColumn(
-        override val modifier: ModifierProperties?,
+        override val modifier: List<ModifierProperties>,
         val children: List<SDUIComponent>
     ) : SDUIComponent()
 
     data class LazyRow(
-        override val modifier: ModifierProperties?,
+        override val modifier: List<ModifierProperties>,
         val children: List<SDUIComponent>
     ) : SDUIComponent()
 
     data class Scaffold(
-        override val modifier: ModifierProperties?,
+        override val modifier: List<ModifierProperties>,
         val topBar: SDUIComponent?,
         val content: SDUIComponent
     ) : SDUIComponent()
 
     // Utility components
-    data class Spacer(override val modifier: ModifierProperties?, val height: Int) : SDUIComponent()
+    data class Spacer(override val modifier: List<ModifierProperties>, val height: Int) :
+        SDUIComponent()
+
     data class Divider(
-        override val modifier: ModifierProperties?,
+        override val modifier: List<ModifierProperties>,
         val thickness: Int,
         val dividerProperties: DividerProperties
     ) : SDUIComponent()
 
     // Media components
-    data class Image(override val modifier: ModifierProperties?, val url: String) : SDUIComponent()
-    data class Icon(override val modifier: ModifierProperties?, val url: String) : SDUIComponent()
+    data class Image(override val modifier: List<ModifierProperties>, val url: String) :
+        SDUIComponent()
+
+    data class Icon(override val modifier: List<ModifierProperties>, val url: String) :
+        SDUIComponent()
 
     // Containers
-    data class Card(override val modifier: ModifierProperties?, val children: List<SDUIComponent>) :
+    data class Card(
+        override val modifier: List<ModifierProperties>,
+        val children: List<SDUIComponent>
+    ) :
         SDUIComponent()
 
     data class Surface(
-        override val modifier: ModifierProperties?,
+        override val modifier: List<ModifierProperties>,
+        val children: List<SDUIComponent>
+    ) : SDUIComponent()
+
+    data class Checkbox(
+        override val modifier: List<ModifierProperties>,
+        val isChecked: Boolean,
+        val label: String,
+        override val action: Action
+    ) : SDUIComponent()
+
+    data class BottomBar(
+        override val modifier: List<ModifierProperties>,
         val children: List<SDUIComponent>
     ) : SDUIComponent()
 }
@@ -103,14 +130,14 @@ data class DividerProperties(
     }
 }
 
-data class ModifierProperties(
-    val width: Int? = null,
-    val height: Int? = null,
-    val padding: Padding? = null,
-    val clickable: Boolean? = null,
-)
+sealed class ModifierProperties {
+    data class Width(val value: Int) : ModifierProperties()
+    data class Height(val value: Int) : ModifierProperties()
+    data class Padding(val value: PaddingProperties) : ModifierProperties()
+    data class Clickable(val value: Boolean) : ModifierProperties()
+}
 
-data class Padding(
+data class PaddingProperties(
     val start: Int,
     val top: Int,
     val end: Int,
@@ -142,15 +169,4 @@ sealed class StyleProperties {
         val disabledBackgroundColor: String? = null,
         val disabledContentColor: String? = null
     ) : StyleProperties()
-}
-
-sealed class Modifier {
-    data class Padding(
-        val start: Int,
-        val top: Int,
-        val end: Int,
-        val bottom: Int
-    ) : Modifier()
-
-    data class Width(val value: Int) : Modifier()
 }

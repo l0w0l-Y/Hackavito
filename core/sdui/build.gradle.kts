@@ -49,8 +49,19 @@ kotlin {
             dependencies {
                 implementation(compose.material3)
                 implementation(compose.components.resources)
-
-                //implementation(projects.core.ui)
+                // Navigation
+                implementation(libs.navigation.compose)
+                // Koin
+                implementation(libs.koin.core)
+                implementation(libs.koin.compose)
+                implementation(libs.koin.compose.viewmodel)
+                // Napier for logging
+                implementation(libs.napier)
+            }
+        }
+        androidMain {
+            dependencies {
+                implementation(libs.koin.androidx.compose)
             }
         }
     }
