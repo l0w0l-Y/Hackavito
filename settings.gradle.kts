@@ -29,4 +29,7 @@ dependencyResolutionManagement {
 }
 
 include(":composeApp")
-include(":core-theme")
+include(":core:theme")
+include(":core:sdui")
+include(":core:ui")
+include(":feature:cart")

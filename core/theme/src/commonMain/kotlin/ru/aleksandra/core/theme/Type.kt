@@ -1,4 +1,4 @@
-package ru.aleksandra.coretheme
+package ru.aleksandra.core.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
@@ -6,10 +6,11 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.LineHeightStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
-import hackavito.core_theme.generated.resources.Manrope_Cut_008_ExtraBold
-import hackavito.core_theme.generated.resources.Manrope_Cut_008_Medium
-import hackavito.core_theme.generated.resources.Res
+import hackavito.core.theme.generated.resources.Manrope_Cut_008_ExtraBold
+import hackavito.core.theme.generated.resources.Manrope_Cut_008_Medium
+import hackavito.core.theme.generated.resources.Res
 import org.jetbrains.compose.resources.Font
 
 @Composable
@@ -24,11 +25,8 @@ fun setupFontFamily(): FontFamily {
 fun getDefaultTextStyle(): TextStyle {
     return TextStyle(
         fontFamily = setupFontFamily(),
-        lineHeightStyle = LineHeightStyle(
-            alignment = LineHeightStyle.Alignment.Center,
-            trim = LineHeightStyle.Trim.None
-        ),
         fontWeight = FontWeight.Medium,
+        textAlign = TextAlign.Center,
     )
 }
 

@@ -1,4 +1,4 @@
-package ru.aleksandra.coretheme
+package ru.aleksandra.core.theme
 
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.darkColorScheme
@@ -16,7 +16,7 @@ val ColorScheme.contentPrimary: Color
     get() = Color(0xFF000000)
 
 val ColorScheme.controlContentPrimary: Color
-    get() = Color(0xFFFFFFFF)
+    get() = Color(0xFF000000)
 
 val ColorScheme.bgPage: Color
     get() = Color(0xFFFFFFFF)

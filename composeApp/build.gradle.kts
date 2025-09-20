@@ -14,7 +14,7 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
     listOf(
         iosArm64(),
         iosSimulatorArm64()
@@ -24,13 +24,13 @@ kotlin {
             isStatic = true
         }
     }
-    
+
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
         browser()
         binaries.executable()
     }
-    
+
     sourceSets {
         androidMain.dependencies {
             implementation(compose.preview)
@@ -46,7 +46,9 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
 
-            implementation(projects.hackavito.coreTheme)
+            implementation(projects.core.theme)
+            implementation(projects.feature.cart)
+            implementation(projects.core.ui)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

@@ -12,11 +12,11 @@ plugins {
 kotlin {
 
     androidLibrary {
-        namespace = "ru.aleksandra.coretheme"
+        namespace = "ru.aleksandra.core.ui"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
     }
 
-    val xcfName = "core-themeKit"
+    val xcfName = "core-uiKit"
     listOf(
         iosX64(),
         iosArm64(),
@@ -45,11 +45,20 @@ kotlin {
     }
 
     sourceSets {
+
         commonMain {
             dependencies {
                 implementation(compose.material3)
                 implementation(compose.components.resources)
+
+                implementation(projects.core.theme)
             }
         }
+    }
+}
+
+kotlin {
+    androidLibrary {
+        experimentalProperties["android.experimental.kmp.enableAndroidResources"] = true
     }
 }
