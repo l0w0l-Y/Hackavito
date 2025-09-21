@@ -1,5 +1,6 @@
 package ru.aleksandra.core.sdui.presentation.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,17 +18,21 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import ru.aleksandra.core.sdui.presentation.model.Action
 import ru.aleksandra.core.sdui.presentation.model.DividerProperties
 import ru.aleksandra.core.sdui.presentation.model.ModifierProperties
 import ru.aleksandra.core.sdui.presentation.model.SDUIComponent
+import ru.aleksandra.core.sdui.presentation.model.StyleProperties
 
 //TODO: Добавить обработку изображений для Image и Icon, Iconbutton и Floatingactionbutton
 
@@ -197,7 +202,11 @@ fun SDUIColumn(model: SDUIComponent.Column) {
 
 @Composable
 fun SDUIRow(model: SDUIComponent.Row, handleAction: (Action) -> Unit) {
-    Row {
+    Row(
+        modifier = buildModifier(model.modifier),
+        verticalAlignment = model.verticalAlignment,
+        horizontalArrangement = model.horizontalArrangement,
+    ) {
         model.children.forEach { child ->
             Render(child) { handleAction(child.action) }
         }
@@ -207,8 +216,42 @@ fun SDUIRow(model: SDUIComponent.Row, handleAction: (Action) -> Unit) {
 @Composable
 fun SDUIText(model: SDUIComponent.Text) {
     Text(
-        text = model.value,
+        text = model.text,
         modifier = buildModifier(model.modifier),
+        color = model.color,
+        fontSize = model.fontSize,
+        fontStyle = model.fontStyle,
+        fontWeight = model.fontWeight,
+        fontFamily = model.fontFamily,
+        letterSpacing = model.letterSpacing,
+        lineHeight = model.lineHeight,
+        textDecoration = model.textDecoration,
+        textAlign = model.textAlign,
+        maxLines = model.maxLines,
+        minLines = model.minLines,
+        overflow = model.overflow,
+        softWrap = model.softWrap,
+        style = model.style?.toTextStyle() ?: LocalTextStyle.current,
+    )
+}
+
+@Composable
+fun StyleProperties.TextStyleProperties.toTextStyle(): TextStyle {
+    return TextStyle(
+        color = color,
+        fontSize = fontSize,
+        fontWeight = fontWeight,
+        fontFamily = fontFamily,
+        letterSpacing = letterSpacing,
+        lineHeight = lineHeight,
+        background = background,
+        textDecoration = textDecoration,
+        shadow = shadow,
+        textAlign = textAlign,
+        textGeometricTransform = textGeometricTransform,
+        localeList = localeList,
+        baselineShift = baselineShift,
+        textIndent = textIndent,
     )
 }
 
@@ -258,6 +301,10 @@ fun buildModifier(modifierProperties: List<ModifierProperties>): Modifier {
 
             is ModifierProperties.Width -> {
                 modifier = modifier.width(property.value.dp)
+            }
+
+            is ModifierProperties.BackgroundColor -> {
+                modifier = modifier.background(property.color)
             }
         }
     }

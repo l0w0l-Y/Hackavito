@@ -1,5 +1,6 @@
 package ru.aleksandra.core.theme
 
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.TextStyle
@@ -26,6 +27,7 @@ fun getDefaultTextStyle(): TextStyle {
         fontFamily = setupFontFamily(),
         fontWeight = FontWeight.Normal,
         textAlign = TextAlign.Center,
+        color = MaterialTheme.colorScheme.contentPrimary,
     )
 }
 
@@ -33,8 +35,6 @@ fun getDefaultTextStyle(): TextStyle {
 fun setupTypography(): Typography {
     return Typography()
 }
-
-// Стилей было меньше, чем цветов, поэтому я добавила их все :)
 
 val Typography.h05: TextStyle
     @Composable

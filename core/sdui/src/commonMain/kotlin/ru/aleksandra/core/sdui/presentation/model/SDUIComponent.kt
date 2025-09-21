@@ -1,125 +1,251 @@
 package ru.aleksandra.core.sdui.presentation.model
 
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontSynthesis
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.intl.LocaleList
+import androidx.compose.ui.text.style.BaselineShift
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextDirection
+import androidx.compose.ui.text.style.TextGeometricTransform
+import androidx.compose.ui.text.style.TextIndent
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.TextUnit
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import ru.aleksandra.core.sdui.presentation.serializer.AlignmentVerticalSerializer
+import ru.aleksandra.core.sdui.presentation.serializer.ArrangementHorizontalSerializer
+import ru.aleksandra.core.sdui.presentation.serializer.BaselineShiftSerializer
+import ru.aleksandra.core.sdui.presentation.serializer.ColorSerializer
+import ru.aleksandra.core.sdui.presentation.serializer.FontFamilySerializer
+import ru.aleksandra.core.sdui.presentation.serializer.FontStyleSerializer
+import ru.aleksandra.core.sdui.presentation.serializer.FontSynthesisSerializer
+import ru.aleksandra.core.sdui.presentation.serializer.FontWeightSerializer
+import ru.aleksandra.core.sdui.presentation.serializer.LocaleListSerializer
+import ru.aleksandra.core.sdui.presentation.serializer.ShadowSerializer
+import ru.aleksandra.core.sdui.presentation.serializer.TextAlignSerializer
+import ru.aleksandra.core.sdui.presentation.serializer.TextDecorationSerializer
+import ru.aleksandra.core.sdui.presentation.serializer.TextDirectionSerializer
+import ru.aleksandra.core.sdui.presentation.serializer.TextGeometricTransformSerializer
+import ru.aleksandra.core.sdui.presentation.serializer.TextIndentSerializer
+import ru.aleksandra.core.sdui.presentation.serializer.TextOverflowSerializer
+import ru.aleksandra.core.sdui.presentation.serializer.TextUnitSerializer
 
-sealed class SDUIComponent(
-    open val modifier: List<ModifierProperties> = emptyList(),
-    open val action: Action = Action.None
-) {
+@Serializable
+sealed class SDUIComponent() {
+    abstract val modifier: List<ModifierProperties>
+
+    abstract val action: Action
+
+    @Serializable
+    @SerialName("Text")
     // Text components
     data class Text(
-        override val modifier: List<ModifierProperties>,
-        val value: String,
-        val style: TextStyle
+        override val modifier: List<ModifierProperties> = emptyList(),
+        override val action: Action = Action.None,
+        val text: String,
+        @Serializable(with = ColorSerializer::class)
+        val color: Color = Color.Unspecified,
+        @Serializable(with = TextUnitSerializer::class)
+        val fontSize: TextUnit = TextUnit.Unspecified,
+        @Serializable(with = FontStyleSerializer::class)
+        val fontStyle: FontStyle? = null,
+        @Serializable(with = FontWeightSerializer::class)
+        val fontWeight: FontWeight? = null,
+        @Serializable(with = FontFamilySerializer::class)
+        val fontFamily: FontFamily? = null,
+        @Serializable(with = TextUnitSerializer::class)
+        val letterSpacing: TextUnit = TextUnit.Unspecified,
+        @Serializable(with = TextDecorationSerializer::class)
+        val textDecoration: TextDecoration? = null,
+        @Serializable(with = TextAlignSerializer::class)
+        val textAlign: TextAlign? = null,
+        @Serializable(with = TextUnitSerializer::class)
+        val lineHeight: TextUnit = TextUnit.Unspecified,
+        @Serializable(with = TextOverflowSerializer::class)
+        val overflow: TextOverflow = TextOverflow.Clip,
+        val softWrap: Boolean = true,
+        val maxLines: Int = Int.MAX_VALUE,
+        val minLines: Int = 1,
+        /* TODO: Добавить onTextLayout в UI */
+        //val onTextLayout: ((TextLayoutResult) -> Unit)? = null,
+        val style: StyleProperties.TextStyleProperties? = null,
     ) : SDUIComponent()
 
+    @Serializable
+    @SerialName("TextField")
     data class TextField(
-        override val modifier: List<ModifierProperties>,
+        override val modifier: List<ModifierProperties> = emptyList(),
+        override val action: Action = Action.None,
         val hint: String,
         val value: String,
     ) : SDUIComponent()
 
     // Button components
+    @Serializable
+    @SerialName("Button")
     data class Button(
-        override val modifier: List<ModifierProperties>,
+        override val modifier: List<ModifierProperties> = emptyList(),
+        override val action: Action = Action.None,
         val title: String,
-        override val action: Action
     ) : SDUIComponent()
 
+    @Serializable
+    @SerialName("OutlinedButton")
     data class OutlinedButton(
-        override val modifier: List<ModifierProperties>,
+        override val modifier: List<ModifierProperties> = emptyList(),
+        override val action: Action = Action.None,
         val title: String,
-        override val action: Action
     ) : SDUIComponent()
 
+    @Serializable
+    @SerialName("IconButton")
     data class IconButton(
-        override val modifier: List<ModifierProperties>,
+        override val modifier: List<ModifierProperties> = emptyList(),
+        override val action: Action = Action.None,
         val iconUrl: String,
-        override val action: Action
     ) : SDUIComponent()
 
+    @Serializable
+    @SerialName("FloatingActionButton")
     data class FloatingActionButton(
-        override val modifier: List<ModifierProperties>,
+        override val modifier: List<ModifierProperties> = emptyList(),
+        override val action: Action = Action.None,
         val iconUrl: String,
-        override val action: Action
     ) : SDUIComponent()
 
     // Layout components
+    @Serializable
+    @SerialName("Column")
     data class Column(
-        override val modifier: List<ModifierProperties>,
+        override val modifier: List<ModifierProperties> = emptyList(),
+        override val action: Action = Action.None,
         val children: List<SDUIComponent>
     ) : SDUIComponent()
 
+    @Serializable
+    @SerialName("Row")
     data class Row(
-        override val modifier: List<ModifierProperties>,
-        val children: List<SDUIComponent>
-    ) :
-        SDUIComponent()
+        override val modifier: List<ModifierProperties> = emptyList(),
+        override val action: Action = Action.None,
+        val children: List<SDUIComponent>,
+        @Serializable(with = ArrangementHorizontalSerializer::class)
+        val horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
+        @Serializable(with = AlignmentVerticalSerializer::class)
+        val verticalAlignment: Alignment.Vertical = Alignment.Top,
+    ) : SDUIComponent()
 
+    @Serializable
+    @SerialName("Box")
     data class Box(
-        override val modifier: List<ModifierProperties>,
+        override val modifier: List<ModifierProperties> = emptyList(),
+        override val action: Action = Action.None,
         val children: List<SDUIComponent>
-    ) :
-        SDUIComponent()
+    ) : SDUIComponent()
 
+    @Serializable
+    @SerialName("LazyColumn")
     data class LazyColumn(
-        override val modifier: List<ModifierProperties>,
+        override val modifier: List<ModifierProperties> = emptyList(),
+        override val action: Action = Action.None,
         val children: List<SDUIComponent>
     ) : SDUIComponent()
 
+    @Serializable
+    @SerialName("LazyRow")
     data class LazyRow(
-        override val modifier: List<ModifierProperties>,
+        override val modifier: List<ModifierProperties> = emptyList(),
+        override val action: Action = Action.None,
         val children: List<SDUIComponent>
     ) : SDUIComponent()
 
+    @Serializable
+    @SerialName("Scaffold")
     data class Scaffold(
-        override val modifier: List<ModifierProperties>,
+        override val modifier: List<ModifierProperties> = emptyList(),
+        override val action: Action = Action.None,
         val topBar: SDUIComponent?,
         val content: SDUIComponent
     ) : SDUIComponent()
 
     // Utility components
-    data class Spacer(override val modifier: List<ModifierProperties>, val height: Int) :
-        SDUIComponent()
+    @Serializable
+    @SerialName("Spacer")
+    data class Spacer(
+        override val modifier: List<ModifierProperties> = emptyList(),
+        override val action: Action = Action.None,
+        val height: Int
+    ) : SDUIComponent()
 
+    @Serializable
+    @SerialName("Divider")
     data class Divider(
-        override val modifier: List<ModifierProperties>,
+        override val modifier: List<ModifierProperties> = emptyList(),
+        override val action: Action = Action.None,
         val thickness: Int,
         val dividerProperties: DividerProperties
     ) : SDUIComponent()
 
     // Media components
-    data class Image(override val modifier: List<ModifierProperties>, val url: String) :
-        SDUIComponent()
-
-    data class Icon(override val modifier: List<ModifierProperties>, val url: String) :
-        SDUIComponent()
-
-    // Containers
-    data class Card(
-        override val modifier: List<ModifierProperties>,
-        val children: List<SDUIComponent>
+    @Serializable
+    @SerialName("Image")
+    data class Image(
+        override val modifier: List<ModifierProperties> = emptyList(),
+        override val action: Action = Action.None,
+        val url: String
     ) :
         SDUIComponent()
 
-    data class Surface(
-        override val modifier: List<ModifierProperties>,
+    @Serializable
+    @SerialName("Icon")
+    data class Icon(
+        override val modifier: List<ModifierProperties> = emptyList(),
+        override val action: Action = Action.None,
+        val url: String
+    ) : SDUIComponent()
+
+    // Containers
+    @Serializable
+    @SerialName("Card")
+    data class Card(
+        override val modifier: List<ModifierProperties> = emptyList(),
+        override val action: Action = Action.None,
         val children: List<SDUIComponent>
     ) : SDUIComponent()
 
-    data class Checkbox(
-        override val modifier: List<ModifierProperties>,
-        val isChecked: Boolean,
-        val label: String,
-        override val action: Action
+    @Serializable
+    @SerialName("Surface")
+    data class Surface(
+        override val modifier: List<ModifierProperties> = emptyList(),
+        override val action: Action = Action.None,
+        val children: List<SDUIComponent>
     ) : SDUIComponent()
 
+    @Serializable
+    @SerialName("Checkbox")
+    data class Checkbox(
+        override val modifier: List<ModifierProperties> = emptyList(),
+        override val action: Action = Action.None,
+        val isChecked: Boolean,
+        val label: String,
+    ) : SDUIComponent()
+
+    @Serializable
+    @SerialName("BottomBar")
     data class BottomBar(
-        override val modifier: List<ModifierProperties>,
+        override val modifier: List<ModifierProperties> = emptyList(),
+        override val action: Action = Action.None,
         val children: List<SDUIComponent>
     ) : SDUIComponent()
 }
 
+@Serializable
 data class DividerProperties(
     val thickness: Int,
     val color: String? = null,
@@ -130,13 +256,30 @@ data class DividerProperties(
     }
 }
 
+@Serializable
 sealed class ModifierProperties {
+    @Serializable
+    @SerialName("Width")
     data class Width(val value: Int) : ModifierProperties()
+
+    @Serializable
+    @SerialName("Height")
     data class Height(val value: Int) : ModifierProperties()
+
+    @Serializable
+    @SerialName("Padding")
     data class Padding(val value: PaddingProperties) : ModifierProperties()
+
+    @Serializable
+    @SerialName("Clickable")
     data class Clickable(val value: Boolean) : ModifierProperties()
+
+    @Serializable
+    @SerialName("BackgroundColor")
+    data class BackgroundColor(@Serializable(with = ColorSerializer::class) val color: Color) : ModifierProperties()
 }
 
+@Serializable
 data class PaddingProperties(
     val start: Int,
     val top: Int,
@@ -147,20 +290,63 @@ data class PaddingProperties(
     constructor(horizontal: Int, vertical: Int) : this(horizontal, vertical, horizontal, vertical)
 }
 
+@Serializable
 sealed class Action {
+    @Serializable
+    @SerialName("OpenUrl")
     data class OpenUrl(val url: String) : Action()
+
+    @Serializable
+    @SerialName("ShowToast")
     data class ShowToast(val message: String) : Action()
+
+    @Serializable
+    @SerialName("Navigate")
     data class Navigate(val destination: String) : Action()
+
+    @Serializable
+    @SerialName("None")
     data object None : Action()
 }
 
 sealed class StyleProperties {
+    @Serializable
     data class TextStyleProperties(
-        val fontSize: Int? = null,
-        val color: String? = null,
-        val bold: Boolean? = null,
-        val italic: Boolean? = null,
-        val underline: Boolean? = null
+        @Serializable(with = ColorSerializer::class)
+        val color: Color = Color.Unspecified,
+        @Serializable(with = TextUnitSerializer::class)
+        val fontSize: TextUnit = TextUnit.Unspecified,
+        @Serializable(with = FontWeightSerializer::class)
+        val fontWeight: FontWeight? = null,
+        @Serializable(with = FontStyleSerializer::class)
+        val fontStyle: FontStyle? = null,
+        @Serializable(with = FontSynthesisSerializer::class)
+        val fontSynthesis: FontSynthesis? = null,
+        @Serializable(with = FontFamilySerializer::class)
+        val fontFamily: FontFamily? = null,
+        val fontFeatureSettings: String? = null,
+        @Serializable(with = TextUnitSerializer::class)
+        val letterSpacing: TextUnit = TextUnit.Unspecified,
+        @Serializable(with = BaselineShiftSerializer::class)
+        val baselineShift: BaselineShift? = null,
+        @Serializable(with = TextGeometricTransformSerializer::class)
+        val textGeometricTransform: TextGeometricTransform? = null,
+        @Serializable(with = LocaleListSerializer::class)
+        val localeList: LocaleList? = null,
+        @Serializable(with = ColorSerializer::class)
+        val background: Color = Color.Unspecified,
+        @Serializable(with = TextDecorationSerializer::class)
+        val textDecoration: TextDecoration? = null,
+        @Serializable(with = ShadowSerializer::class)
+        val shadow: Shadow? = null,
+        @Serializable(with = TextAlignSerializer::class)
+        val textAlign: TextAlign = TextAlign.Unspecified,
+        @Serializable(with = TextDirectionSerializer::class)
+        val textDirection: TextDirection? = null,
+        @Serializable(with = TextUnitSerializer::class)
+        val lineHeight: TextUnit = TextUnit.Unspecified,
+        @Serializable(with = TextIndentSerializer::class)
+        val textIndent: TextIndent? = null,
     ) : StyleProperties()
 
     data class ButtonStyleProperties(

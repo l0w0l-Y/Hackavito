@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.androidKotlinMultiplatformLibrary)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    kotlin("plugin.serialization")
 }
 
 
@@ -49,14 +50,22 @@ kotlin {
             dependencies {
                 implementation(compose.material3)
                 implementation(compose.components.resources)
+
                 // Navigation
                 implementation(libs.navigation.compose)
+
                 // Koin
                 implementation(libs.koin.core)
                 implementation(libs.koin.compose)
                 implementation(libs.koin.compose.viewmodel)
+
                 // Napier for logging
                 implementation(libs.napier)
+
+                // Serialization Json
+                implementation(libs.kotlinx.serialization.json)
+
+                implementation(projects.core.theme)
             }
         }
         androidMain {

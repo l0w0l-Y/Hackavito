@@ -3,6 +3,7 @@ package ru.aleksandra.core.sdui.presentation
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -10,7 +11,6 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import ru.aleksandra.core.sdui.domain.LoadUIUseCase
-import ru.aleksandra.core.sdui.domain.LoadUIUseCaseImpl
 import ru.aleksandra.core.sdui.presentation.model.Action
 import ru.aleksandra.core.sdui.presentation.model.UIEffect
 import ru.aleksandra.core.sdui.presentation.model.UIState
@@ -20,7 +20,7 @@ class SDUIViewModel(
     loadUIUseCase: LoadUIUseCase
 ) : ViewModel() {
 
-    private val name = savedStateHandle.get<String>("name")
+    private val screenId = savedStateHandle.toRoute<NavigationDestination.SDUIScreen>().screenId
     private var _ui = MutableStateFlow<UIState>(UIState.Init)
     val ui: StateFlow<UIState> = _ui
 
@@ -29,13 +29,8 @@ class SDUIViewModel(
 
     init {
         viewModelScope.launch {
-            Napier.d("Load screen: $name")
             _ui.value = UIState.Loading
-            if (name == null) {
-                _ui.value = UIState.Error("No screen name")
-                return@launch
-            }
-            loadUIUseCase.loadUI(name).collect {
+            loadUIUseCase.loadUI(screenId).collect {
                 _ui.value = UIState.Loaded(it)
             }
         }

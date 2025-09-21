@@ -22,7 +22,7 @@ fun SDUIScreen(
         sDUIViewModel.sideEffects.collect {
             when (it) {
                 is UIEffect.NavigateEffect -> {
-                    navController.navigate(it.destination)
+                    navController.navigate(NavigationDestination.SDUIScreen(it.destination))
                 }
 
                 is UIEffect.OpenUrlEffect -> {
