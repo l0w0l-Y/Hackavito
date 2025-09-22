@@ -19,8 +19,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import ru.aleksandra.core.sdui.presentation.serializer.AlignmentHorizontalSerializer
+import ru.aleksandra.core.sdui.presentation.serializer.AlignmentSerializer
 import ru.aleksandra.core.sdui.presentation.serializer.AlignmentVerticalSerializer
 import ru.aleksandra.core.sdui.presentation.serializer.ArrangementHorizontalSerializer
+import ru.aleksandra.core.sdui.presentation.serializer.ArrangementVerticalSerializer
 import ru.aleksandra.core.sdui.presentation.serializer.BaselineShiftSerializer
 import ru.aleksandra.core.sdui.presentation.serializer.ColorSerializer
 import ru.aleksandra.core.sdui.presentation.serializer.FontFamilySerializer
@@ -37,6 +40,7 @@ import ru.aleksandra.core.sdui.presentation.serializer.TextIndentSerializer
 import ru.aleksandra.core.sdui.presentation.serializer.TextOverflowSerializer
 import ru.aleksandra.core.sdui.presentation.serializer.TextUnitSerializer
 
+//TODO: Заменить классы из compose, или сделать эту модель для domain отдельно + маппер
 @Serializable
 sealed class SDUIComponent() {
     abstract val modifier: List<ModifierProperties>
@@ -93,7 +97,12 @@ sealed class SDUIComponent() {
     data class Button(
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
-        val title: String,
+       /* val enabled: Boolean = true,
+        val shape: Shape? = null,
+        val colors: ButtonColors? = null,
+        val elevation: ButtonElevation? = null,
+        val border: BorderStroke? = null,
+        val contentPadding: PaddingValues? = null,*/
     ) : SDUIComponent()
 
     @Serializable
@@ -126,7 +135,11 @@ sealed class SDUIComponent() {
     data class Column(
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
-        val children: List<SDUIComponent>
+        val children: List<SDUIComponent>,
+        @Serializable(with = ArrangementVerticalSerializer::class)
+        val verticalArrangement: Arrangement.Vertical = Arrangement.Top,
+        @Serializable(with = AlignmentHorizontalSerializer::class)
+        val horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     ) : SDUIComponent()
 
     @Serializable
@@ -146,7 +159,10 @@ sealed class SDUIComponent() {
     data class Box(
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
-        val children: List<SDUIComponent>
+        val children: List<SDUIComponent>,
+        @Serializable(with = AlignmentSerializer::class)
+        val contentAlignment: Alignment = Alignment.TopStart,
+        val propagateMinConstraints: Boolean = false,
     ) : SDUIComponent()
 
     @Serializable
@@ -188,9 +204,15 @@ sealed class SDUIComponent() {
     data class Divider(
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
-        val thickness: Int,
-        val dividerProperties: DividerProperties
-    ) : SDUIComponent()
+        val thickness: Int? = null,
+        @Serializable(with = ColorSerializer::class)
+        val color: Color? = null,
+        val type: DividerType
+    ) : SDUIComponent() {
+        enum class DividerType {
+            HORIZONTAL, VERTICAL
+        }
+    }
 
     // Media components
     @Serializable
@@ -246,17 +268,6 @@ sealed class SDUIComponent() {
 }
 
 @Serializable
-data class DividerProperties(
-    val thickness: Int,
-    val color: String? = null,
-    val type: DividerType
-) {
-    enum class DividerType {
-        HORIZONTAL, VERTICAL
-    }
-}
-
-@Serializable
 sealed class ModifierProperties {
     @Serializable
     @SerialName("Width")
@@ -276,7 +287,8 @@ sealed class ModifierProperties {
 
     @Serializable
     @SerialName("BackgroundColor")
-    data class BackgroundColor(@Serializable(with = ColorSerializer::class) val color: Color) : ModifierProperties()
+    data class BackgroundColor(@Serializable(with = ColorSerializer::class) val color: Color) :
+        ModifierProperties()
 }
 
 @Serializable

@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.IconButton
@@ -24,12 +25,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import ru.aleksandra.core.sdui.presentation.model.Action
-import ru.aleksandra.core.sdui.presentation.model.DividerProperties
 import ru.aleksandra.core.sdui.presentation.model.ModifierProperties
 import ru.aleksandra.core.sdui.presentation.model.SDUIComponent
 import ru.aleksandra.core.sdui.presentation.model.StyleProperties
@@ -159,23 +158,28 @@ fun SDUIFloatingActionButton(model: SDUIComponent.FloatingActionButton) {
 
 @Composable
 fun SDUIDivider(model: SDUIComponent.Divider) {
-    when (model.dividerProperties.type) {
-        DividerProperties.DividerType.HORIZONTAL -> HorizontalDivider(
+    when (model.type) {
+        SDUIComponent.Divider.DividerType.HORIZONTAL -> HorizontalDivider(
             modifier = buildModifier(model.modifier),
-            thickness = model.dividerProperties.thickness.dp,
+            thickness = model.thickness?.dp ?: DividerDefaults.Thickness,
+            color = model.color ?: DividerDefaults.color
         )
 
-        DividerProperties.DividerType.VERTICAL -> VerticalDivider(
+        SDUIComponent.Divider.DividerType.VERTICAL -> VerticalDivider(
             modifier = buildModifier(model.modifier),
-            thickness = model.dividerProperties.thickness.dp,
+            thickness = model.thickness?.dp ?: DividerDefaults.Thickness,
+            color = model.color ?: DividerDefaults.color
         )
     }
-
 }
 
 @Composable
 fun SDUIBox(model: SDUIComponent.Box) {
-    Box {
+    Box(
+        modifier = buildModifier(model.modifier),
+        contentAlignment = model.contentAlignment,
+        propagateMinConstraints = model.propagateMinConstraints,
+    ) {
         model.children.forEach { child ->
             Render(child)
         }
@@ -193,7 +197,11 @@ fun SDUICard(model: SDUIComponent.Card) {
 
 @Composable
 fun SDUIColumn(model: SDUIComponent.Column) {
-    Column {
+    Column(
+        modifier = buildModifier(model.modifier),
+        verticalArrangement = model.verticalArrangement,
+        horizontalAlignment = model.horizontalAlignment,
+    ) {
         model.children.forEach { child ->
             Render(child)
         }
