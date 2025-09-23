@@ -15,11 +15,11 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -32,6 +32,9 @@ import ru.aleksandra.core.sdui.presentation.model.Action
 import ru.aleksandra.core.sdui.presentation.model.ModifierProperties
 import ru.aleksandra.core.sdui.presentation.model.SDUIComponent
 import ru.aleksandra.core.sdui.presentation.model.StyleProperties
+import ru.aleksandra.core.ui.AvitoCheckbox
+import ru.aleksandra.core.ui.AvitoNavBar
+import ru.aleksandra.core.ui.AvitoSelectAll
 
 //TODO: Добавить обработку изображений для Image и Icon, Iconbutton и Floatingactionbutton
 
@@ -60,7 +63,9 @@ fun Render(
     is SDUIComponent.TextField -> SDUITextField(component)
     is SDUIComponent.Checkbox -> SDUICheckbox(component) { handleAction(component.action) }
     is SDUIComponent.BottomBar -> SDUIBottomBar(component)
-    is Nothing -> {}
+    is SDUIComponent.AvitoCheckBox -> AvitoCheckbox(component.isChecked)
+    is SDUIComponent.AvitoNavBar -> AvitoNavBar(component.title)
+    is SDUIComponent.AvitoSelectAll -> AvitoSelectAll(isChecked = component.isChecked, deleteCount = component.deleteCount)
 }
 
 @Composable
@@ -239,7 +244,7 @@ fun SDUIText(model: SDUIComponent.Text) {
         minLines = model.minLines,
         overflow = model.overflow,
         softWrap = model.softWrap,
-        style = model.style?.toTextStyle() ?: LocalTextStyle.current,
+        //style = model.style?.toTextStyle() ?: LocalTextStyle.current,
     )
 }
 
@@ -266,22 +271,23 @@ fun StyleProperties.TextStyleProperties.toTextStyle(): TextStyle {
 @Composable
 fun SDUIButton(model: SDUIComponent.Button, handleAction: () -> Unit) {
     Button(
-        onClick = { handleAction() }
+        onClick = { handleAction() },
+        modifier = buildModifier(model.modifier)
     ) {
-        Text(
-            text = model.title,
-            modifier = buildModifier(model.modifier),
-        )
+        Render(model.content)
     }
 }
 
 @Composable
 fun SDUICheckbox(model: SDUIComponent.Checkbox, handleAction: () -> Unit) {
     Checkbox(
-        checked = model.isChecked,
-        onCheckedChange = { handleAction() }
+        checked = model.checked,
+        onCheckedChange = { handleAction() },
+        modifier = buildModifier(model.modifier),
+        enabled = model.enabled,
+        /* TODO: Добавить цвета */
+        colors = CheckboxDefaults.colors()
     )
-
 }
 
 @Composable

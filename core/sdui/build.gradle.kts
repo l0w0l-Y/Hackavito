@@ -66,6 +66,7 @@ kotlin {
                 implementation(libs.kotlinx.serialization.json)
 
                 implementation(projects.core.theme)
+                implementation(projects.core.ui)
             }
         }
         androidMain {

@@ -4,13 +4,13 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import io.github.aakira.napier.Napier
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import ru.aleksandra.core.sdui.domain.LoadUIUseCase
+import ru.aleksandra.core.sdui.domain.usecase.LoadUIUseCase
+import ru.aleksandra.core.sdui.presentation.mapper.toUi
 import ru.aleksandra.core.sdui.presentation.model.Action
 import ru.aleksandra.core.sdui.presentation.model.UIEffect
 import ru.aleksandra.core.sdui.presentation.model.UIState
@@ -31,7 +31,7 @@ class SDUIViewModel(
         viewModelScope.launch {
             _ui.value = UIState.Loading
             loadUIUseCase.loadUI(screenId).collect {
-                _ui.value = UIState.Loaded(it)
+                _ui.value = UIState.Loaded(it.toUi())
             }
         }
     }

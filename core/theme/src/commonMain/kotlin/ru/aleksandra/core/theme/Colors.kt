@@ -68,3 +68,6 @@ val ColorScheme.controlContentMasterPassive: Color
 
 val ColorScheme.violet500: Color
     get() = Color(0xFFA168F7)
+
+val ColorScheme.controlBgUncheck : Color
+    get() = Color(0xFFFFFFFF)

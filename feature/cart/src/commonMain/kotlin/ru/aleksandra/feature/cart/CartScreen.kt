@@ -7,6 +7,6 @@ import ru.aleksandra.core.ui.AvitoNavBar
 @Composable
 fun CartScreen() {
     Column {
-        AvitoNavBar()
+        AvitoNavBar("Корзина")
     }
 }
