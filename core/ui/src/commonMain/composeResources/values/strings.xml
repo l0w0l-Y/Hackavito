@@ -2,4 +2,6 @@
     <string name="navbar_cart">Корзина</string>
     <string name="select_all">Выбрать всё</string>
     <string name="delete">Удалить (%1$d)</string>
+    <string name="amount_with_ruble">%1$d ₽</string>
+    <string name="sale_with_percent">-%1$d %</string>
 </resources>
