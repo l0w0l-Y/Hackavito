@@ -8,9 +8,9 @@ import ru.aleksandra.core.sdui.presentation.model.UIState
 @Composable
 fun Renderer(
     uiState: UIState,
+    handleAction: (Action) -> Unit = {},
     showLoading: Boolean = true,
-    loadingIndicator: @Composable () -> Unit = {  },
-    handleAction: (Action) -> Unit
+    loadingIndicator: @Composable () -> Unit = { },
 ) {
     when (uiState) {
         is UIState.Error -> {

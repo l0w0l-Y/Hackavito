@@ -41,7 +41,6 @@ import ru.aleksandra.core.sdui.presentation.serializer.TextGeometricTransformSer
 import ru.aleksandra.core.sdui.presentation.serializer.TextIndentSerializer
 import ru.aleksandra.core.sdui.presentation.serializer.TextUnitSerializer
 
-//TODO: Заменить классы из compose, или сделать эту модель для domain отдельно + маппер
 @Serializable
 sealed class SDUIComponent() {
     abstract val modifier: List<ModifierProperties>

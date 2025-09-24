@@ -66,6 +66,9 @@ val ColorScheme.controlContentPayPassive: Color
 val ColorScheme.controlContentMasterPassive: Color
     get() = Color(0xFFFFFFFF)
 
+val ColorScheme.controlBgMasterPrimary: Color
+    get() = Color(0xFF141414)
+
 val ColorScheme.violet500: Color
     get() = Color(0xFFA168F7)
 

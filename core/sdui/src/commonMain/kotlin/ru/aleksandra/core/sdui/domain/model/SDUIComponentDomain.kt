@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 import ru.aleksandra.core.sdui.presentation.model.PaddingProperties
 import ru.aleksandra.core.sdui.presentation.model.SDUIComponent
 import ru.aleksandra.core.sdui.presentation.serializer.ColorSerializer
+import kotlin.reflect.KClass
 
 @Serializable
 sealed class SDUIComponentDomain() {
@@ -241,6 +242,15 @@ sealed class SDUIComponentDomain() {
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None
     ) : SDUIComponentDomain()
+
+    companion object {
+        //TODO: Добавить все подклассы. Нельзя использовать рефлексию, т.к. она не поддерживается в wasm :(
+        val subclasses: List<KClass<out SDUIComponentDomain>> = listOf(
+            Text::class,
+            Button::class,
+            AvitoNavBar::class
+        )
+    }
 }
 
 @Serializable

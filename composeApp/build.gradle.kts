@@ -50,6 +50,7 @@ kotlin {
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
+
             implementation(libs.navigation.compose)
 
             implementation(projects.core.theme)
@@ -58,6 +59,9 @@ kotlin {
             implementation(projects.core.sdui)
 
             implementation(libs.napier)
+        }
+        wasmJsMain.dependencies {
+            implementation(projects.feature.admin)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
