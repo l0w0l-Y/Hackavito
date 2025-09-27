@@ -19,7 +19,7 @@ sealed class SDUIComponentDomain() {
     data class Text(
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
-        val text: String,
+        val text: BindableString,
         val color: String? = null,
         val fontSize: String? = null,
         val fontStyle: String? = null,
@@ -220,7 +220,7 @@ sealed class SDUIComponentDomain() {
     @Serializable
     @SerialName("AvitoNavBar")
     data class AvitoNavBar(
-        val title: String,
+        val title: BindableString,
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
     ) : SDUIComponentDomain()
@@ -231,7 +231,7 @@ sealed class SDUIComponentDomain() {
         val text: String,
         val isChecked: Boolean = false,
         override val modifier: List<ModifierProperties> = emptyList(),
-        override val action: Action = Action.None
+        override val action: Action = Action.None,
     ) : SDUIComponentDomain()
 
     @Serializable
@@ -240,7 +240,7 @@ sealed class SDUIComponentDomain() {
         val isChecked: Boolean = false,
         val deleteCount: Int = 0,
         override val modifier: List<ModifierProperties> = emptyList(),
-        override val action: Action = Action.None
+        override val action: Action = Action.None,
     ) : SDUIComponentDomain()
 
     companion object {
@@ -397,3 +397,32 @@ data class CheckboxColors(
     val disabledUncheckedBorderColor: String?,
     val disabledIndeterminateBorderColor: String?
 )
+
+@Serializable
+sealed class BindableValue<T> {
+    abstract fun getValue(dataContext: Map<String, Any?>): T
+
+    @Serializable
+    @SerialName("Static")
+    data class Static<T>(val value: T) : BindableValue<T>() {
+        override fun getValue(dataContext: Map<String, Any?>): T = value
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    @Serializable
+    @SerialName("Dynamic")
+    data class Dynamic<T>(val path: String) : BindableValue<T>() {
+        override fun getValue(dataContext: Map<String, Any?>): T {
+            return dataContext[path] as T
+        }
+    }
+}
+
+typealias BindableString = BindableValue<String>
+typealias BindableInt = BindableValue<Int>
+typealias BindableBoolean = BindableValue<Boolean>
+typealias BindableDouble = BindableValue<Double>
+typealias BindableFloat = BindableValue<Float>
+typealias BindableLong = BindableValue<Long>
+typealias BindableList<T> = BindableValue<List<T>>
+typealias BindableMap<K, V> = BindableValue<Map<K, V>>

@@ -263,7 +263,7 @@ sealed class SDUIComponent() {
         val text: String,
         val isChecked: Boolean = false,
         override val modifier: List<ModifierProperties> = emptyList(),
-        override val action: Action = Action.None
+        override val action: Action = Action.None,
     ) : SDUIComponent()
 
     @Serializable
@@ -271,7 +271,7 @@ sealed class SDUIComponent() {
         val isChecked: Boolean = false,
         val deleteCount: Int = 0,
         override val modifier: List<ModifierProperties> = emptyList(),
-        override val action: Action = Action.None
+        override val action: Action = Action.None,
     ) : SDUIComponent()
 }
 

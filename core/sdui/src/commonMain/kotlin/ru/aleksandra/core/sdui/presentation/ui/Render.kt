@@ -65,7 +65,10 @@ fun Render(
     is SDUIComponent.BottomBar -> SDUIBottomBar(component)
     is SDUIComponent.AvitoCheckBox -> AvitoCheckbox(component.isChecked)
     is SDUIComponent.AvitoNavBar -> AvitoNavBar(component.title)
-    is SDUIComponent.AvitoSelectAll -> AvitoSelectAll(isChecked = component.isChecked, deleteCount = component.deleteCount)
+    is SDUIComponent.AvitoSelectAll -> AvitoSelectAll(
+        isChecked = component.isChecked,
+        deleteCount = component.deleteCount
+    )
 }
 
 @Composable
@@ -208,7 +211,7 @@ fun SDUIColumn(model: SDUIComponent.Column) {
         horizontalAlignment = model.horizontalAlignment,
     ) {
         model.children.forEach { child ->
-            Render(child)
+            Render(child, )
         }
     }
 }

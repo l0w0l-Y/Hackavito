@@ -4,18 +4,21 @@ import androidx.lifecycle.SavedStateHandle
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.bind
 import org.koin.dsl.module
+import ru.aleksandra.core.sdui.domain.usecase.LoadDataUseCase
+import ru.aleksandra.core.sdui.domain.usecase.LoadDataUseCaseImpl
 import ru.aleksandra.core.sdui.domain.usecase.LoadUIUseCase
 import ru.aleksandra.core.sdui.domain.usecase.LoadUIUseCaseImpl
 import ru.aleksandra.core.sdui.presentation.SDUIViewModel
 
 val viewModelModule = module {
     viewModel { (savedStateHandle: SavedStateHandle) ->
-        SDUIViewModel(savedStateHandle, get())
+        SDUIViewModel(savedStateHandle, get(), get())
     }
 }
 
 val useCaseModule = module {
     single { LoadUIUseCaseImpl() } bind LoadUIUseCase::class
+    single { LoadDataUseCaseImpl() } bind LoadDataUseCase::class
 }
 
 fun initModules() = module {

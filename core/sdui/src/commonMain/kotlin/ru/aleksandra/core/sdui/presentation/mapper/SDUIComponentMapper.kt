@@ -37,14 +37,14 @@ import androidx.compose.ui.geometry.Offset as OffsetUi
 import androidx.compose.ui.text.style.TextIndent as TextIndentUi
 import ru.aleksandra.core.sdui.presentation.model.Action as ActionUi
 
-fun SDUIComponentDomain.toUi(): SDUIComponent {
+fun SDUIComponentDomain.toUi(data: Map<String, Any>): SDUIComponent {
     return when (this) {
         is SDUIComponentDomain.BottomBar -> TODO()
         is SDUIComponentDomain.Box -> TODO()
-        is SDUIComponentDomain.Button -> toUi()
+        is SDUIComponentDomain.Button -> toUi(data)
         is SDUIComponentDomain.Card -> TODO()
         is SDUIComponentDomain.Checkbox -> toUi()
-        is SDUIComponentDomain.Column -> toUi()
+        is SDUIComponentDomain.Column -> toUi(data)
         is SDUIComponentDomain.Divider -> TODO()
         is SDUIComponentDomain.FloatingActionButton -> TODO()
         is SDUIComponentDomain.Icon -> TODO()
@@ -53,14 +53,14 @@ fun SDUIComponentDomain.toUi(): SDUIComponent {
         is SDUIComponentDomain.LazyColumn -> TODO()
         is SDUIComponentDomain.LazyRow -> TODO()
         is SDUIComponentDomain.OutlinedButton -> TODO()
-        is SDUIComponentDomain.Row -> toUi()
+        is SDUIComponentDomain.Row -> toUi(data)
         is SDUIComponentDomain.Scaffold -> TODO()
         is SDUIComponentDomain.Spacer -> TODO()
         is SDUIComponentDomain.Surface -> TODO()
-        is SDUIComponentDomain.Text -> toUi()
+        is SDUIComponentDomain.Text -> toUi(data)
         is SDUIComponentDomain.TextField -> TODO()
         is SDUIComponentDomain.AvitoCheckBox -> toUi()
-        is SDUIComponentDomain.AvitoNavBar -> toUi()
+        is SDUIComponentDomain.AvitoNavBar -> toUi(data)
         is SDUIComponentDomain.AvitoSelectAll -> toUi()
     }
 
@@ -82,10 +82,10 @@ fun SDUIComponentDomain.AvitoCheckBox.toUi(): SDUIComponent.AvitoCheckBox {
     )
 }
 
-fun SDUIComponentDomain.AvitoNavBar.toUi(): SDUIComponent.AvitoNavBar {
+fun SDUIComponentDomain.AvitoNavBar.toUi(data: Map<String, Any>): SDUIComponent.AvitoNavBar {
     return SDUIComponent.AvitoNavBar(
-        title = title,
-        action = action.toUi()
+        title = title.getValue(data),
+        action = action.toUi(),
     )
 }
 
@@ -98,28 +98,28 @@ fun SDUIComponentDomain.Checkbox.toUi(): SDUIComponent.Checkbox {
     )
 }
 
-fun SDUIComponentDomain.Column.toUi(): SDUIComponent.Column {
+fun SDUIComponentDomain.Column.toUi(data: Map<String, Any>): SDUIComponent.Column {
     return SDUIComponent.Column(
         action = action.toUi(),
-        children = children.map { it.toUi() },
+        children = children.map { it.toUi(data) },
         verticalArrangement = verticalArrangement?.toArrangementVertical() ?: Arrangement.Top,
         horizontalAlignment = horizontalAlignment?.toAlignmentHorizontal() ?: Alignment.Start,
     )
 }
 
-fun SDUIComponentDomain.Row.toUi(): SDUIComponent.Row {
+fun SDUIComponentDomain.Row.toUi(data: Map<String, Any>): SDUIComponent.Row {
     return SDUIComponent.Row(
         action = action.toUi(),
-        children = children.map { it.toUi() },
+        children = children.map { it.toUi(data) },
         horizontalArrangement = horizontalArrangement.toArrangementHorizontal(),
         verticalAlignment = verticalAlignment.toAlignmentVertical(),
     )
 }
 
-fun SDUIComponentDomain.Text.toUi(): SDUIComponent.Text {
+fun SDUIComponentDomain.Text.toUi(data: Map<String, Any>): SDUIComponent.Text {
     return SDUIComponent.Text(
         action = action.toUi(),
-        text = text,
+        text = text.getValue(data),
         color = color?.toColor() ?: Color.Unspecified,
         fontSize = fontSize?.toTextUnit() ?: TextUnit.Unspecified,
         letterSpacing = letterSpacing?.toTextUnit() ?: TextUnit.Unspecified,
@@ -136,7 +136,7 @@ fun SDUIComponentDomain.Text.toUi(): SDUIComponent.Text {
     )
 }
 
-fun SDUIComponentDomain.Button.toUi(): SDUIComponent.Button {
+fun SDUIComponentDomain.Button.toUi(data: Map<String, Any>): SDUIComponent.Button {
     return SDUIComponent.Button(
         action = action.toUi(),
         enabled = enabled,
@@ -145,7 +145,7 @@ fun SDUIComponentDomain.Button.toUi(): SDUIComponent.Button {
         elevation = elevation?.toCompose(),
         border = border?.toCompose(),
         contentPadding = contentPadding?.toCompose(),
-        content = content.toUi()
+        content = content.toUi(data)
     )
 }
 

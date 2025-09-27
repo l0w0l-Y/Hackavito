@@ -4,6 +4,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.serialization.json.Json
+import ru.aleksandra.core.sdui.domain.model.BindableValue
 import ru.aleksandra.core.sdui.domain.model.SDUIComponentDomain
 
 class LoadUIUseCaseImpl() : LoadUIUseCase {
@@ -19,7 +20,10 @@ class LoadUIUseCaseImpl() : LoadUIUseCase {
     "children": [
         {
             "type": "AvitoNavBar",
-            "title": "Корзина"
+            "title": {
+                "type": "Dynamic",
+                "path": "navbar.title"
+            }
         },
         {
             "type": "AvitoSelectAll",
@@ -40,7 +44,10 @@ class LoadUIUseCaseImpl() : LoadUIUseCase {
             },
             "content": {
                 "type": "Text",
-                "text": "Мы получили текст кнопки"
+                "text": {
+                    "type": "Static",
+                    "value": "Кнопка"
+                }
             }
         }
     ]
@@ -54,12 +61,12 @@ class LoadUIUseCaseImpl() : LoadUIUseCase {
         } else if (screenName == "details") {
             SDUIComponentDomain.Text(
                 modifier = emptyList(),
-                text = "Все в деталях",
+                text = BindableValue.Static("Все в деталях"),
             )
         } else {
             SDUIComponentDomain.Text(
                 modifier = emptyList(),
-                text = "Неизвестный экран",
+                text = BindableValue.Static("Неизвестный экран"),
             )
         }
         return flowOf(value)
