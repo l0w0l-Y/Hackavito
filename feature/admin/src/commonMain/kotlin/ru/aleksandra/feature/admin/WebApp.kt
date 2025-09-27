@@ -6,13 +6,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -21,10 +19,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -37,19 +33,22 @@ import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import ru.aleksandra.core.theme.AvitoTheme
-import ru.aleksandra.core.theme.bgBase
 import ru.aleksandra.core.theme.bgPage
 import ru.aleksandra.core.theme.contentPrimary
-import ru.aleksandra.core.theme.controlBgMasterDefault
 import ru.aleksandra.core.theme.controlBgMasterPrimary
 import ru.aleksandra.core.theme.controlContentMasterPassive
 import ru.aleksandra.core.theme.m20
 
 @Composable
 fun WebApp() {
-    AvitoTheme {
+    AvitoTheme() {
         Column {
-            Row(modifier = Modifier.fillMaxSize(), horizontalArrangement = Arrangement.spacedBy(20.dp)) {
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(vertical = 24.dp),
+                horizontalArrangement = Arrangement.spacedBy(20.dp)
+            ) {
                 val navController = rememberNavController()
                 AdminNavigation { navController.navigate(it.route) }
                 AdminNavHost(navController)
@@ -68,7 +67,7 @@ fun AdminNavigation(onClick: (AdminNavRoute) -> Unit) {
         ),
         TopLevelRoute(
             name = "Version control",
-            route = AdminNavRoute.Screens,
+            route = AdminNavRoute.VersionControl,
             drawableResource = Res.drawable.ic_branch
         ),
     )
@@ -117,12 +116,11 @@ fun RowScope.AdminNavHost(navController: NavHostController) {
         startDestination = AdminNavRoute.Create.route,
         modifier = Modifier.weight(1f)
     ) {
-        // Define your composable destinations here
         composable(AdminNavRoute.Create.route) {
-            AdminApp()
+            CodeEditorScreen()
         }
-        composable(AdminNavRoute.Screens.route) {
-            Text("Хеллоу")
+        composable(AdminNavRoute.VersionControl.route) {
+            VersionControlScreen()
         }
     }
 }
@@ -137,5 +135,5 @@ sealed class AdminNavRoute(val route: String) {
     object Create : AdminNavRoute("create")
 
     @Serializable
-    object Screens : AdminNavRoute("screens")
+    object VersionControl : AdminNavRoute("screens")
 }

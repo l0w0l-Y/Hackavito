@@ -26,7 +26,7 @@ fun getDefaultTextStyle(): TextStyle {
     return TextStyle(
         fontFamily = setupFontFamily(),
         fontWeight = FontWeight.Normal,
-        textAlign = TextAlign.Center,
+        textAlign = TextAlign.Start,
         color = MaterialTheme.colorScheme.contentPrimary,
     )
 }

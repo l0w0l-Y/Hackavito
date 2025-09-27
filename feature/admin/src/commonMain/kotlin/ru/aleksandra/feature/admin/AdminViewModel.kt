@@ -164,4 +164,10 @@ class AdminViewModel(
             }
         }
     }
+
+    fun sendToReview(json: String) {
+        viewModelScope.launch {
+            //TODO: Добавить метод отправки на сервер
+        }
+    }
 }

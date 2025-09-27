@@ -10,10 +10,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -21,16 +21,15 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
+import ru.aleksandra.core.theme.gray36
+import ru.aleksandra.core.theme.gray4
+import ru.aleksandra.core.theme.m20
 
 @Composable
 fun RowScope.CodeEditor(
@@ -51,7 +50,11 @@ fun RowScope.CodeEditor(
          }
      }*/
 
-    Row(Modifier.weight(1f).background(Color(0xFF1E1E1E))) {
+    Row(
+        Modifier
+            .weight(1f)
+            .background(MaterialTheme.colorScheme.gray4)
+    ) {
         val lines = textFieldValue.text.split("\n")
 
         /*val annotatedText = if (errorLines.isNotEmpty()) {
@@ -79,16 +82,15 @@ fun RowScope.CodeEditor(
 
         Column(
             modifier = Modifier
-                .background(Color(0xFF252526))
+                .background(MaterialTheme.colorScheme.gray4)
                 .fillMaxHeight()
                 .padding(horizontal = 4.dp)
         ) {
             lines.indices.forEach { i ->
                 Text(
                     text = (i + 1).toString(),
-                    color = Color(0xFF858585),
-                    fontSize = 14.sp,
-                    modifier = Modifier.height(20.sp.toDp())
+                    color = MaterialTheme.colorScheme.gray36,
+                    style = MaterialTheme.typography.m20,
                 )
             }
         }
@@ -96,7 +98,7 @@ fun RowScope.CodeEditor(
         val focusRequester = remember { FocusRequester() }
         Box(
             modifier = Modifier
-                .padding(4.dp)
+                .padding(horizontal = 4.dp)
                 .fillMaxSize()
                 .horizontalScroll(scrollState)
                 .clickable(
@@ -104,16 +106,12 @@ fun RowScope.CodeEditor(
                     indication = null
                 ) {
                     focusRequester.requestFocus()
-                } // клик по пустому месту
+                }
         ) {
             BasicTextField(
                 value = textFieldValue,
                 onValueChange = { onTextChange(it) },
-                textStyle = TextStyle(
-                    color = Color(0XFFFFFFFF),
-                    fontSize = 14.sp,
-                    fontFamily = FontFamily.Monospace
-                ),
+                textStyle = MaterialTheme.typography.m20,
                 modifier = Modifier
                     .fillMaxSize()
                     .focusRequester(focusRequester),

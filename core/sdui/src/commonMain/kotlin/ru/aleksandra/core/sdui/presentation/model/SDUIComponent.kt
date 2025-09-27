@@ -325,6 +325,15 @@ sealed class Action {
     data class Navigate(val destination: String) : Action()
 
     @Serializable
+    @SerialName("CallApi")
+    data class CallApi(val endpoint: String, val method: String = "GET", val body: String? = null) :
+        Action()
+
+    @Serializable
+    @SerialName("Close")
+    data object Close : Action()
+
+    @Serializable
     @SerialName("None")
     data object None : Action()
 }
