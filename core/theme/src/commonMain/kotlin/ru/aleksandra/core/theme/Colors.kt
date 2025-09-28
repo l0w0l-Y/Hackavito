@@ -24,6 +24,9 @@ val ColorScheme.bgPage: Color
 val ColorScheme.controlBgCheck: Color
     get() = Color(0xFF141414)
 
+val ColorScheme.controlBgUncheck: Color
+    get() = Color(0xFFFFFFFF)
+
 val ColorScheme.controlBgFaint: Color
     get() = Color(0xFFFFFFFF)
 
