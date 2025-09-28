@@ -13,14 +13,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import hackavito.core.ui.generated.resources.Res
-import hackavito.core.ui.generated.resources.navbar_cart
-import org.jetbrains.compose.resources.stringResource
 import ru.aleksandra.core.theme.controlContentPrimary
 import ru.aleksandra.core.theme.h50
 
 @Composable
-fun AvitoNavBar() {
+fun AvitoNavBar(title: String) {
     Row(
         modifier = Modifier
             .safeDrawingPadding()
@@ -30,7 +27,7 @@ fun AvitoNavBar() {
     ) {
         AvitoIconL()
         Text(
-            stringResource(Res.string.navbar_cart),
+            title,
             modifier = Modifier.weight(1f),
             style = MaterialTheme.typography.h50,
             color = MaterialTheme.colorScheme.controlContentPrimary,

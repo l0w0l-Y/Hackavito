@@ -1,11 +1,11 @@
 package ru.aleksandra.core.theme
 
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import hackavito.core.theme.generated.resources.Manrope_Cut_008_ExtraBold
@@ -16,7 +16,7 @@ import org.jetbrains.compose.resources.Font
 @Composable
 fun setupFontFamily(): FontFamily {
     return FontFamily(
-        Font(Res.font.Manrope_Cut_008_Medium, weight = FontWeight.Medium),
+        Font(Res.font.Manrope_Cut_008_Medium, weight = FontWeight.Normal),
         Font(Res.font.Manrope_Cut_008_ExtraBold, weight = FontWeight.ExtraBold)
     )
 }
@@ -25,8 +25,9 @@ fun setupFontFamily(): FontFamily {
 fun getDefaultTextStyle(): TextStyle {
     return TextStyle(
         fontFamily = setupFontFamily(),
-        fontWeight = FontWeight.Medium,
-        textAlign = TextAlign.Center,
+        fontWeight = FontWeight.Normal,
+        textAlign = TextAlign.Start,
+        color = MaterialTheme.colorScheme.contentPrimary,
     )
 }
 
@@ -34,8 +35,6 @@ fun getDefaultTextStyle(): TextStyle {
 fun setupTypography(): Typography {
     return Typography()
 }
-
-// Стилей было меньше, чем цветов, поэтому я добавила их все :)
 
 val Typography.h05: TextStyle
     @Composable
@@ -72,7 +71,7 @@ val Typography.h25: TextStyle
 val Typography.xl10: TextStyle
     @Composable
     get() = getDefaultTextStyle().copy(
-        fontWeight = FontWeight.Medium,
+        fontWeight = FontWeight.Normal,
         fontSize = 21.sp,
         lineHeight = 26.sp,
     )
@@ -88,7 +87,7 @@ val Typography.h30: TextStyle
 val Typography.l10: TextStyle
     @Composable
     get() = getDefaultTextStyle().copy(
-        fontWeight = FontWeight.Medium,
+        fontWeight = FontWeight.Normal,
         fontSize = 18.sp,
         lineHeight = 24.sp,
     )
@@ -96,7 +95,7 @@ val Typography.l10: TextStyle
 val Typography.l20: TextStyle
     @Composable
     get() = getDefaultTextStyle().copy(
-        fontWeight = FontWeight.Medium,
+        fontWeight = FontWeight.Normal,
         fontSize = 18.sp,
         lineHeight = 22.sp,
     )
@@ -120,7 +119,7 @@ val Typography.h50: TextStyle
 val Typography.m10: TextStyle
     @Composable
     get() = getDefaultTextStyle().copy(
-        fontWeight = FontWeight.Medium,
+        fontWeight = FontWeight.Normal,
         fontSize = 15.sp,
         lineHeight = 22.sp,
     )
@@ -128,7 +127,7 @@ val Typography.m10: TextStyle
 val Typography.m20: TextStyle
     @Composable
     get() = getDefaultTextStyle().copy(
-        fontWeight = FontWeight.Medium,
+        fontWeight = FontWeight.Normal,
         fontSize = 15.sp,
         lineHeight = 20.sp,
     )
@@ -144,7 +143,7 @@ val Typography.h60: TextStyle
 val Typography.s10: TextStyle
     @Composable
     get() = getDefaultTextStyle().copy(
-        fontWeight = FontWeight.Medium,
+        fontWeight = FontWeight.Normal,
         fontSize = 13.sp,
         lineHeight = 18.sp,
     )
@@ -152,7 +151,7 @@ val Typography.s10: TextStyle
 val Typography.s20: TextStyle
     @Composable
     get() = getDefaultTextStyle().copy(
-        fontWeight = FontWeight.Medium,
+        fontWeight = FontWeight.Normal,
         fontSize = 13.sp,
         lineHeight = 16.sp,
     )
@@ -168,7 +167,7 @@ val Typography.h70: TextStyle
 val Typography.xs10: TextStyle
     @Composable
     get() = getDefaultTextStyle().copy(
-        fontWeight = FontWeight.Medium,
+        fontWeight = FontWeight.Normal,
         fontSize = 11.sp,
         lineHeight = 14.sp,
     )
