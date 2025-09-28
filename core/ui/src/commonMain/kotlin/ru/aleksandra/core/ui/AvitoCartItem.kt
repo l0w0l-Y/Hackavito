@@ -25,36 +25,31 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import hackavito.core.ui.generated.resources.Res
 import hackavito.core.ui.generated.resources.amount_with_ruble
-import hackavito.core.ui.generated.resources.delete
+import hackavito.core.ui.generated.resources.buy_with_delivery
 import hackavito.core.ui.generated.resources.ic_delete
 import hackavito.core.ui.generated.resources.ic_favorite
-import hackavito.core.ui.generated.resources.ic_star
-import hackavito.core.ui.generated.resources.img
 import hackavito.core.ui.generated.resources.sale_with_percent
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.aleksandra.core.theme.bgBase
 import ru.aleksandra.core.theme.contentPrimary
 import ru.aleksandra.core.theme.controlContentError
-import ru.aleksandra.core.theme.gray36
-import ru.aleksandra.core.theme.h30
 import ru.aleksandra.core.theme.h40
-import ru.aleksandra.core.theme.m10
 import ru.aleksandra.core.theme.m20
-import ru.aleksandra.core.theme.orange500
+import ru.aleksandra.core.theme.s10
 import ru.aleksandra.core.theme.s20
+import ru.aleksandra.core.theme.violet500
+import ru.aleksandra.core.ui.model.Item
 import kotlin.math.ceil
 
 @Composable
 fun AvitoCartItem(
     isChecked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
-    itemName: String,
+    item: Item,
     itemCount: Int, //кол-во товара
     onPlusItemCountClicked: () -> Unit,
     onMinusItemCountClicked: () -> Unit,
-    price: Float,
-    salePercent: Int,
 ) {
     Spacer(modifier = Modifier.height(height = 200.dp))
     Divider(
@@ -85,7 +80,7 @@ fun AvitoCartItem(
 //
 //        }
         Image(
-            painter = painterResource(Res.drawable.img),
+            painter = painterResource(item.image),
             contentDescription = null,
             modifier = Modifier
                 .padding(start = 12.dp)
@@ -101,40 +96,47 @@ fun AvitoCartItem(
             Text(
                 text = stringResource(
                     Res.string.amount_with_ruble,
-                    if (salePercent < 1 && salePercent > 100) price.toInt()
-                    else (ceil(price * (100 - salePercent) / 100)).toInt()
+                    if (item.salePercent < 1 && item.salePercent > 100) item.priceWithoutDiscount.toInt()
+                    else item.priceWithDiscount.toInt()
                 ),
                 style = MaterialTheme.typography.h40,
                 color = MaterialTheme.colorScheme.contentPrimary,
             )
-            if (salePercent > 0 && salePercent < 100) {
+            if (item.salePercent > 0 && item.salePercent < 100) {
                 Row {
                     Text(
-                        stringResource(Res.string.amount_with_ruble, price.toInt()),
+                        stringResource(Res.string.amount_with_ruble, item.priceWithoutDiscount.toInt()),
                         style = MaterialTheme.typography.m20,
                         color = MaterialTheme.colorScheme.contentPrimary,
                         modifier = Modifier.padding(end = 4.dp)
                     )
                     Text(
-                        stringResource(Res.string.sale_with_percent, salePercent),
+                        stringResource(Res.string.sale_with_percent, item.salePercent),
                         style = MaterialTheme.typography.m20,
                         color = MaterialTheme.colorScheme.controlContentError,
                     )
                 }
             }
             Text(
-                itemName,
+                item.name,
                 style = MaterialTheme.typography.s20,
                 color = MaterialTheme.colorScheme.contentPrimary,
-                textAlign = TextAlign.Start
+                textAlign = TextAlign.Start,
+                modifier = Modifier.padding(top = 2.dp)
             )
             AvitoCartCounter(
                 count = itemCount,
                 onPlusClicked = onPlusItemCountClicked,
                 onMinusClicked = onMinusItemCountClicked
                 )
-//            Spacer(modifier = Modifier.padding(5.dp))
+            Text(
+                text = stringResource(Res.string.buy_with_delivery),
+                style = MaterialTheme.typography.s10,
+                color = MaterialTheme.colorScheme.violet500,
+                textAlign = TextAlign.Start,
+                modifier = Modifier.padding(top = 10.dp)
 
+            )
         }
         Column(
             modifier = Modifier.align(alignment = Alignment.Top)

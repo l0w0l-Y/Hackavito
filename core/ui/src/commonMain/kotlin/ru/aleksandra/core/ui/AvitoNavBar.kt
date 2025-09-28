@@ -20,7 +20,7 @@ import ru.aleksandra.core.theme.h50
 fun AvitoNavBar(title: String) {
     Row(
         modifier = Modifier
-            .safeDrawingPadding()
+//            .safeDrawingPadding()
             .fillMaxWidth()
             .padding(vertical = 14.dp, horizontal = 12.dp),
         verticalAlignment = Alignment.CenterVertically
