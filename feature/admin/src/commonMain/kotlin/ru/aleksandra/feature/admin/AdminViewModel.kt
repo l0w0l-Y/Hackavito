@@ -30,7 +30,6 @@ import ru.aleksandra.core.sdui.presentation.mapper.toUi
 import ru.aleksandra.core.sdui.presentation.model.Action
 import ru.aleksandra.core.sdui.presentation.model.UIEffect
 import ru.aleksandra.core.sdui.presentation.model.UIState
-import kotlin.collections.iterator
 
 class AdminViewModel(
     val loadUIUseCase: LoadUIUseCase
@@ -120,7 +119,7 @@ class AdminViewModel(
                 classDiscriminator = "type"
             }
             runCatching { json.decodeFromString<SDUIComponentDomain>(newJson) }
-                .onSuccess { _ui.value = UIState.Loaded(it.toUi()) }
+                .onSuccess { _ui.value = UIState.Loaded(it.toUi(emptyMap())) }
                 .onFailure { _ui.value = UIState.Error(it.message ?: "Неизвестная ошибка") }
         }
     }

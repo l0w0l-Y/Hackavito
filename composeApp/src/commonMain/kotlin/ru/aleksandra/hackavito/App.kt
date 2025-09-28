@@ -11,8 +11,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import ru.aleksandra.core.sdui.presentation.NavigationDestination
-import ru.aleksandra.core.sdui.presentation.SDUIScreen
 import ru.aleksandra.core.theme.AvitoTheme
+import ru.aleksandra.feature.cart.presentation.CartScreen
 
 @Composable
 @Preview
@@ -26,7 +26,7 @@ fun App() {
                     startDestination = NavigationDestination.SDUIScreen("cart")
                 ) {
                     composable<NavigationDestination.SDUIScreen> {
-                        SDUIScreen(navController)
+                        CartScreen(navController)
                     }
                 }
             }

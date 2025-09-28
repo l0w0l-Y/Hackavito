@@ -57,6 +57,7 @@ kotlin {
             implementation(projects.feature.cart)
             implementation(projects.core.ui)
             implementation(projects.core.sdui)
+            implementation(projects.core.di)
 
             implementation(libs.napier)
         }

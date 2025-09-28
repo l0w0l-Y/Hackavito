@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
+import kotlinx.serialization.json.JsonElement
 import ru.aleksandra.core.sdui.domain.model.Action
 import ru.aleksandra.core.sdui.domain.model.BorderStroke
 import ru.aleksandra.core.sdui.domain.model.ButtonColors
@@ -37,14 +38,15 @@ import androidx.compose.ui.geometry.Offset as OffsetUi
 import androidx.compose.ui.text.style.TextIndent as TextIndentUi
 import ru.aleksandra.core.sdui.presentation.model.Action as ActionUi
 
-fun SDUIComponentDomain.toUi(data: Map<String, Any>): SDUIComponent {
+//TODO: Добавить метод с data map<String, Any> для динамических данных прям с сервера
+fun SDUIComponentDomain.toUi(json: JsonElement): SDUIComponent {
     return when (this) {
         is SDUIComponentDomain.BottomBar -> TODO()
         is SDUIComponentDomain.Box -> TODO()
-        is SDUIComponentDomain.Button -> toUi(data)
+        is SDUIComponentDomain.Button -> toUi(json)
         is SDUIComponentDomain.Card -> TODO()
         is SDUIComponentDomain.Checkbox -> toUi()
-        is SDUIComponentDomain.Column -> toUi(data)
+        is SDUIComponentDomain.Column -> toUi(json)
         is SDUIComponentDomain.Divider -> TODO()
         is SDUIComponentDomain.FloatingActionButton -> TODO()
         is SDUIComponentDomain.Icon -> TODO()
@@ -53,14 +55,14 @@ fun SDUIComponentDomain.toUi(data: Map<String, Any>): SDUIComponent {
         is SDUIComponentDomain.LazyColumn -> TODO()
         is SDUIComponentDomain.LazyRow -> TODO()
         is SDUIComponentDomain.OutlinedButton -> TODO()
-        is SDUIComponentDomain.Row -> toUi(data)
+        is SDUIComponentDomain.Row -> toUi(json)
         is SDUIComponentDomain.Scaffold -> TODO()
         is SDUIComponentDomain.Spacer -> TODO()
         is SDUIComponentDomain.Surface -> TODO()
-        is SDUIComponentDomain.Text -> toUi(data)
+        is SDUIComponentDomain.Text -> toUi(json)
         is SDUIComponentDomain.TextField -> TODO()
         is SDUIComponentDomain.AvitoCheckBox -> toUi()
-        is SDUIComponentDomain.AvitoNavBar -> toUi(data)
+        is SDUIComponentDomain.AvitoNavBar -> toUi(json)
         is SDUIComponentDomain.AvitoSelectAll -> toUi()
     }
 
@@ -82,9 +84,14 @@ fun SDUIComponentDomain.AvitoCheckBox.toUi(): SDUIComponent.AvitoCheckBox {
     )
 }
 
-fun SDUIComponentDomain.AvitoNavBar.toUi(data: Map<String, Any>): SDUIComponent.AvitoNavBar {
+fun SDUIComponentDomain.AvitoNavBar.toUi(json: JsonElement): SDUIComponent.AvitoNavBar {
     return SDUIComponent.AvitoNavBar(
-        title = title.getValue(data),
+        title = when (title) {
+            is ru.aleksandra.core.sdui.domain.model.BindableValue.Static -> title.value
+            is ru.aleksandra.core.sdui.domain.model.BindableValue.Dynamic -> json.getByPath<String>(
+                title.path
+            ) ?: ""
+        },
         action = action.toUi(),
     )
 }
@@ -98,28 +105,33 @@ fun SDUIComponentDomain.Checkbox.toUi(): SDUIComponent.Checkbox {
     )
 }
 
-fun SDUIComponentDomain.Column.toUi(data: Map<String, Any>): SDUIComponent.Column {
+fun SDUIComponentDomain.Column.toUi(json: JsonElement): SDUIComponent.Column {
     return SDUIComponent.Column(
         action = action.toUi(),
-        children = children.map { it.toUi(data) },
+        children = children.map { it.toUi(json) },
         verticalArrangement = verticalArrangement?.toArrangementVertical() ?: Arrangement.Top,
         horizontalAlignment = horizontalAlignment?.toAlignmentHorizontal() ?: Alignment.Start,
     )
 }
 
-fun SDUIComponentDomain.Row.toUi(data: Map<String, Any>): SDUIComponent.Row {
+fun SDUIComponentDomain.Row.toUi(json: JsonElement): SDUIComponent.Row {
     return SDUIComponent.Row(
         action = action.toUi(),
-        children = children.map { it.toUi(data) },
+        children = children.map { it.toUi(json) },
         horizontalArrangement = horizontalArrangement.toArrangementHorizontal(),
         verticalAlignment = verticalAlignment.toAlignmentVertical(),
     )
 }
 
-fun SDUIComponentDomain.Text.toUi(data: Map<String, Any>): SDUIComponent.Text {
+fun SDUIComponentDomain.Text.toUi(json: JsonElement): SDUIComponent.Text {
     return SDUIComponent.Text(
         action = action.toUi(),
-        text = text.getValue(data),
+        text = when (text) {
+            is ru.aleksandra.core.sdui.domain.model.BindableValue.Static -> text.value
+            is ru.aleksandra.core.sdui.domain.model.BindableValue.Dynamic -> json.getByPath<String>(
+                text.path
+            ) ?: ""
+        },
         color = color?.toColor() ?: Color.Unspecified,
         fontSize = fontSize?.toTextUnit() ?: TextUnit.Unspecified,
         letterSpacing = letterSpacing?.toTextUnit() ?: TextUnit.Unspecified,
@@ -136,7 +148,7 @@ fun SDUIComponentDomain.Text.toUi(data: Map<String, Any>): SDUIComponent.Text {
     )
 }
 
-fun SDUIComponentDomain.Button.toUi(data: Map<String, Any>): SDUIComponent.Button {
+fun SDUIComponentDomain.Button.toUi(json: JsonElement): SDUIComponent.Button {
     return SDUIComponent.Button(
         action = action.toUi(),
         enabled = enabled,
@@ -145,7 +157,7 @@ fun SDUIComponentDomain.Button.toUi(data: Map<String, Any>): SDUIComponent.Butto
         elevation = elevation?.toCompose(),
         border = border?.toCompose(),
         contentPadding = contentPadding?.toCompose(),
-        content = content.toUi(data)
+        content = content.toUi(json)
     )
 }
 
@@ -416,3 +428,4 @@ fun CheckboxColors.toUi(): androidx.compose.material3.CheckboxColors {
             ?: Color.Unspecified
     )
 }
+

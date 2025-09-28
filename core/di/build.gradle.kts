@@ -13,11 +13,11 @@ plugins {
 kotlin {
 
     androidLibrary {
-        namespace = "ru.aleksandra.feature.cart"
+        namespace = "ru.aleksandra.core.di"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
     }
 
-    val xcfName = "feature-cartKit"
+    val xcfName = "core-diKit"
     listOf(
         iosX64(),
         iosArm64(),
@@ -48,26 +48,13 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation(compose.material3)
-                implementation(compose.components.resources)
-
-                // Navigation
-                implementation(libs.navigation.compose)
-
                 // Koin
                 implementation(libs.koin.core)
                 implementation(libs.koin.compose)
                 implementation(libs.koin.compose.viewmodel)
 
-                // Napier for logging
-                implementation(libs.napier)
-
-                // Serialization Json
-                implementation(libs.kotlinx.serialization.json)
-
-                implementation(projects.core.theme)
-                implementation(projects.core.ui)
                 implementation(projects.core.sdui)
+                implementation(projects.feature.cart)
             }
         }
         androidMain {

@@ -22,7 +22,7 @@ class LoadUIUseCaseImpl() : LoadUIUseCase {
             "type": "AvitoNavBar",
             "title": {
                 "type": "Dynamic",
-                "path": "navbar.title"
+                "path": "items.0.store.name"
             }
         },
         {
