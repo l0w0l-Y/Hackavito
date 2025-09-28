@@ -16,7 +16,6 @@ import ru.aleksandra.feature.cart.data.model.Store
 
 fun Cart.toMap(): Map<String, Any?> =
     mapOf(
-        "count" to count,
         "totalPrice" to totalPrice,
         "items" to items.map { it.toMap() }
     )
@@ -25,9 +24,6 @@ fun Item.toMap(): Map<String, Any?> =
     mapOf(
         "id" to id,
         "name" to name,
-        "price" to price,
-        "discount" to discount,
-        "prevPrice" to prevPrice,
         "count" to count
     )
 

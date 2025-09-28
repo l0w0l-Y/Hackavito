@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import ru.aleksandra.core.sdui.domain.model.SDUIComponentDomain
 import ru.aleksandra.core.sdui.presentation.serializer.AlignmentHorizontalSerializer
 import ru.aleksandra.core.sdui.presentation.serializer.AlignmentSerializer
 import ru.aleksandra.core.sdui.presentation.serializer.AlignmentVerticalSerializer
@@ -269,7 +270,38 @@ sealed class SDUIComponent() {
     @Serializable
     data class AvitoSelectAll(
         val isChecked: Boolean = false,
-        val deleteCount: Int = 0,
+        val deleteCount: Int,
+        override val modifier: List<ModifierProperties> = emptyList(),
+        override val action: Action = Action.None,
+    ) : SDUIComponent()
+
+    @Serializable
+    data class AvitoShopName(
+        val isChecked: Boolean = false,
+        val shopName: String,
+        val rating: Float,
+        val reviewsCount: Int,
+        override val modifier: List<ModifierProperties> = emptyList(),
+        override val action: Action = Action.None,
+    ) : SDUIComponent()
+
+    @Serializable
+    data class AvitoCartItem(
+        val isChecked: Boolean = false,
+        val name: String,
+        val priceWithoutDiscount: Int,
+        val priceWithDiscount: Int,
+        val salePercent: Int,
+        val count: Int,
+        val imageUrl: String,
+        override val modifier: List<ModifierProperties> = emptyList(),
+        override val action: Action = Action.None,
+    ) : SDUIComponent()
+
+    @Serializable
+    @SerialName("RepetitiveComponent")
+    data class RepetitiveComponent(
+        val component: List<SDUIComponent>,
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
     ) : SDUIComponent()

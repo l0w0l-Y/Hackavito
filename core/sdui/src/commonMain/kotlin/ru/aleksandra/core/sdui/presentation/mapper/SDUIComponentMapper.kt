@@ -20,8 +20,10 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
+import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import ru.aleksandra.core.sdui.domain.model.Action
+import ru.aleksandra.core.sdui.domain.model.BindableValue
 import ru.aleksandra.core.sdui.domain.model.BorderStroke
 import ru.aleksandra.core.sdui.domain.model.ButtonColors
 import ru.aleksandra.core.sdui.domain.model.ButtonElevation
@@ -63,17 +65,130 @@ fun SDUIComponentDomain.toUi(json: JsonElement): SDUIComponent {
         is SDUIComponentDomain.TextField -> TODO()
         is SDUIComponentDomain.AvitoCheckBox -> toUi()
         is SDUIComponentDomain.AvitoNavBar -> toUi(json)
-        is SDUIComponentDomain.AvitoSelectAll -> toUi()
+        is SDUIComponentDomain.AvitoSelectAll -> toUi(json)
+        is SDUIComponentDomain.AvitoShopName -> toUi(json)
+        is SDUIComponentDomain.AvitoCartItem -> toUi(json)
+        is SDUIComponentDomain.RepetitiveComponent -> toUi(json)
     }
-
 }
 
-fun SDUIComponentDomain.AvitoSelectAll.toUi(): SDUIComponent.AvitoSelectAll {
-    return SDUIComponent.AvitoSelectAll(
+fun SDUIComponentDomain.RepetitiveComponent.toUi(json: JsonElement): SDUIComponent.RepetitiveComponent {
+    val list = mutableListOf<SDUIComponentDomain>()
+    repeat(json.countByPath(itemsPath)) {
+        list.add(component.updatePath(index = it, itemsPath = itemsPath))
+    }
+    return SDUIComponent.RepetitiveComponent(
+        component = list.map { it.toUi(json) },
+    )
+}
+
+fun SDUIComponentDomain.updatePath(index: Int, itemsPath: String): SDUIComponentDomain {
+    when (this) {
+        is SDUIComponentDomain.AvitoCartItem -> {
+            return this.copy(
+                name = when (name) {
+                    is BindableValue.Dynamic -> BindableValue.Dynamic(
+                        itemsPath.replace(
+                            "*",
+                            index.toString()
+                        ) + "." + name.path
+                    )
+
+                    else -> name
+                },
+                priceWithDiscount = when (priceWithDiscount) {
+                    is BindableValue.Dynamic -> BindableValue.Dynamic(
+                        itemsPath.replace(
+                            "*",
+                            index.toString()
+                        ) + "." + priceWithDiscount.path
+                    )
+
+                    else -> priceWithDiscount
+                },
+                priceWithoutDiscount = when (priceWithoutDiscount) {
+                    is BindableValue.Dynamic -> BindableValue.Dynamic(
+                        itemsPath.replace(
+                            "*",
+                            index.toString()
+                        ) + "." + priceWithoutDiscount.path
+                    )
+
+                    else -> priceWithoutDiscount
+                },
+                salePercent = when (salePercent) {
+                    is BindableValue.Dynamic -> BindableValue.Dynamic(
+                        itemsPath.replace(
+                            "*",
+                            index.toString()
+                        ) + "." + salePercent.path
+                    )
+
+                    else -> salePercent
+                },
+                count = when (count) {
+                    is BindableValue.Dynamic -> BindableValue.Dynamic(
+                        itemsPath.replace(
+                            "*",
+                            index.toString()
+                        ) + "." + count.path
+                    )
+
+                    else -> count
+                },
+                imageUrl = when (imageUrl) {
+                    is BindableValue.Dynamic -> BindableValue.Dynamic(
+                        itemsPath.replace(
+                            "*",
+                            index.toString()
+                        ) + "." + imageUrl.path
+                    )
+
+                    else -> imageUrl
+                },
+            )
+        }
+
+        else -> return this
+    }
+}
+
+fun SDUIComponentDomain.AvitoCartItem.toUi(json: JsonElement): SDUIComponent.AvitoCartItem {
+    return SDUIComponent.AvitoCartItem(
         isChecked = isChecked,
-        deleteCount = deleteCount,
+        name = name.toValue(json),
+        priceWithDiscount = priceWithDiscount.toValue(json),
+        priceWithoutDiscount = priceWithoutDiscount.toValue(json),
+        salePercent = salePercent.toValue(json),
+        count = count.toValue(json),
+        imageUrl = imageUrl.toValue(json),
+    )
+}
+
+fun SDUIComponentDomain.AvitoShopName.toUi(json: JsonElement): SDUIComponent.AvitoShopName {
+    return SDUIComponent.AvitoShopName(
+        isChecked = isChecked,
+        shopName = shopName.toValue(json),
+        rating = rating.toValue(json),
+        reviewsCount = reviewsCount.toValue(json),
         action = action.toUi()
     )
+}
+
+fun SDUIComponentDomain.AvitoSelectAll.toUi(json: JsonElement): SDUIComponent.AvitoSelectAll {
+    return SDUIComponent.AvitoSelectAll(
+        isChecked = isChecked,
+        deleteCount = deleteCount.toValue(json),
+        action = action.toUi()
+    )
+}
+
+inline fun <reified T> BindableValue<T>.toValue(json: JsonElement): T {
+    return when (this) {
+        is BindableValue.Static -> this.value
+        is BindableValue.Dynamic -> json.getByPath<T>(this.path)
+            ?: error("No value found for path: ${this.path}")
+    }
 }
 
 fun SDUIComponentDomain.AvitoCheckBox.toUi(): SDUIComponent.AvitoCheckBox {
@@ -86,12 +201,7 @@ fun SDUIComponentDomain.AvitoCheckBox.toUi(): SDUIComponent.AvitoCheckBox {
 
 fun SDUIComponentDomain.AvitoNavBar.toUi(json: JsonElement): SDUIComponent.AvitoNavBar {
     return SDUIComponent.AvitoNavBar(
-        title = when (title) {
-            is ru.aleksandra.core.sdui.domain.model.BindableValue.Static -> title.value
-            is ru.aleksandra.core.sdui.domain.model.BindableValue.Dynamic -> json.getByPath<String>(
-                title.path
-            ) ?: ""
-        },
+        title = title.toValue(json),
         action = action.toUi(),
     )
 }
@@ -126,12 +236,7 @@ fun SDUIComponentDomain.Row.toUi(json: JsonElement): SDUIComponent.Row {
 fun SDUIComponentDomain.Text.toUi(json: JsonElement): SDUIComponent.Text {
     return SDUIComponent.Text(
         action = action.toUi(),
-        text = when (text) {
-            is ru.aleksandra.core.sdui.domain.model.BindableValue.Static -> text.value
-            is ru.aleksandra.core.sdui.domain.model.BindableValue.Dynamic -> json.getByPath<String>(
-                text.path
-            ) ?: ""
-        },
+        text = text.toValue(json),
         color = color?.toColor() ?: Color.Unspecified,
         fontSize = fontSize?.toTextUnit() ?: TextUnit.Unspecified,
         letterSpacing = letterSpacing?.toTextUnit() ?: TextUnit.Unspecified,
@@ -267,16 +372,25 @@ fun String.toArrangementHorizontal(): Arrangement.Horizontal {
     }
 }
 
-fun String.toArrangementVertical(): Arrangement.Vertical =
-    when (this) {
-        "Center" -> Arrangement.Center
-        "SpaceBetween" -> Arrangement.SpaceBetween
-        "SpaceEvenly" -> Arrangement.SpaceEvenly
-        "SpaceAround" -> Arrangement.SpaceAround
-        "Top" -> Arrangement.Top
-        "Bottom" -> Arrangement.Bottom
+fun String.toArrangementVertical(): Arrangement.Vertical {
+    return when {
+        this == "Center" -> Arrangement.Center
+        this == "SpaceBetween" -> Arrangement.SpaceBetween
+        this == "SpaceEvenly" -> Arrangement.SpaceEvenly
+        this == "SpaceAround" -> Arrangement.SpaceAround
+        this == "Top" -> Arrangement.Top
+        this == "Bottom" -> Arrangement.Bottom
+        this.startsWith("SpacedBy") -> {
+            val value = this
+                .removePrefix("SpacedBy(")
+                .removeSuffix(")")
+                .toFloatOrNull() ?: 0f
+            Arrangement.spacedBy(value.dp)
+        }
+
         else -> Arrangement.Top
     }
+}
 
 fun String.toBaselineShift(): BaselineShift {
     return when (this) {

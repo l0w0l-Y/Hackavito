@@ -32,9 +32,11 @@ import ru.aleksandra.core.sdui.presentation.model.Action
 import ru.aleksandra.core.sdui.presentation.model.ModifierProperties
 import ru.aleksandra.core.sdui.presentation.model.SDUIComponent
 import ru.aleksandra.core.sdui.presentation.model.StyleProperties
+import ru.aleksandra.core.ui.AvitoCartItem
 import ru.aleksandra.core.ui.AvitoCheckbox
 import ru.aleksandra.core.ui.AvitoNavBar
 import ru.aleksandra.core.ui.AvitoSelectAll
+import ru.aleksandra.core.ui.AvitoShopName
 
 //TODO: Добавить обработку изображений для Image и Icon, Iconbutton и Floatingactionbutton
 
@@ -69,6 +71,36 @@ fun Render(
         isChecked = component.isChecked,
         deleteCount = component.deleteCount
     )
+
+    is SDUIComponent.AvitoShopName -> AvitoShopName(
+        isChecked = component.isChecked,
+        shopName = component.shopName,
+        rating = component.rating,
+        reviewsCount = component.reviewsCount,
+        onCheckedChange = {}
+    )
+
+    is SDUIComponent.AvitoCartItem -> AvitoCartItem(
+        isChecked = component.isChecked,
+        name = component.name,
+        priceWithoutDiscount = component.priceWithoutDiscount,
+        priceWithDiscount = component.priceWithDiscount,
+        salePercent = component.salePercent,
+        count = component.count,
+        image = component.imageUrl,
+        onCheckedChange = {},
+        onPlusItemCountClicked = {},
+        onMinusItemCountClicked = {}
+    )
+
+    is SDUIComponent.RepetitiveComponent -> RepetitiveComponent(component) { handleAction(it) }
+}
+
+@Composable
+fun RepetitiveComponent(model: SDUIComponent.RepetitiveComponent, handleAction: (Action) -> Unit) {
+    model.component.forEach {
+        Render(component = it, handleAction = handleAction)
+    }
 }
 
 @Composable
@@ -211,7 +243,7 @@ fun SDUIColumn(model: SDUIComponent.Column) {
         horizontalAlignment = model.horizontalAlignment,
     ) {
         model.children.forEach { child ->
-            Render(child, )
+            Render(child)
         }
     }
 }

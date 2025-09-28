@@ -4,8 +4,8 @@ import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import ru.aleksandra.core.di.initModules
 
-fun initKoin(modules: List<Module> = emptyList()) {
+fun initKoin() {
     startKoin {
-        modules(initModules() + modules)
+        modules(initModules())
     }
 }

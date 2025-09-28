@@ -38,7 +38,7 @@ fun AvitoCartCounter(
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(12.dp))
-            .background(/*MaterialTheme.colorScheme.bgBase*/ Color.Red)
+            .background(MaterialTheme.colorScheme.bgBase)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,

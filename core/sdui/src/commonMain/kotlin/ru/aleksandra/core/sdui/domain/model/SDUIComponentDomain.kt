@@ -238,7 +238,41 @@ sealed class SDUIComponentDomain() {
     @SerialName("AvitoSelectAll")
     data class AvitoSelectAll(
         val isChecked: Boolean = false,
-        val deleteCount: Int = 0,
+        val deleteCount: BindableInt,
+        override val modifier: List<ModifierProperties> = emptyList(),
+        override val action: Action = Action.None,
+    ) : SDUIComponentDomain()
+
+    @Serializable
+    @SerialName("AvitoShopName")
+    data class AvitoShopName(
+        val isChecked: Boolean = false,
+        val shopName: BindableString,
+        val rating: BindableFloat,
+        val reviewsCount: BindableInt,
+        override val modifier: List<ModifierProperties> = emptyList(),
+        override val action: Action = Action.None,
+    ) : SDUIComponentDomain()
+
+    @Serializable
+    @SerialName("AvitoCartItem")
+    data class AvitoCartItem(
+        val isChecked: Boolean = false,
+        val name: BindableString,
+        val priceWithoutDiscount: BindableInt,
+        val priceWithDiscount: BindableInt = BindableValue.Static(0),
+        val salePercent: BindableInt = BindableValue.Static(0),
+        val count: BindableInt,
+        val imageUrl: BindableString,
+        override val modifier: List<ModifierProperties> = emptyList(),
+        override val action: Action = Action.None,
+    ) : SDUIComponentDomain()
+
+    @Serializable
+    @SerialName("RepetitiveComponent")
+    data class RepetitiveComponent(
+        val component: SDUIComponentDomain,
+        val itemsPath: String,
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
     ) : SDUIComponentDomain()

@@ -9,5 +9,6 @@ data class Item(
     val priceWithoutDiscount: Float,
     val priceWithDiscount: Float,
     val salePercent: Int,
+    val count: Int,
     val image: DrawableResource = Res.drawable.img
-    )
+)

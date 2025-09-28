@@ -16,42 +16,133 @@ class LoadUIUseCaseImpl() : LoadUIUseCase {
 
         val input = """
         {
-    "type": "Column",
-    "children": [
+  "type": "Column",
+  "verticalArrangement": "SpacedBy(24)",
+  "children": [
+    {
+      "type": "AvitoNavBar",
+      "title": {
+        "type": "Static",
+        "value": "Корзина"
+      }
+    },
+    {
+      "type": "AvitoSelectAll",
+      "isChecked": true,
+      "deleteCount": {
+        "type": "Dynamic",
+        "path": "totalItems"
+      }
+    },
+    {
+      "type": "AvitoShopName",
+      "isChecked": true,
+      "shopName": {
+        "type": "Dynamic",
+        "path": "items.0.store.name"
+      },
+      "rating": {
+        "type": "Dynamic",
+        "path": "items.0.store.rating"
+      },
+      "reviewsCount": {
+        "type": "Dynamic",
+        "path": "items.0.store.reviewsCount"
+      }
+    },
+    {
+      "type": "Column",
+      "children": [
         {
-            "type": "AvitoNavBar",
-            "title": {
-                "type": "Dynamic",
-                "path": "items.0.store.name"
-            }
-        },
-        {
-            "type": "AvitoSelectAll",
+          "type": "RepetitiveComponent",
+          "component": {
+            "type": "AvitoCartItem",
             "isChecked": true,
-            "deleteCount": 3
-        },
-        {
-            "type": "Button",
-            "modifier": [
-                {
-                    "type": "BackgroundColor",
-                    "color": "#000000"
-                }
-            ],
-            "action": {
-                "type": "Navigate",
-                "destination": "details"
+            "name": {
+                "type": "Dynamic",
+                "path": "name"
             },
-            "content": {
-                "type": "Text",
-                "text": {
-                    "type": "Static",
-                    "value": "Кнопка"
-                }
-            }
+            "priceWithoutDiscount": {
+                "type": "Dynamic",
+                "path": "priceWithoutDiscount"
+            },
+              "priceWithDiscount": {
+                "type": "Dynamic",
+                "path": "priceWithDiscount"
+              },
+              "salePercent": {
+                "type": "Dynamic",
+                "path": "salePercent"
+              },
+              "count": {
+                "type": "Dynamic",
+                "path": "count"
+              },
+              "imageUrl": {
+                "type": "Dynamic",
+                "path": "imageUrl"
+              }
+          },
+          "itemsPath": "items.0.items.*"
         }
-    ]
+      ]
+    },
+    {
+      "type": "AvitoShopName",
+      "isChecked": true,
+      "shopName": {
+        "type": "Dynamic",
+        "path": "items.1.store.name"
+      },
+      "rating": {
+        "type": "Dynamic",
+        "path": "items.1.store.rating"
+      },
+      "reviewsCount": {
+        "type": "Dynamic",
+        "path": "items.1.store.reviewsCount"
+      }
+    },
+    {
+      "type": "Column",
+      "children": [
+        {
+          "type": "RepetitiveComponent",
+          "component": {
+            "type": "AvitoCartItem",
+            "isChecked": true,
+            "name": {
+                "type": "Dynamic",
+                "path": "name"
+            },
+            "priceWithoutDiscount": {
+                "type": "Dynamic",
+                "path": "priceWithoutDiscount"
+            },
+              "priceWithDiscount": {
+                "type": "Dynamic",
+                "path": "priceWithDiscount"
+              },
+              "salePercent": {
+                "type": "Dynamic",
+                "path": "salePercent"
+              },
+              "count": {
+                "type": "Dynamic",
+                "path": "count"
+              },
+              "imageUrl": {
+                "type": "Dynamic",
+                "path": "imageUrl"
+              }
+          },
+          "itemsPath": "items.1.items.*"
+        }
+      ]
+    }
+  ]
 }
+
         """
 
         val obj = json.decodeFromString<SDUIComponentDomain>(input)

@@ -23,23 +23,54 @@ class LoadCartRepositoryImpl() : LoadCartRepository {
                             Item(
                                 id = "1",
                                 name = "Зарядка MagSafe Charger 15W 1 метр",
-                                price = 4990,
-                                discount = 5,
-                                prevPrice = 9481,
-                                count = 1
+                                priceWithDiscount = 4990,
+                                salePercent = 5,
+                                priceWithoutDiscount = 9481,
+                                count = 1,
+                                imageUrl = "https://image.kazanexpress.ru/ce1555j2fmcqfdjtaulg/t_product_high.jpg"
                             ),
                             Item(
                                 id = "2",
                                 name = "AirPods Pro 2",
-                                price = 15191,
-                                discount = 5,
-                                prevPrice = 15990,
-                                count = 1
+                                priceWithDiscount = 15191,
+                                salePercent = 5,
+                                priceWithoutDiscount = 15990,
+                                count = 1,
+                                imageUrl = "https://image.kazanexpress.ru/ce1555j2fmcqfdjtaulg/t_product_high.jpg"
+                            )
+                        )
+                    ),
+                    CartItem(
+                        store = Store(
+                            id = "2",
+                            "TECHNO ZONE",
+                            rating = 5.0f,
+                            916
+                        ),
+                        items = listOf(
+                            Item(
+                                id = "1",
+                                name = "Зарядка MagSafe Charger 15W 1 метр",
+                                priceWithDiscount = 4990,
+                                salePercent = 5,
+                                priceWithoutDiscount = 9481,
+                                count = 1,
+                                imageUrl = "https://image.kazanexpress.ru/ce1555j2fmcqfdjtaulg/t_product_high.jpg"
+                            ),
+                            Item(
+                                id = "2",
+                                name = "AirPods Pro 2",
+                                priceWithDiscount = 15191,
+                                salePercent = 5,
+                                priceWithoutDiscount = 15990,
+                                count = 1,
+                                imageUrl = "https://image.kazanexpress.ru/ce1555j2fmcqfdjtaulg/t_product_high.jpg"
                             )
                         )
                     )
                 ),
-                count = 0,
+                isSelected = false,
+                totalItems = 3,
                 totalPrice = 0
             )
         )

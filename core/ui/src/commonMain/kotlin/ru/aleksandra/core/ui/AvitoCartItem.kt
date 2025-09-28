@@ -1,6 +1,5 @@
 package ru.aleksandra.core.ui
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -21,8 +21,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
 import hackavito.core.ui.generated.resources.Res
 import hackavito.core.ui.generated.resources.amount_with_ruble
 import hackavito.core.ui.generated.resources.buy_with_delivery
@@ -39,20 +41,21 @@ import ru.aleksandra.core.theme.m20
 import ru.aleksandra.core.theme.s10
 import ru.aleksandra.core.theme.s20
 import ru.aleksandra.core.theme.violet500
-import ru.aleksandra.core.ui.model.Item
-import kotlin.math.ceil
 
 @Composable
 fun AvitoCartItem(
     isChecked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
-    item: Item,
-    itemCount: Int, //кол-во товара
+    name: String,
+    priceWithoutDiscount: Int,
+    priceWithDiscount: Int,
+    salePercent: Int,
+    count: Int,
+    image: String,
     onPlusItemCountClicked: () -> Unit,
     onMinusItemCountClicked: () -> Unit,
 ) {
-    Spacer(modifier = Modifier.height(height = 200.dp))
-    Divider(
+    HorizontalDivider(
         color = Color.Black, // цвет линии
         thickness = 1.dp,   // толщина линии
         modifier = Modifier.fillMaxWidth() // растягиваем по ширине
@@ -79,13 +82,14 @@ fun AvitoCartItem(
 //        ){
 //
 //        }
-        Image(
-            painter = painterResource(item.image),
+        AsyncImage(
+            model = image,
             contentDescription = null,
             modifier = Modifier
                 .padding(start = 12.dp)
                 .size(96.dp) // квадрат
-                .clip(shape = RoundedCornerShape(8.dp)) // скругление углов
+                .clip(shape = RoundedCornerShape(8.dp)),
+            contentScale = ContentScale.FillWidth
         )
         Column(
             modifier = Modifier
@@ -96,39 +100,41 @@ fun AvitoCartItem(
             Text(
                 text = stringResource(
                     Res.string.amount_with_ruble,
-                    if (item.salePercent < 1 && item.salePercent > 100) item.priceWithoutDiscount.toInt()
-                    else item.priceWithDiscount.toInt()
+                    if (salePercent < 1 && salePercent > 100) priceWithoutDiscount else priceWithDiscount
                 ),
                 style = MaterialTheme.typography.h40,
                 color = MaterialTheme.colorScheme.contentPrimary,
             )
-            if (item.salePercent > 0 && item.salePercent < 100) {
+            if (salePercent > 0 && salePercent < 100) {
                 Row {
                     Text(
-                        stringResource(Res.string.amount_with_ruble, item.priceWithoutDiscount.toInt()),
+                        stringResource(
+                            Res.string.amount_with_ruble,
+                            priceWithoutDiscount.toInt()
+                        ),
                         style = MaterialTheme.typography.m20,
                         color = MaterialTheme.colorScheme.contentPrimary,
                         modifier = Modifier.padding(end = 4.dp)
                     )
                     Text(
-                        stringResource(Res.string.sale_with_percent, item.salePercent),
+                        stringResource(Res.string.sale_with_percent, salePercent),
                         style = MaterialTheme.typography.m20,
                         color = MaterialTheme.colorScheme.controlContentError,
                     )
                 }
             }
             Text(
-                item.name,
+                name,
                 style = MaterialTheme.typography.s20,
                 color = MaterialTheme.colorScheme.contentPrimary,
                 textAlign = TextAlign.Start,
                 modifier = Modifier.padding(top = 2.dp)
             )
             AvitoCartCounter(
-                count = itemCount,
+                count = count,
                 onPlusClicked = onPlusItemCountClicked,
                 onMinusClicked = onMinusItemCountClicked
-                )
+            )
             Text(
                 text = stringResource(Res.string.buy_with_delivery),
                 style = MaterialTheme.typography.s10,
