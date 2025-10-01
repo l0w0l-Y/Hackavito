@@ -1,0 +1,21 @@
+{
+  "type": "IconButton",
+  "action": {
+    "type": "Navigate",
+    "destination": "back"
+  },
+  "modifier": [
+    {
+      "type": "Size",
+      "value": 24
+    }
+  ],
+  "content":
+  {
+    "type": "Icon",
+    "drawable": "ic_back",
+    "tintTheme": "controlContentPrimary",
+    "contentDescription": null
+  }
+
+}

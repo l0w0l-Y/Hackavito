@@ -171,3 +171,39 @@ val Typography.xs10: TextStyle
         fontSize = 11.sp,
         lineHeight = 14.sp,
     )
+
+@Composable
+fun String.toTextStyle(): TextStyle {
+    return when (this) {
+        "h05" -> MaterialTheme.typography.h05
+        "h10" -> MaterialTheme.typography.h10
+        "h20" -> MaterialTheme.typography.h20
+        "h25" -> MaterialTheme.typography.h25
+        "xl10" -> MaterialTheme.typography.xl10
+        "h30" -> MaterialTheme.typography.h30
+        "l10" -> MaterialTheme.typography.l10
+        "l20" -> MaterialTheme.typography.l20
+        "h40" -> MaterialTheme.typography.h40
+        "h50" -> MaterialTheme.typography.h50
+        "m10" -> MaterialTheme.typography.m10
+        "m20" -> MaterialTheme.typography.m20
+        "h60" -> MaterialTheme.typography.h60
+        "s10" -> MaterialTheme.typography.s10
+        "s20" -> MaterialTheme.typography.s20
+        "h70" -> MaterialTheme.typography.h70
+        "xs10" -> MaterialTheme.typography.xs10
+        "bodySmall" -> MaterialTheme.typography.bodySmall
+        "bodyMedium" -> MaterialTheme.typography.bodyMedium
+        "bodyLarge" -> MaterialTheme.typography.bodyLarge
+        "labelSmall" -> MaterialTheme.typography.labelSmall
+        "labelMedium" -> MaterialTheme.typography.labelMedium
+        "labelLarge" -> MaterialTheme.typography.labelLarge
+        "titleSmall" -> MaterialTheme.typography.titleSmall
+        "titleMedium" -> MaterialTheme.typography.titleMedium
+        "titleLarge" -> MaterialTheme.typography.titleLarge
+        "displaySmall" -> MaterialTheme.typography.displaySmall
+        "displayMedium" -> MaterialTheme.typography.displayMedium
+        "displayLarge" -> MaterialTheme.typography.displayLarge
+        else -> MaterialTheme.typography.m20
+    }
+}

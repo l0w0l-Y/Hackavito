@@ -9,107 +9,357 @@ import ru.aleksandra.core.sdui.domain.model.SDUIComponentDomain
 
 class LoadUIUseCaseImpl() : LoadUIUseCase {
     override suspend fun loadUI(screenName: String): Flow<SDUIComponentDomain> {
-        delay(2000)
+        //delay(2000)
         val json = Json {
             classDiscriminator = "type"
         }
 
         val input = """
-        {
-  "type": "Row",
-  "modifier": [
-    {
-      "type": "Width",
-      "value": "200"
-    },
-    {
-      "type": "Padding",
-      "value": {
-        "start": 16,
-        "top": 0,
-        "end": 0,
-        "bottom": 0
-      }
-    }
-  ],
-  "horizontalArrangement": "start",
-  "verticalAlignment": "center",
-  "children": [
-    {
-      "type": "Icon",
-      "modifier": [
-        {
-          "type": "Width",
-          "value": 24
-        },
-        {
-          "type": "Height",
-          "value": 24
-        }
-      ],
-      "url": "Res.drawable.ic_arrow"
-    },
-    {
-      "type": "Column",
-      "modifier": [
-        {
-          "type": "Padding",
-          "value": {
-            "start": 6,
-            "top": 0,
-            "end": 0,
-            "bottom": 0
-          }
-        }
-      ],
-      "verticalArrangement": "start",
-      "horizontalAlignment": "start",
-      "children": [
-        {
-          "type": "Row",
-          "modifier": [
             {
-              "type": "Padding",
-              "value": {
-                "start": 0,
-                "top": 4,
-                "end": 0,
-                "bottom": 0
-              }
-            }
-          ],
-          "horizontalArrangement": "start",
-          "verticalAlignment": "center",
-          "children": [
-            {
-              "type": "Text",
-              "text": {
-              "type": "Static",
-                "value": "Добавьте ещё 1 товар до скидки 5%"
-              },
-              "modifier": []
-            },
-            {
-              "type": "Icon",
-              "modifier": [
+              "type": "Column",
+              "children": [
                 {
-                  "type": "Width",
-                  "value": 16
+                  "type": "Row",
+                  "modifier": [
+                    {
+                      "type": "FillMaxWidth"
+                    },
+                    {
+                      "type": "Padding",
+                      "value": {
+                        "start": 12,
+                        "top": 14,
+                        "end": 12,
+                        "bottom": 14
+                      }
+                    }
+                  ],
+                  "verticalAlignment": "CenterVertically",
+                  "children": [
+                    {
+                      "type": "IconButton",
+                      "action": {
+                        "type": "PopBack"
+                      },
+                      "modifier": [
+                        {
+                          "type": "Size",
+                          "value": 24
+                        }
+                      ],
+                      "content": {
+                        "type": "Icon",
+                        "drawable": {
+                          "type": "Theme",
+                          "name": "ic_back"
+                        },
+                        "tint": {
+                          "type": "Theme",
+                          "name": "controlContentPrimary"
+                        },
+                        "contentDescription": null
+                      }
+                    },
+                    {
+                      "type": "Text",
+                      "modifier": [],
+                      "style": "h50",
+                      "color": {
+                        "type": "Theme",
+                        "name": "controlContentPrimary"
+                      },
+                      "textAlign": "Center",
+                      "text": {
+                        "type": "Static",
+                        "value": "Корзина"
+                      }
+                    },
+                    {
+                      "type": "Spacer",
+                      "modifier": [
+                        {
+                          "type": "Width",
+                          "value": 24
+                        }
+                      ]
+                    }
+                  ]
                 },
                 {
-                  "type": "Height",
-                  "value": 16
+                  "type": "Row",
+                  "modifier": [
+                    {
+                      "type": "FillMaxWidth"
+                    },
+                    {
+                      "type": "Padding",
+                      "value": {
+                        "start": 16,
+                        "top": 0,
+                        "end": 16,
+                        "bottom": 0
+                      }
+                    }
+                  ],
+                  "horizontalArrangement": "SpacedBy(12)",
+                  "children": [
+                    {
+                      "type": "Box",
+                      "modifier": [
+                        {
+                          "type": "Size",
+                          "value": 18
+                        },
+                        {
+                          "type": "Background",
+                          "color": {
+                            "type": "Theme",
+                            "name": "controlContentPrimary"
+                          },
+                          "shape": {
+                            "type": "RoundedCornerShape",
+                            "radius": 4
+                          }
+                        }
+                      ],
+                      "contentAlignment": "Center",
+                      "children": [
+                        {
+                          "type": "Icon",
+                          "drawable": {
+                            "type": "Theme",
+                            "name": "ic_check"
+                          },
+                          "contentDescription": "Чекбокс",
+                          "tint": {
+                            "type": "Theme",
+                            "name": "controlBgFaint"
+                          },
+                          "modifier": [
+                            {
+                              "type": "Size",
+                              "value": 20
+                            },
+                            {
+                              "type": "Padding",
+                              "value": {
+                                "start": 3,
+                                "top": 4,
+                                "end": 3,
+                                "bottom": 4
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Text",
+                      "modifier": [
+                        {
+                          "type": "Padding",
+                          "value": {
+                            "start": 8,
+                            "top": 0,
+                            "end": 0,
+                            "bottom": 0
+                          }
+                        }
+                      ],
+                      "style": "b20",
+                      "color": {
+                        "type": "Theme",
+                        "name": "controlContentPrimary"
+                      },
+                      "textAlign": null,
+                      "text": {
+                        "type": "Static",
+                        "value": "Выбрать все"
+                      }
+                    },
+                    {
+                      "type": "Text",
+                      "text": {
+                        "type": "Dynamic",
+                        "path": "totalItems",
+                        "transformation":
+                        {
+                          "type": "Format",
+                          "pattern": "Удалить (%s)"
+                        }
+                      },
+                      "style": "m10",
+                      "color": {
+                        "type": "Theme",
+                        "name": "otherLink"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "RepetitiveComponent",
+                  "itemsPath": "items.*",
+                  "content": {
+                    "type": "Row",
+                    "modifier": [
+                      {
+                        "type": "FillMaxWidth"
+                      },
+                      {
+                        "type": "Padding",
+                        "value": {
+                          "start": 16,
+                          "top": 0,
+                          "end": 16,
+                          "bottom": 0
+                        }
+                      }
+                    ],
+                    "children": [
+                      {
+                        "type": "Box",
+                        "modifier": [
+                          {
+                            "type": "Size",
+                            "value": 18
+                          },
+                          {
+                            "type": "Background",
+                            "color": {
+                              "type": "Theme",
+                              "name": "controlContentPrimary"
+                            },
+                            "shape": {
+                              "type": "RoundedCornerShape",
+                              "radius": 4
+                            }
+                          }
+                        ],
+                        "contentAlignment": "Center",
+                        "children": [
+                          {
+                            "type": "Icon",
+                            "drawable": {
+                              "type": "Theme",
+                              "name": "ic_check"
+                            },
+                            "contentDescription": "Чекбокс",
+                            "tint": {
+                              "type": "Theme",
+                              "name": "controlBgFaint"
+                            },
+                            "modifier": [
+                              {
+                                "type": "Size",
+                                "value": 20
+                              },
+                              {
+                                "type": "Padding",
+                                "value": {
+                                  "start": 3,
+                                  "top": 4,
+                                  "end": 3,
+                                  "bottom": 4
+                                }
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "Spacer",
+                        "modifier": [
+                          {
+                            "type": "Width",
+                            "value": 11
+                          }
+                        ]
+                      },
+                      {
+                        "type": "Text",
+                        "text": {
+                          "type": "Dynamic",
+                          "path": "store.name"
+                        },
+                        "style": "h30",
+                        "color": {
+                          "type": "Theme",
+                          "name": "contentPrimary"
+                        }
+                      },
+                      {
+                        "type": "Icon",
+                        "drawable": {
+                          "type": "Theme",
+                          "name": "ic_star"
+                        },
+                        "contentDescription": "Рейтинг",
+                        "tint": {
+                          "type": "Theme",
+                          "name": "orange500"
+                        },
+                        "modifier": [
+                          {
+                            "type": "Padding",
+                            "value": {
+                              "start": 0,
+                              "top": 3,
+                              "end": 0,
+                              "bottom": 3
+                            }
+                          },
+                          {
+                            "type": "Size",
+                            "value": 16
+                          }
+                        ]
+                      },
+                      {
+                        "type": "Text",
+                        "text": {
+                          "type": "Dynamic",
+                          "path": "store.rating"
+                        },
+                        "style": "m10",
+                        "color": {
+                          "type": "Theme",
+                          "name": "contentPrimary"
+                        },
+                        "modifier": [
+                          {
+                            "type": "Padding",
+                            "value": {
+                              "start": 2,
+                              "top": 0,
+                              "end": 0,
+                              "bottom": 0
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "Text",
+                        "text": {
+                          "type": "Dynamic",
+                          "path": "store.reviewsCount",
+                          "transformation":
+                          {
+                            "type": "Format",
+                            "pattern": "(%s)"
+                          }
+                        },
+                        "style": "m10",
+                        "color": {
+                          "type": "Theme",
+                          "name": "gray36"
+                        }
+                      }
+                    ]
+                  }
                 }
-              ],
-              "url": "Res.drawable.ic_pointer"
+              ]
             }
-          ]
-        }
-      ]
-    }
-  ]
-}
-        """
+        """.trimIndent()
 
         val obj = json.decodeFromString<SDUIComponentDomain>(input)
 

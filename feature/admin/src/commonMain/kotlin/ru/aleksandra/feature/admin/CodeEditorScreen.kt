@@ -217,7 +217,7 @@ fun CodeEditorScreen(
                         textFieldValue = textFieldValue,
                         onTextChange = { textFieldValue = it },
                     )
-                    LazyColumn(
+                    /*LazyColumn(
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                         modifier = Modifier
                             .padding(horizontal = 4.dp)
@@ -276,7 +276,7 @@ fun CodeEditorScreen(
                                 }
                             }
                         }
-                    }
+                    }*/
                     if (showDocumentation) {
                         Text(
                             uiElements.getOrNull(selectedItem)?.json ?: "Выберите элемент",

@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import org.jetbrains.compose.resources.DrawableResource
 import ru.aleksandra.core.sdui.presentation.serializer.AlignmentHorizontalSerializer
 import ru.aleksandra.core.sdui.presentation.serializer.AlignmentSerializer
 import ru.aleksandra.core.sdui.presentation.serializer.AlignmentVerticalSerializer
@@ -53,7 +54,7 @@ sealed class SDUIComponent() {
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
         val text: String,
-        val color: Color = Color.Unspecified,
+        val color: ColorType?,
         val fontSize: TextUnit = TextUnit.Unspecified,
         val fontStyle: FontStyle? = null,
         val fontWeight: FontWeight? = null,
@@ -66,6 +67,7 @@ sealed class SDUIComponent() {
         val softWrap: Boolean = true,
         val maxLines: Int = Int.MAX_VALUE,
         val minLines: Int = 1,
+        val style: String? = null,
         /* TODO: Добавить onTextLayout в UI */
         //val onTextLayout: ((TextLayoutResult) -> Unit)? = null,
         //val style: StyleProperties.TextStyleProperties? = null,
@@ -105,7 +107,6 @@ sealed class SDUIComponent() {
     data class IconButton(
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
-        val iconUrl: String,
         val content: SDUIComponent,
     ) : SDUIComponent()
 
@@ -114,7 +115,6 @@ sealed class SDUIComponent() {
     data class FloatingActionButton(
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
-        val iconUrl: String,
     ) : SDUIComponent()
 
     // Layout components
@@ -182,7 +182,6 @@ sealed class SDUIComponent() {
     data class Spacer(
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
-        val height: Dp
     ) : SDUIComponent()
 
     data class Divider(
@@ -209,11 +208,13 @@ sealed class SDUIComponent() {
     ) :
         SDUIComponent()
 
+    //TODO: Разделить на Классы tint и drawable (чтобы не передавать лишнее)
     data class Icon(
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
-        val url: String,
-        val tint: Color,
+        val drawable: DrawableType,
+        val tint: ColorType,
+        val contentDescription: String?
     ) : SDUIComponent()
 
     // Containers
@@ -304,6 +305,10 @@ sealed class ModifierProperties {
 
     data class Height(val value: Dp) : ModifierProperties()
 
+
+    @Serializable
+    data class Weight(val value: Float) : ModifierProperties()
+
     data class Padding(val value: PaddingProperties) : ModifierProperties()
 
     data class Size(val size: Dp) : ModifierProperties()
@@ -320,7 +325,7 @@ sealed class ModifierProperties {
     data class WrapContentHeight(val alignment: Alignment.Vertical = Alignment.CenterVertically) :
         ModifierProperties()
 
-    data class Background(val color: Color, val shape: Shape) : ModifierProperties()
+    data class Background(val color: ColorType, val shape: Shape) : ModifierProperties()
 
     data class Border(
         val width: Dp,
@@ -374,6 +379,10 @@ sealed class Action {
     @Serializable
     @SerialName("Close")
     data object Close : Action()
+
+    @Serializable
+    @SerialName("PopBack")
+    data object PopBack : Action()
 
     @Serializable
     @SerialName("None")
@@ -441,4 +450,18 @@ sealed class StyleProperties {
         val disabledBackgroundColor: String? = null,
         val disabledContentColor: String? = null
     ) : StyleProperties()
+}
+
+sealed class ColorType {
+
+    data class ThemeColor(val name: String) : ColorType()
+
+    data class StaticColor(val value: Color) : ColorType()
+}
+
+sealed class DrawableType {
+
+    data class ThemeDrawable(val resource: DrawableResource) : DrawableType()
+
+    data class StaticDrawable(val value: String) : DrawableType()
 }

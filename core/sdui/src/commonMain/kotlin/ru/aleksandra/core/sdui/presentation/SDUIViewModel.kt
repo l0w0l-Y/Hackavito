@@ -38,18 +38,18 @@ abstract class SDUIViewModel(
     val sideEffects: SharedFlow<UIEffect> = _sideEffects
 
     init {
-       /* viewModelScope.launch {
-            _ui.value = UIState.Loading
-            combine(
-                loadUIUseCase.loadUI(screenId),
-                loadCartRepository.loadCart()
-            ) { ui, cart ->
-                val json = Json.encodeToJsonElement(cart)
-                ui.toUi(json)
-            }.collect {
-                _ui.value = UIState.Loaded(it)
-            }
-        }*/
+        /* viewModelScope.launch {
+             _ui.value = UIState.Loading
+             combine(
+                 loadUIUseCase.loadUI(screenId),
+                 loadCartRepository.loadCart()
+             ) { ui, cart ->
+                 val json = Json.encodeToJsonElement(cart)
+                 ui.toUi(json)
+             }.collect {
+                 _ui.value = UIState.Loaded(it)
+             }
+         }*/
     }
 
     fun handleAction(action: Action) {
@@ -63,6 +63,12 @@ abstract class SDUIViewModel(
             is Action.OpenUrl -> {
                 viewModelScope.launch {
                     _sideEffects.emit(UIEffect.OpenUrlEffect(action.url))
+                }
+            }
+
+            is Action.PopBack -> {
+                viewModelScope.launch {
+                    _sideEffects.emit(UIEffect.PopBackEffect)
                 }
             }
 

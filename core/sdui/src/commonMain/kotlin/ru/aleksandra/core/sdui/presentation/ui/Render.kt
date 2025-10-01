@@ -19,12 +19,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -34,12 +34,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import coil3.compose.rememberAsyncImagePainter
+import org.jetbrains.compose.resources.painterResource
 import ru.aleksandra.core.sdui.presentation.model.Action
+import ru.aleksandra.core.sdui.presentation.model.ColorType
+import ru.aleksandra.core.sdui.presentation.model.DrawableType
 import ru.aleksandra.core.sdui.presentation.model.ModifierProperties
 import ru.aleksandra.core.sdui.presentation.model.SDUIComponent
 import ru.aleksandra.core.sdui.presentation.model.StyleProperties
+import ru.aleksandra.core.theme.toTextStyle
+import ru.aleksandra.core.theme.toThemeColor
 import ru.aleksandra.core.ui.AvitoCartItem
 import ru.aleksandra.core.ui.AvitoCheckbox
 import ru.aleksandra.core.ui.AvitoNavBar
@@ -59,7 +67,7 @@ fun Render(
     is SDUIComponent.Divider -> SDUIDivider(component)
     is SDUIComponent.FloatingActionButton -> SDUIFloatingActionButton(component)
     is SDUIComponent.Icon -> SDUIIcon(component)
-    is SDUIComponent.IconButton -> SDUIIconButton(component)
+    is SDUIComponent.IconButton -> SDUIIconButton(component) { handleAction(it) }
     is SDUIComponent.Image -> SDUIImage(component)
     is SDUIComponent.LazyColumn -> SDUILazyColumn(component)
     is SDUIComponent.LazyRow -> SDUILazyRow(component)
@@ -185,21 +193,44 @@ fun SDUIImage(model: SDUIComponent.Image) {
 }
 
 @Composable
-fun SDUIIconButton(model: SDUIComponent.IconButton) {
-    IconButton({}) {
-        Text(model.iconUrl)
+fun SDUIIconButton(model: SDUIComponent.IconButton, handleAction: (Action) -> Unit) {
+    IconButton({
+        handleAction(model.action)
+    }) {
+        Render(model.content)
     }
 }
 
 @Composable
 fun SDUIIcon(model: SDUIComponent.Icon) {
-    Text(model.url)
+    Icon(
+        model.drawable.toCompose(),
+        contentDescription = model.contentDescription,
+        modifier = buildModifier(model.modifier),
+        tint = model.tint.toCompose(),
+    )
+}
+
+@Composable
+fun ColorType.toCompose(): Color {
+    return when (this) {
+        is ColorType.StaticColor -> this.value
+        is ColorType.ThemeColor -> this.name.toThemeColor()
+    }
+}
+
+@Composable
+fun DrawableType.toCompose(): Painter {
+    return when (this) {
+        is DrawableType.StaticDrawable -> rememberAsyncImagePainter(this.value)
+        is DrawableType.ThemeDrawable -> painterResource(this.resource)
+    }
 }
 
 @Composable
 fun SDUIFloatingActionButton(model: SDUIComponent.FloatingActionButton) {
     FloatingActionButton({}) {
-        Text(model.iconUrl)
+        //
     }
 }
 
@@ -264,7 +295,8 @@ fun SDUIText(model: SDUIComponent.Text) {
     Text(
         text = model.text,
         modifier = buildModifier(model.modifier),
-        color = model.color,
+        color = model.color?.toCompose() ?: Color.Unspecified,
+        style = model.style?.toTextStyle() ?: LocalTextStyle.current,
         fontSize = model.fontSize,
         fontStyle = model.fontStyle,
         fontWeight = model.fontWeight,
@@ -349,7 +381,7 @@ fun buildModifier(modifierProperties: List<ModifierProperties>): Modifier {
             }
 
             is ModifierProperties.Background -> {
-                modifier = modifier.background(property.color)
+                modifier = modifier.background(property.color.toCompose(), property.shape)
             }
 
             is ModifierProperties.Border -> {
@@ -392,6 +424,10 @@ fun buildModifier(modifierProperties: List<ModifierProperties>): Modifier {
 
             is ModifierProperties.WrapContentWidth -> {
                 modifier = modifier.wrapContentWidth(property.alignment)
+            }
+
+            else -> {
+                //TODO: Подумать над скоупами
             }
         }
     }

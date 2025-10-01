@@ -1,9 +1,7 @@
 package ru.aleksandra.core.sdui.domain.model
 
-import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.builtins.serializer
 import kotlin.reflect.KClass
 
 @Serializable
@@ -19,7 +17,8 @@ sealed class SDUIComponentDomain() {
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
         val text: BindableString,
-        val color: String? = null,
+        val style: String? = null,
+        val color: ColorType? = null,
         val fontSize: String? = null,
         val fontStyle: String? = null,
         val fontWeight: String? = null,
@@ -74,7 +73,6 @@ sealed class SDUIComponentDomain() {
     data class IconButton(
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
-        val iconUrl: String,
         val content: SDUIComponentDomain,
     ) : SDUIComponentDomain()
 
@@ -83,7 +81,6 @@ sealed class SDUIComponentDomain() {
     data class FloatingActionButton(
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
-        val iconUrl: String,
     ) : SDUIComponentDomain()
 
     // Layout components
@@ -103,8 +100,8 @@ sealed class SDUIComponentDomain() {
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
         val children: List<SDUIComponentDomain>,
-        val horizontalArrangement: String,
-        val verticalAlignment: String,
+        val horizontalArrangement: String? = null,
+        val verticalAlignment: String? = null,
     ) : SDUIComponentDomain()
 
     @Serializable
@@ -148,7 +145,6 @@ sealed class SDUIComponentDomain() {
     data class Spacer(
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
-        val height: Int
     ) : SDUIComponentDomain()
 
     @Serializable
@@ -181,8 +177,9 @@ sealed class SDUIComponentDomain() {
     data class Icon(
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
-        val url: String,
-        val tint: String? = null,
+        val drawable: DrawableType,
+        val tint: ColorType,
+        val contentDescription: String? = null,
     ) : SDUIComponentDomain()
 
     // Containers
@@ -267,7 +264,7 @@ sealed class SDUIComponentDomain() {
     @Serializable
     @SerialName("RepetitiveComponent")
     data class RepetitiveComponent(
-        val component: SDUIComponentDomain,
+        val content: SDUIComponentDomain,
         val itemsPath: String,
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
@@ -317,7 +314,11 @@ sealed class ModifierProperties {
 
     @Serializable
     @SerialName("Size")
-    data class Size(val size: Int) : ModifierProperties()
+    data class Size(val value: Int) : ModifierProperties()
+
+    @Serializable
+    @SerialName("Weight")
+    data class Weight(val value: Float) : ModifierProperties()
 
     @Serializable
     @SerialName("FillMaxWidth")
@@ -341,7 +342,7 @@ sealed class ModifierProperties {
 
     @Serializable
     @SerialName("Background")
-    data class Background(val color: String, val shape: Shape) : ModifierProperties()
+    data class Background(val color: ColorType, val shape: Shape) : ModifierProperties()
 
     @Serializable
     @SerialName("Border")
@@ -371,6 +372,7 @@ sealed class ModifierProperties {
 }
 
 @Serializable
+@SerialName("PaddingProperties")
 data class PaddingProperties(
     val start: Int,
     val top: Int,
@@ -396,6 +398,10 @@ sealed class Action {
     data class Navigate(val destination: String) : Action()
 
     @Serializable
+    @SerialName("PopBack")
+    data object PopBack : Action()
+
+    @Serializable
     @SerialName("None")
     data object None : Action()
 }
@@ -412,9 +418,16 @@ sealed class StyleProperties {
 
 @Serializable
 sealed class Shape() {
+    @Serializable
+    @SerialName("CircleShape")
     data object CircleShape : Shape()
-    data class RoundedCornerShape(val cornerRadius: Int) : Shape()
 
+    @Serializable
+    @SerialName("RoundedCornerShape")
+    data class RoundedCornerShape(val radius: Int) : Shape()
+
+    @Serializable
+    @SerialName("RectangleShape")
     data object RectangleShape : Shape()
 }
 
@@ -507,12 +520,62 @@ sealed class BindableValue<T> {
     @Suppress("UNCHECKED_CAST")
     @Serializable
     @SerialName("Dynamic")
-    data class Dynamic<T>(val path: String) : BindableValue<T>() {
+    data class Dynamic<T>(
+        val path: String,
+        val transformation: Transformation? = null,
+    ) : BindableValue<T>() {
         override fun getValue(dataContext: Map<String, Any?>): T {
             return dataContext[path] as T
         }
     }
 }
+
+@Serializable
+@SerialName("Transformation")
+sealed class Transformation {
+    @Serializable
+    @SerialName("Format")
+    data class Format(val pattern: String) : Transformation()
+}
+
+@Serializable
+@SerialName("Color")
+sealed class ColorType {
+
+    @Serializable
+    @SerialName("Theme")
+    data class ThemeColor(val name: String) : ColorType()
+
+    @Serializable
+    @SerialName("Static")
+    data class StaticColor(val value: String) : ColorType()
+}
+
+@Serializable
+@SerialName("Drawable")
+sealed class DrawableType {
+
+    @Serializable
+    @SerialName("Theme")
+    data class ThemeDrawable(val name: String) : DrawableType()
+
+    @Serializable
+    @SerialName("Static")
+    data class StaticDrawable(val value: String) : DrawableType()
+}
+
+/*@Serializable
+sealed class TypoType {
+
+    @Serializable
+    @SerialName("Theme")
+    data class ThemeTypo(val name: String) : TypoType()
+
+    @Serializable
+    @SerialName("Static")
+    data class StaticTypo(val value: String) : TypoType()
+}*/
+
 
 typealias BindableString = BindableValue<String>
 typealias BindableInt = BindableValue<Int>

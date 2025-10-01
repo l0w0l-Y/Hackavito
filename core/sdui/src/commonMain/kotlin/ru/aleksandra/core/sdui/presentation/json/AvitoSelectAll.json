@@ -1,0 +1,344 @@
+{
+  "type": "Column",
+  "children": [
+    {
+      "type": "Row",
+      "modifier": [
+        {
+          "type": "FillMaxWidth"
+        },
+        {
+          "type": "Padding",
+          "value": {
+            "start": 12,
+            "top": 14,
+            "end": 12,
+            "bottom": 14
+          }
+        }
+      ],
+      "verticalAlignment": "CenterVertically",
+      "children": [
+        {
+          "type": "IconButton",
+          "action": {
+            "type": "PopBack"
+          },
+          "modifier": [
+            {
+              "type": "Size",
+              "value": 24
+            }
+          ],
+          "content": {
+            "type": "Icon",
+            "drawable": {
+              "type": "Theme",
+              "name": "ic_back"
+            },
+            "tint": {
+              "type": "Theme",
+              "name": "controlContentPrimary"
+            },
+            "contentDescription": null
+          }
+        },
+        {
+          "type": "Text",
+          "modifier": [],
+          "style": "h50",
+          "color": {
+            "type": "Theme",
+            "name": "controlContentPrimary"
+          },
+          "textAlign": "Center",
+          "text": {
+            "type": "Static",
+            "value": "Корзина"
+          }
+        },
+        {
+          "type": "Spacer",
+          "modifier": [
+            {
+              "type": "Width",
+              "value": 24
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Row",
+      "modifier": [
+        {
+          "type": "FillMaxWidth"
+        },
+        {
+          "type": "Padding",
+          "value": {
+            "start": 16,
+            "top": 0,
+            "end": 16,
+            "bottom": 0
+          }
+        }
+      ],
+      "horizontalArrangement": "SpacedBy(12)",
+      "children": [
+        {
+          "type": "Box",
+          "modifier": [
+            {
+              "type": "Size",
+              "value": 18
+            },
+            {
+              "type": "Background",
+              "color": {
+                "type": "Theme",
+                "name": "controlContentPrimary"
+              },
+              "shape": {
+                "type": "RoundedCornerShape",
+                "radius": 4
+              }
+            }
+          ],
+          "contentAlignment": "Center",
+          "children": [
+            {
+              "type": "Icon",
+              "drawable": {
+                "type": "Theme",
+                "name": "ic_check"
+              },
+              "contentDescription": "Чекбокс",
+              "tint": {
+                "type": "Theme",
+                "name": "controlBgFaint"
+              },
+              "modifier": [
+                {
+                  "type": "Size",
+                  "value": 20
+                },
+                {
+                  "type": "Padding",
+                  "value": {
+                    "start": 3,
+                    "top": 4,
+                    "end": 3,
+                    "bottom": 4
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "Text",
+          "modifier": [
+            {
+              "type": "Padding",
+              "value": {
+                "start": 8,
+                "top": 0,
+                "end": 0,
+                "bottom": 0
+              }
+            }
+          ],
+          "style": "b20",
+          "color": {
+            "type": "Theme",
+            "name": "controlContentPrimary"
+          },
+          "textAlign": null,
+          "text": {
+            "type": "Static",
+            "value": "Выбрать все"
+          }
+        },
+        {
+          "type": "Text",
+          "text": {
+            "type": "Dynamic",
+            "path": "totalItems",
+            "transformation":
+            {
+              "type": "Format",
+              "pattern": "Удалить (%s)"
+            }
+          },
+          "style": "m10",
+          "color": {
+            "type": "Theme",
+            "name": "otherLink"
+          }
+        }
+      ]
+    },
+    {
+      "type": "RepetitiveComponent",
+      "itemsPath": "items.*",
+      "content": {
+        "type": "Row",
+        "modifier": [
+          {
+            "type": "FillMaxWidth"
+          },
+          {
+            "type": "Padding",
+            "value": {
+              "start": 16,
+              "top": 0,
+              "end": 16,
+              "bottom": 0
+            }
+          }
+        ],
+        "children": [
+          {
+            "type": "Box",
+            "modifier": [
+              {
+                "type": "Size",
+                "value": 18
+              },
+              {
+                "type": "Background",
+                "color": {
+                  "type": "Theme",
+                  "name": "controlContentPrimary"
+                },
+                "shape": {
+                  "type": "RoundedCornerShape",
+                  "radius": 4
+                }
+              }
+            ],
+            "contentAlignment": "Center",
+            "children": [
+              {
+                "type": "Icon",
+                "drawable": {
+                  "type": "Theme",
+                  "name": "ic_check"
+                },
+                "contentDescription": "Чекбокс",
+                "tint": {
+                  "type": "Theme",
+                  "name": "controlBgFaint"
+                },
+                "modifier": [
+                  {
+                    "type": "Size",
+                    "value": 20
+                  },
+                  {
+                    "type": "Padding",
+                    "value": {
+                      "start": 3,
+                      "top": 4,
+                      "end": 3,
+                      "bottom": 4
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "Spacer",
+            "modifier": [
+              {
+                "type": "Width",
+                "value": 11
+              }
+            ]
+          },
+          {
+            "type": "Text",
+            "text": {
+              "type": "Dynamic",
+              "path": "store.name"
+            },
+            "style": "h30",
+            "color": {
+              "type": "Theme",
+              "name": "contentPrimary"
+            }
+          },
+          {
+            "type": "Icon",
+            "drawable": {
+              "type": "Theme",
+              "name": "ic_star"
+            },
+            "contentDescription": "Рейтинг",
+            "tint": {
+              "type": "Theme",
+              "name": "orange500"
+            },
+            "modifier": [
+              {
+                "type": "Padding",
+                "value": {
+                  "start": 0,
+                  "top": 3,
+                  "end": 0,
+                  "bottom": 3
+                }
+              },
+              {
+                "type": "Size",
+                "value": 16
+              }
+            ]
+          },
+          {
+            "type": "Text",
+            "text": {
+              "type": "Dynamic",
+              "path": "store.rating"
+            },
+            "style": "m10",
+            "color": {
+              "type": "Theme",
+              "name": "contentPrimary"
+            },
+            "modifier": [
+              {
+                "type": "Padding",
+                "value": {
+                  "start": 2,
+                  "top": 0,
+                  "end": 0,
+                  "bottom": 0
+                }
+              }
+            ]
+          },
+          {
+            "type": "Text",
+            "text": {
+              "type": "Dynamic",
+              "path": "store.reviewsCount",
+              "transformation":
+              {
+                "type": "Format",
+                "pattern": "(%s)"
+              }
+            },
+            "style": "m10",
+            "color": {
+              "type": "Theme",
+              "name": "gray36"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
