@@ -29,6 +29,8 @@ import androidx.navigation.compose.rememberNavController
 import hackavito.feature.admin.generated.resources.Res
 import hackavito.feature.admin.generated.resources.ic_branch
 import hackavito.feature.admin.generated.resources.ic_figure_scobe
+import hackavito.feature.admin.generated.resources.ic_folder
+import hackavito.feature.admin.generated.resources.ic_info
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
@@ -70,6 +72,16 @@ fun AdminNavigation(onClick: (AdminNavRoute) -> Unit) {
             route = AdminNavRoute.VersionControl,
             drawableResource = Res.drawable.ic_branch
         ),
+        TopLevelRoute(
+            name = "File Manager",
+            route = AdminNavRoute.VersionControl,
+            drawableResource = Res.drawable.ic_folder
+        ),
+        TopLevelRoute(
+            name = "Projects",
+            route = AdminNavRoute.VersionControl,
+            drawableResource = Res.drawable.ic_info
+        )
     )
     var selectedItem by remember { mutableStateOf(0) }
     Column(

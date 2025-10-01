@@ -1,19 +1,24 @@
 package ru.aleksandra.core.sdui.presentation.ui
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.DividerDefaults
@@ -26,6 +31,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import ru.aleksandra.core.sdui.presentation.model.Action
@@ -47,7 +55,6 @@ fun Render(
 ) = when (component) {
     is SDUIComponent.Box -> SDUIBox(component)
     is SDUIComponent.Button -> SDUIButton(component) { handleAction(component.action) }
-    is SDUIComponent.Card -> SDUICard(component)
     is SDUIComponent.Column -> SDUIColumn(component)
     is SDUIComponent.Divider -> SDUIDivider(component)
     is SDUIComponent.FloatingActionButton -> SDUIFloatingActionButton(component)
@@ -201,13 +208,13 @@ fun SDUIDivider(model: SDUIComponent.Divider) {
     when (model.type) {
         SDUIComponent.Divider.DividerType.HORIZONTAL -> HorizontalDivider(
             modifier = buildModifier(model.modifier),
-            thickness = model.thickness?.dp ?: DividerDefaults.Thickness,
+            thickness = model.thickness ?: DividerDefaults.Thickness,
             color = model.color ?: DividerDefaults.color
         )
 
         SDUIComponent.Divider.DividerType.VERTICAL -> VerticalDivider(
             modifier = buildModifier(model.modifier),
-            thickness = model.thickness?.dp ?: DividerDefaults.Thickness,
+            thickness = model.thickness ?: DividerDefaults.Thickness,
             color = model.color ?: DividerDefaults.color
         )
     }
@@ -220,15 +227,6 @@ fun SDUIBox(model: SDUIComponent.Box) {
         contentAlignment = model.contentAlignment,
         propagateMinConstraints = model.propagateMinConstraints,
     ) {
-        model.children.forEach { child ->
-            Render(child)
-        }
-    }
-}
-
-@Composable
-fun SDUICard(model: SDUIComponent.Card) {
-    Card {
         model.children.forEach { child ->
             Render(child)
         }
@@ -315,13 +313,10 @@ fun SDUIButton(model: SDUIComponent.Button, handleAction: () -> Unit) {
 
 @Composable
 fun SDUICheckbox(model: SDUIComponent.Checkbox, handleAction: () -> Unit) {
-    Checkbox(
+    AvitoCheckbox(
         checked = model.checked,
         onCheckedChange = { handleAction() },
-        modifier = buildModifier(model.modifier),
-        enabled = model.enabled,
-        /* TODO: Добавить цвета */
-        colors = CheckboxDefaults.colors()
+        modifier = buildModifier(model.modifier)
     )
 }
 
@@ -331,29 +326,72 @@ fun buildModifier(modifierProperties: List<ModifierProperties>): Modifier {
 
     modifierProperties.forEach { property ->
         when (property) {
-            is ModifierProperties.Clickable -> {
-                modifier = modifier.clickable(property.value) {}
-            }
 
             is ModifierProperties.Height -> {
-                modifier = modifier.height(property.value.dp)
+                modifier = modifier.height(property.value)
             }
 
             is ModifierProperties.Padding -> {
                 modifier = modifier.padding(
-                    start = property.value.start.dp,
-                    top = property.value.top.dp,
-                    end = property.value.end.dp,
-                    bottom = property.value.bottom.dp
+                    start = property.value.start,
+                    top = property.value.top,
+                    end = property.value.end,
+                    bottom = property.value.bottom
                 )
             }
 
             is ModifierProperties.Width -> {
-                modifier = modifier.width(property.value.dp)
+                modifier = modifier.width(property.value)
             }
 
-            is ModifierProperties.BackgroundColor -> {
+            is ModifierProperties.Alpha -> {
+                modifier = modifier.alpha(property.alpha)
+            }
+
+            is ModifierProperties.Background -> {
                 modifier = modifier.background(property.color)
+            }
+
+            is ModifierProperties.Border -> {
+                modifier = modifier.border(property.width, property.color, property.shape)
+            }
+
+            is ModifierProperties.Clip -> {
+                modifier = modifier.clip(property.shape)
+            }
+
+            is ModifierProperties.FillMaxHeight -> {
+                modifier = modifier.fillMaxHeight(property.fraction)
+            }
+
+            is ModifierProperties.FillMaxSize -> {
+                modifier = modifier.fillMaxSize(property.fraction)
+            }
+
+            is ModifierProperties.FillMaxWidth -> {
+                modifier = modifier.fillMaxWidth(property.fraction)
+            }
+
+            is ModifierProperties.Shadow -> {
+                modifier = modifier.shadow(
+                    property.elevation,
+                    property.shape,
+                    property.clip,
+                    property.ambientColor,
+                    property.spotColor
+                )
+            }
+
+            is ModifierProperties.Size -> {
+                modifier = modifier.size(property.size)
+            }
+
+            is ModifierProperties.WrapContentHeight -> {
+                modifier = modifier.wrapContentHeight(property.alignment)
+            }
+
+            is ModifierProperties.WrapContentWidth -> {
+                modifier = modifier.wrapContentWidth(property.alignment)
             }
         }
     }

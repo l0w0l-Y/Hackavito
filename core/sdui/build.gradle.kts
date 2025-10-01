@@ -67,6 +67,8 @@ kotlin {
 
                 implementation(projects.core.theme)
                 implementation(projects.core.ui)
+
+                implementation(libs.coil.compose)
             }
         }
         androidMain {

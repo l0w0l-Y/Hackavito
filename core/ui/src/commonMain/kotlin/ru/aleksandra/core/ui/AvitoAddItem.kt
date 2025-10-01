@@ -35,7 +35,7 @@ fun AvitoAddItem(
     itemsBeforeDiscountCount: Int, //кол-во товаров до скидки
     salePercent: Int, //процент скидки
 
-){
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -46,17 +46,20 @@ fun AvitoAddItem(
             contentDescription = null,
             tint = MaterialTheme.colorScheme.contentPrimary,
             modifier = Modifier.size(24.dp)
-                .align(Alignment.Top)
-            )
+        )
 
-        Column (
+        Column(
             modifier = Modifier.padding(start = 6.dp)
-        ){
-            Row (
+        ) {
+            Row(
                 modifier = Modifier.padding(top = 4.dp)
-            ){
+            ) {
                 Text(
-                    text = stringResource(Res.string.add_discounted_item_before_sale, itemsBeforeDiscountCount, salePercent),
+                    text = stringResource(
+                        Res.string.add_discounted_item_before_sale,
+                        itemsBeforeDiscountCount,
+                        salePercent
+                    ),
                     style = MaterialTheme.typography.h60,
                 )
                 Icon(

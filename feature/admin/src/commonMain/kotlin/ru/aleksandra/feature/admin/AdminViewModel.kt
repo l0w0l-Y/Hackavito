@@ -12,17 +12,21 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.KSerializer
+import kotlinx.serialization.descriptors.PolymorphicKind
 import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.SerialKind
 import kotlinx.serialization.descriptors.StructureKind
+import kotlinx.serialization.internal.GeneratedSerializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
-import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.serializer
 import ru.aleksandra.core.sdui.domain.model.SDUIComponentDomain
 import ru.aleksandra.core.sdui.domain.usecase.LoadUIUseCase
@@ -30,6 +34,7 @@ import ru.aleksandra.core.sdui.presentation.mapper.toUi
 import ru.aleksandra.core.sdui.presentation.model.Action
 import ru.aleksandra.core.sdui.presentation.model.UIEffect
 import ru.aleksandra.core.sdui.presentation.model.UIState
+import ru.aleksandra.feature.admin.model.Documentation
 
 class AdminViewModel(
     val loadUIUseCase: LoadUIUseCase
@@ -40,8 +45,8 @@ class AdminViewModel(
     private val _sideEffects: MutableSharedFlow<UIEffect> = MutableSharedFlow()
     val sideEffects: SharedFlow<UIEffect> = _sideEffects
 
-    private var _uiElements = MutableStateFlow<List<String>>(emptyList())
-    val uiElements: StateFlow<List<String>> = _uiElements
+    private var _uiElements = MutableStateFlow<List<Documentation>>(emptyList())
+    val uiElements: StateFlow<List<Documentation>> = _uiElements
 
     private var _effect = MutableSharedFlow<AdminUIEffect>()
     val effect: SharedFlow<AdminUIEffect> = _effect
@@ -56,8 +61,19 @@ class AdminViewModel(
             SDUIComponentDomain.subclasses[index].let { clazz ->
                 val serializer = clazz.serializer() as KSerializer<SDUIComponentDomain>
                 val jsonModel = toJsonModel(serializer, null)
-                _effect.emit(AdminUIEffect.UpdateJson(jsonModel.toString()))
+                _effect.emit(AdminUIEffect.UpdateJson(prettyPrint(jsonModel)))
             }
+        }
+    }
+
+    fun prettyPrint(jsonObject: JsonObject): String {
+        val json = Json { prettyPrint = true }
+        return json.encodeToString(JsonObject.serializer(), jsonObject).let {
+            it/*.lines()//.filter { line -> !line.contains("\"__comment__\"") }
+                .joinToString("\n")*/
+                .replace(Regex("\"__comment__\":\\s*\"(.*?)\",?")) { matchResult ->
+                    "// ${matchResult.groupValues[1]}"
+                }
         }
     }
 
@@ -65,63 +81,108 @@ class AdminViewModel(
     fun getAllUIJson() {
         viewModelScope.launch {
             _uiElements.value =
-                SDUIComponentDomain.subclasses.map { it.serializer().descriptor.serialName }
+                SDUIComponentDomain.subclasses.map {
+                    val serializer = it.serializer() as KSerializer<SDUIComponentDomain>
+                   val jsonModel = toJsonModel(serializer, null)
+                    Documentation(
+                        serializer.descriptor.serialName,
+                        prettyPrint(jsonModel),
+                        //prettyPrint(jsonModel)
+                    )
+                }
         }
     }
 
-    fun <T> toJsonModel(serializer: KSerializer<T>, value: T?): JsonObject {
+    @OptIn(ExperimentalSerializationApi::class, InternalSerializationApi::class)
+    fun <T> toJsonModel(
+        serializer: KSerializer<T>,
+        value: T? = null
+    ): JsonObject {
         val json = Json { encodeDefaults = false }
         val baseJson = if (value != null) {
-            json.encodeToJsonElement(serializer, value).jsonObject
+            val elem = json.encodeToJsonElement(serializer, value)
+            elem as? JsonObject ?: buildJsonObject { }
         } else {
             buildJsonObject { }
         }
 
         val descriptor = serializer.descriptor
-        val withRequired = buildJsonObject {
+        val generated = serializer as? GeneratedSerializer<*>
+        val children: Array<KSerializer<*>>? = generated?.childSerializers()
+
+        return buildJsonObject {
             put("type", JsonPrimitive(descriptor.serialName))
 
-            for ((k, v) in baseJson) {
-                put(k, v)
-            }
+            for ((k, v) in baseJson) put(k, v)
 
-            // проверяем обязательные поля
             for (i in 0 until descriptor.elementsCount) {
                 val name = descriptor.getElementName(i)
-                val isOptional = descriptor.isElementOptional(i)
+                if (baseJson.containsKey(name)) continue
+                if (descriptor.isElementOptional(i)) continue
 
-                if (!isOptional) {
-                    // обязательное поле отсутствует → вставляем заглушку
-                    val kind = descriptor.getElementDescriptor(i).kind
-                    val defaultValue = when (kind) {
-                        PrimitiveKind.STRING -> JsonPrimitive("")
-                        PrimitiveKind.INT -> JsonPrimitive(0)
-                        PrimitiveKind.LONG -> JsonPrimitive(0L)
-                        PrimitiveKind.BOOLEAN -> JsonPrimitive(false)
-                        PrimitiveKind.FLOAT -> JsonPrimitive(0f)
-                        PrimitiveKind.DOUBLE -> JsonPrimitive(0.0)
-                        StructureKind.LIST -> JsonArray(emptyList())
-                        StructureKind.CLASS -> JsonObject(emptyMap())
-                        else -> JsonNull
+                val childSerializer = children?.getOrNull(i) as KSerializer<Any?>?
+                val childDesc = childSerializer?.descriptor ?: descriptor.getElementDescriptor(i)
+                val kind = childDesc.kind
+
+                val defaultValue: JsonElement = when (kind) {
+                    PrimitiveKind.STRING -> JsonPrimitive("")
+                    PrimitiveKind.INT -> JsonPrimitive(0)
+                    PrimitiveKind.LONG -> JsonPrimitive(0L)
+                    PrimitiveKind.BOOLEAN -> JsonPrimitive(false)
+                    PrimitiveKind.FLOAT -> JsonPrimitive(0f)
+                    PrimitiveKind.DOUBLE -> JsonPrimitive(0.0)
+
+                    StructureKind.LIST -> JsonArray(emptyList())
+                    StructureKind.MAP -> JsonObject(emptyMap())
+
+                    StructureKind.CLASS, StructureKind.OBJECT -> {
+                        if (childSerializer != null) toJsonModel(childSerializer)
+                        else JsonObject(emptyMap())
                     }
-                    put(name, defaultValue)
+
+                    SerialKind.ENUM -> {
+                        val first =
+                            if (childDesc.elementsCount > 0) childDesc.getElementName(0) else ""
+                        JsonPrimitive(first)
+                    }
+
+                    is PolymorphicKind -> {
+                        // Генерируем комментарий с type + generic
+                        val typeName = childDesc.serialName
+                        val genericInfo = if (childDesc.elementsCount > 0) {
+                            childDesc.getElementDescriptor(0).serialName
+                        } else ""
+                        val value =
+                            "__comment__" to JsonPrimitive("type: $typeName${if (genericInfo.isNotEmpty()) "<$genericInfo>" else ""}")
+                        JsonObject(mapOf(value))
+                    }
+
+                    else -> JsonNull
                 }
+
+                put(name, defaultValue)
             }
         }
-
-        return withRequired
     }
+
 
     fun loadFromJson(newJson: String) {
         viewModelScope.launch {
             _ui.value = UIState.Loading
             val json = Json {
                 classDiscriminator = "type"
+                prettyPrint = true
             }
-            runCatching { json.decodeFromString<SDUIComponentDomain>(newJson) }
-                .onSuccess { _ui.value = UIState.Loaded(it.toUi(emptyMap())) }
+            runCatching { json.decodeFromString<SDUIComponentDomain>(removeComments(newJson)) }
+                .onSuccess { _ui.value = UIState.Loaded(it.toUi(JsonObject(emptyMap()))) }
                 .onFailure { _ui.value = UIState.Error(it.message ?: "Неизвестная ошибка") }
         }
+    }
+
+    fun removeComments(code: String): String {
+        val noBlockComments = code.replace(Regex("/\\*.*?\\*/", RegexOption.MULTILINE), "")
+        val noLineComments = noBlockComments.replace(Regex("//.*"), "")
+        return noLineComments
     }
 
     fun saveToFile(name: String, json: String) {
@@ -139,7 +200,7 @@ class AdminViewModel(
             val result: PlatformFile? = FileKit.openFilePicker()
             result?.let {
                 val content = it.readString()
-                _effect.emit(AdminUIEffect.UpdateJson(content))
+                _effect.emit(AdminUIEffect.UpdateJson(prettyPrint(Json.parseToJsonElement(content) as JsonObject)))
             }
         }
     }

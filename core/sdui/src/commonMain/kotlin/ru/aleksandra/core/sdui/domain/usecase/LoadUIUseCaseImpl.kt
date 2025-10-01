@@ -16,133 +16,99 @@ class LoadUIUseCaseImpl() : LoadUIUseCase {
 
         val input = """
         {
-  "type": "Column",
-  "verticalArrangement": "SpacedBy(24)",
+  "type": "Row",
+  "modifier": [
+    {
+      "type": "Width",
+      "value": "200"
+    },
+    {
+      "type": "Padding",
+      "value": {
+        "start": 16,
+        "top": 0,
+        "end": 0,
+        "bottom": 0
+      }
+    }
+  ],
+  "horizontalArrangement": "start",
+  "verticalAlignment": "center",
   "children": [
     {
-      "type": "AvitoNavBar",
-      "title": {
-        "type": "Static",
-        "value": "Корзина"
-      }
-    },
-    {
-      "type": "AvitoSelectAll",
-      "isChecked": true,
-      "deleteCount": {
-        "type": "Dynamic",
-        "path": "totalItems"
-      }
-    },
-    {
-      "type": "AvitoShopName",
-      "isChecked": true,
-      "shopName": {
-        "type": "Dynamic",
-        "path": "items.0.store.name"
-      },
-      "rating": {
-        "type": "Dynamic",
-        "path": "items.0.store.rating"
-      },
-      "reviewsCount": {
-        "type": "Dynamic",
-        "path": "items.0.store.reviewsCount"
-      }
-    },
-    {
-      "type": "Column",
-      "children": [
+      "type": "Icon",
+      "modifier": [
         {
-          "type": "RepetitiveComponent",
-          "component": {
-            "type": "AvitoCartItem",
-            "isChecked": true,
-            "name": {
-                "type": "Dynamic",
-                "path": "name"
-            },
-            "priceWithoutDiscount": {
-                "type": "Dynamic",
-                "path": "priceWithoutDiscount"
-            },
-              "priceWithDiscount": {
-                "type": "Dynamic",
-                "path": "priceWithDiscount"
-              },
-              "salePercent": {
-                "type": "Dynamic",
-                "path": "salePercent"
-              },
-              "count": {
-                "type": "Dynamic",
-                "path": "count"
-              },
-              "imageUrl": {
-                "type": "Dynamic",
-                "path": "imageUrl"
-              }
-          },
-          "itemsPath": "items.0.items.*"
+          "type": "Width",
+          "value": 24
+        },
+        {
+          "type": "Height",
+          "value": 24
         }
-      ]
-    },
-    {
-      "type": "AvitoShopName",
-      "isChecked": true,
-      "shopName": {
-        "type": "Dynamic",
-        "path": "items.1.store.name"
-      },
-      "rating": {
-        "type": "Dynamic",
-        "path": "items.1.store.rating"
-      },
-      "reviewsCount": {
-        "type": "Dynamic",
-        "path": "items.1.store.reviewsCount"
-      }
+      ],
+      "url": "Res.drawable.ic_arrow"
     },
     {
       "type": "Column",
+      "modifier": [
+        {
+          "type": "Padding",
+          "value": {
+            "start": 6,
+            "top": 0,
+            "end": 0,
+            "bottom": 0
+          }
+        }
+      ],
+      "verticalArrangement": "start",
+      "horizontalAlignment": "start",
       "children": [
         {
-          "type": "RepetitiveComponent",
-          "component": {
-            "type": "AvitoCartItem",
-            "isChecked": true,
-            "name": {
-                "type": "Dynamic",
-                "path": "name"
-            },
-            "priceWithoutDiscount": {
-                "type": "Dynamic",
-                "path": "priceWithoutDiscount"
-            },
-              "priceWithDiscount": {
-                "type": "Dynamic",
-                "path": "priceWithDiscount"
-              },
-              "salePercent": {
-                "type": "Dynamic",
-                "path": "salePercent"
-              },
-              "count": {
-                "type": "Dynamic",
-                "path": "count"
-              },
-              "imageUrl": {
-                "type": "Dynamic",
-                "path": "imageUrl"
+          "type": "Row",
+          "modifier": [
+            {
+              "type": "Padding",
+              "value": {
+                "start": 0,
+                "top": 4,
+                "end": 0,
+                "bottom": 0
               }
-          },
-          "itemsPath": "items.1.items.*"
+            }
+          ],
+          "horizontalArrangement": "start",
+          "verticalAlignment": "center",
+          "children": [
+            {
+              "type": "Text",
+              "text": {
+              "type": "Static",
+                "value": "Добавьте ещё 1 товар до скидки 5%"
+              },
+              "modifier": []
+            },
+            {
+              "type": "Icon",
+              "modifier": [
+                {
+                  "type": "Width",
+                  "value": 16
+                },
+                {
+                  "type": "Height",
+                  "value": 16
+                }
+              ],
+              "url": "Res.drawable.ic_pointer"
+            }
+          ]
         }
       ]
     }
   ]
 }
-
         """
 
         val obj = json.decodeFromString<SDUIComponentDomain>(input)
