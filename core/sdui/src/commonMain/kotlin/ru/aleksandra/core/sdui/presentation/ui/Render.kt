@@ -3,8 +3,10 @@ package ru.aleksandra.core.sdui.presentation.ui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -35,10 +37,11 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
 import coil3.compose.rememberAsyncImagePainter
+import io.github.aakira.napier.Napier
 import org.jetbrains.compose.resources.painterResource
 import ru.aleksandra.core.sdui.presentation.model.Action
 import ru.aleksandra.core.sdui.presentation.model.ColorType
@@ -186,10 +189,40 @@ fun SDUILazyColumn(model: SDUIComponent.LazyColumn) {
 
 @Composable
 fun SDUIImage(model: SDUIComponent.Image) {
-    Text(
-        model.url,
-        modifier = buildModifier(model.modifier)
-    )
+    model.toCompose()
+}
+
+@Composable
+fun SDUIComponent.Image.toCompose() {
+    //TODO: Вернуть общий элемент
+    when (this.url) {
+        is DrawableType.DynamicDrawable -> {
+            AsyncImage(
+                url.value,
+                contentDescription = this.contentDescription,
+                modifier = buildModifier(this.modifier),
+                contentScale = this.contentScale
+            )
+        }
+
+        is DrawableType.StaticDrawable -> {
+            AsyncImage(
+                url.value,
+                contentDescription = this.contentDescription,
+                modifier = buildModifier(this.modifier),
+                contentScale = this.contentScale
+            )
+        }
+
+        is DrawableType.ThemeDrawable -> {
+            androidx.compose.foundation.Image(
+                painter = painterResource(url.resource),
+                contentDescription = this.contentDescription,
+                modifier = buildModifier(this.modifier),
+                contentScale = this.contentScale
+            )
+        }
+    }
 }
 
 @Composable
@@ -203,12 +236,18 @@ fun SDUIIconButton(model: SDUIComponent.IconButton, handleAction: (Action) -> Un
 
 @Composable
 fun SDUIIcon(model: SDUIComponent.Icon) {
-    Icon(
-        model.drawable.toCompose(),
-        contentDescription = model.contentDescription,
-        modifier = buildModifier(model.modifier),
-        tint = model.tint.toCompose(),
-    )
+    when (model.drawable) {
+        is DrawableType.ThemeDrawable -> {
+            Icon(
+                painterResource(model.drawable.resource),
+                contentDescription = model.contentDescription,
+                modifier = buildModifier(model.modifier),
+                tint = model.tint.toCompose(),
+            )
+        }
+
+        else -> {}
+    }
 }
 
 @Composable
@@ -216,14 +255,6 @@ fun ColorType.toCompose(): Color {
     return when (this) {
         is ColorType.StaticColor -> this.value
         is ColorType.ThemeColor -> this.name.toThemeColor()
-    }
-}
-
-@Composable
-fun DrawableType.toCompose(): Painter {
-    return when (this) {
-        is DrawableType.StaticDrawable -> rememberAsyncImagePainter(this.value)
-        is DrawableType.ThemeDrawable -> painterResource(this.resource)
     }
 }
 
@@ -352,6 +383,8 @@ fun SDUICheckbox(model: SDUIComponent.Checkbox, handleAction: () -> Unit) {
     )
 }
 
+enum class ParentScope { Row, Column, Box }
+
 @Composable
 fun buildModifier(modifierProperties: List<ModifierProperties>): Modifier {
     var modifier = Modifier.padding(0.dp)
@@ -424,6 +457,10 @@ fun buildModifier(modifierProperties: List<ModifierProperties>): Modifier {
 
             is ModifierProperties.WrapContentWidth -> {
                 modifier = modifier.wrapContentWidth(property.alignment)
+            }
+
+            is ModifierProperties.MatchParentSize -> {
+                //TODO:
             }
 
             else -> {

@@ -10,7 +10,9 @@ import hackavito.core.ui.generated.resources.ic_minus
 import hackavito.core.ui.generated.resources.ic_plus
 import hackavito.core.ui.generated.resources.ic_pointer
 import hackavito.core.ui.generated.resources.ic_star
+import hackavito.core.ui.generated.resources.strike
 import org.jetbrains.compose.resources.DrawableResource
+
 
 //TODO: Добавить возможность искать иконки из других модулей
 fun String.toDrawable(): DrawableResource? {
@@ -24,6 +26,7 @@ fun String.toDrawable(): DrawableResource? {
         "ic_plus" -> Res.drawable.ic_plus
         "ic_pointer" -> Res.drawable.ic_pointer
         "ic_star" -> Res.drawable.ic_star
+        "strike" -> Res.drawable.strike
         else -> null
     }
 }

@@ -1,7 +1,5 @@
 package ru.aleksandra.core.ui.model
 
-import hackavito.core.ui.generated.resources.Res
-import hackavito.core.ui.generated.resources.img
 import org.jetbrains.compose.resources.DrawableResource
 
 data class Item(
@@ -10,5 +8,5 @@ data class Item(
     val priceWithDiscount: Float,
     val salePercent: Int,
     val count: Int,
-    val image: DrawableResource = Res.drawable.img
+    val image: DrawableResource
 )

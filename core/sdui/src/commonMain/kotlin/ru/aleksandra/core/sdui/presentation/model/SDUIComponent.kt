@@ -197,12 +197,11 @@ sealed class SDUIComponent() {
     }
 
     // Media components
-    @Serializable
-    @SerialName("Image")
+
     data class Image(
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
-        val url: String,
+        val url: DrawableType,
         val contentDescription: String?,
         val contentScale: ContentScale = ContentScale.Fit,
     ) :
@@ -305,8 +304,6 @@ sealed class ModifierProperties {
 
     data class Height(val value: Dp) : ModifierProperties()
 
-
-    @Serializable
     data class Weight(val value: Float) : ModifierProperties()
 
     data class Padding(val value: PaddingProperties) : ModifierProperties()
@@ -344,6 +341,8 @@ sealed class ModifierProperties {
     ) : ModifierProperties()
 
     data class Alpha(val alpha: Float) : ModifierProperties()
+
+    data object MatchParentSize : ModifierProperties()
 }
 
 
@@ -464,4 +463,6 @@ sealed class DrawableType {
     data class ThemeDrawable(val resource: DrawableResource) : DrawableType()
 
     data class StaticDrawable(val value: String) : DrawableType()
+
+    data class DynamicDrawable(val value: String) : DrawableType()
 }

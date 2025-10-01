@@ -22,9 +22,9 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
-import io.github.aakira.napier.Napier
 import kotlinx.serialization.json.JsonElement
 import ru.aleksandra.core.sdui.domain.model.Action
+import ru.aleksandra.core.sdui.domain.model.BindableString
 import ru.aleksandra.core.sdui.domain.model.BindableValue
 import ru.aleksandra.core.sdui.domain.model.BorderStroke
 import ru.aleksandra.core.sdui.domain.model.ButtonColors
@@ -105,7 +105,7 @@ fun SDUIComponentDomain.OutlinedButton.toUi(json: JsonElement): SDUIComponent.Ou
 fun SDUIComponentDomain.Image.toUi(json: JsonElement): SDUIComponent.Image {
     return SDUIComponent.Image(
         action = action.toUi(),
-        url = url,
+        url = url.toUi(json),
         contentDescription = contentDescription,
         contentScale = contentScale?.toContentScale() ?: ContentScale.Fit,
         modifier = modifier.map { it.toUi() }
@@ -218,6 +218,7 @@ fun ModifierPropertiesDomain.toUi(): ModifierProperties {
         )
 
         is ModifierPropertiesDomain.Weight -> ModifierProperties.Weight(value = value)
+        ModifierPropertiesDomain.MatchParentSize -> ModifierProperties.MatchParentSize
     }
 }
 
@@ -239,7 +240,7 @@ fun SDUIComponentDomain.IconButton.toUi(json: JsonElement): SDUIComponent.IconBu
 
 fun SDUIComponentDomain.Icon.toUi(json: JsonElement): SDUIComponent.Icon {
     return SDUIComponent.Icon(
-        drawable = drawable.toUi(),
+        drawable = drawable.toUi(json),
         tint = tint.toUi(),
         modifier = modifier.map { it.toUi() },
         contentDescription = contentDescription
@@ -258,14 +259,18 @@ fun ColorType.toUi(): ru.aleksandra.core.sdui.presentation.model.ColorType {
     }
 }
 
-fun ru.aleksandra.core.sdui.domain.model.DrawableType.toUi(): DrawableType {
+fun ru.aleksandra.core.sdui.domain.model.DrawableType.toUi(json: JsonElement): DrawableType {
     return when (this) {
-        is ru.aleksandra.core.sdui.domain.model.DrawableType.StaticDrawable -> DrawableType.StaticDrawable(
-            value = value
+        is ru.aleksandra.core.sdui.domain.model.DrawableType.DynamicDrawable -> DrawableType.DynamicDrawable(
+            value = json.getByPath<String>(path, null) ?: error("No drawable found for path: $path")
         )
 
         is ru.aleksandra.core.sdui.domain.model.DrawableType.ThemeDrawable -> DrawableType.ThemeDrawable(
             resource = this.name.toDrawable() ?: error("No drawable found for name: ${this.name}")
+        )
+
+        is ru.aleksandra.core.sdui.domain.model.DrawableType.StaticDrawable -> DrawableType.StaticDrawable(
+            value = value
         )
     }
 }
@@ -286,30 +291,77 @@ fun SDUIComponentDomain.updatePath(index: Int, itemsPath: String): SDUIComponent
     return when (this) {
         is SDUIComponentDomain.Text -> {
             return this.copy(
-                text = when (text) {
-                    is BindableValue.Dynamic -> {
-                        BindableValue.Dynamic(
-                            itemsPath.replace(
-                                "*",
-                                index.toString()
-                            ) + "." + text.path,
-                            text.transformation
-                        )
-                    }
-
-                    is BindableValue.Static -> {
-                        text
-                    }
-                }
+                text = text.updatePathAndTransformation(index, itemsPath)
             )
         }
+
         is SDUIComponentDomain.Row -> {
             return this.copy(
                 children = children.map { it.updatePath(index, itemsPath) }
             )
         }
 
+        is SDUIComponentDomain.Column -> {
+            return this.copy(
+                children = children.map { it.updatePath(index, itemsPath) }
+            )
+        }
+
+        is SDUIComponentDomain.Box -> {
+            return this.copy(
+                children = children.map { it.updatePath(index, itemsPath) }
+            )
+        }
+
+        is SDUIComponentDomain.RepetitiveComponent -> {
+            return this.copy(
+                itemsPath = itemsPath.replace(
+                    "*",
+                    index.toString()
+                ) + "." + this.itemsPath,
+            )
+        }
+
+        is SDUIComponentDomain.Image -> {
+            return this.copy(
+                url = when (url) {
+                    is ru.aleksandra.core.sdui.domain.model.DrawableType.DynamicDrawable -> {
+                        url.copy(
+                            itemsPath.replace(
+                                "*",
+                                index.toString()
+                            ) + "." + this.url.path
+                        )
+                    }
+
+                    is ru.aleksandra.core.sdui.domain.model.DrawableType.ThemeDrawable -> url
+                    is ru.aleksandra.core.sdui.domain.model.DrawableType.StaticDrawable -> url
+                }
+            )
+        }
+
         else -> this
+    }
+}
+
+fun BindableString.updatePathAndTransformation(
+    index: Int,
+    itemsPath: String
+): BindableString {
+    return when (this) {
+        is BindableValue.Dynamic -> {
+            BindableValue.Dynamic(
+                itemsPath.replace(
+                    "*",
+                    index.toString()
+                ) + "." + path,
+                transformation
+            )
+        }
+
+        is BindableValue.Static -> {
+            this
+        }
     }
 }
 

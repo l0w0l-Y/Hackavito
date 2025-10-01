@@ -167,7 +167,7 @@ sealed class SDUIComponentDomain() {
     data class Image(
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
-        val url: String,
+        val url: DrawableType,
         val contentDescription: String? = null,
         val contentScale: String? = null,
     ) : SDUIComponentDomain()
@@ -339,6 +339,10 @@ sealed class ModifierProperties {
     @Serializable
     @SerialName("WrapContentHeight")
     data class WrapContentHeight(val alignment: String) : ModifierProperties()
+
+    @Serializable
+    @SerialName("MatchParentSize")
+    data object MatchParentSize : ModifierProperties()
 
     @Serializable
     @SerialName("Background")
@@ -558,6 +562,10 @@ sealed class DrawableType {
     @Serializable
     @SerialName("Theme")
     data class ThemeDrawable(val name: String) : DrawableType()
+
+    @Serializable
+    @SerialName("Dynamic")
+    data class DynamicDrawable(val path: String) : DrawableType()
 
     @Serializable
     @SerialName("Static")

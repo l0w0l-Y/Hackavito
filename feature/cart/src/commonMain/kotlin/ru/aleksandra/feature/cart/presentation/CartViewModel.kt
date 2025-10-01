@@ -2,6 +2,7 @@ package ru.aleksandra.feature.cart.presentation
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json

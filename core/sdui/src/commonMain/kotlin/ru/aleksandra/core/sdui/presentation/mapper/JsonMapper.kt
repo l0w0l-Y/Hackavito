@@ -33,7 +33,6 @@ inline fun <reified T> JsonElement.getByPath(path: String, transformation: Trans
             when (transformation) {
                 is Transformation.Format -> {
                     val content = primitive.content
-                    Napier.d("Content: $content")
                     transformation.pattern.replace("%s", content) as T
                 }
 
