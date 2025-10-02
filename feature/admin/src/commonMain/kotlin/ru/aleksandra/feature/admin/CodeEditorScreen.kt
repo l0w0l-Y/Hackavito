@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -19,6 +18,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,9 +28,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextRange
@@ -55,7 +55,9 @@ import ru.aleksandra.core.theme.controlBgPayPrimary
 import ru.aleksandra.core.theme.controlContentMasterPassive
 import ru.aleksandra.core.theme.controlContentPrimary
 import ru.aleksandra.core.theme.h30
+import ru.aleksandra.core.theme.h50
 import ru.aleksandra.core.theme.m20
+import ru.aleksandra.feature.admin.model.AdminUIEffect
 
 @Composable
 fun CodeEditorScreen(
@@ -82,6 +84,8 @@ fun CodeEditorScreen(
     val isCodeEditor by remember { mutableStateOf(true) }
     var isPreview by remember { mutableStateOf(false) }
     val clipboardManager = LocalClipboardManager.current
+    var showDocumentation by remember { mutableStateOf(false) }
+    var selectedItem by remember { mutableStateOf(0) }
 
     LaunchedEffect(Unit) {
         adminViewModel.effect.collect {
@@ -111,7 +115,8 @@ fun CodeEditorScreen(
             color = MaterialTheme.colorScheme.controlContentPrimary
         )
         Row(
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
+            horizontalArrangement = Arrangement.spacedBy(2.dp),
+            modifier = Modifier.padding(vertical = 4.dp)
         ) {
             Button(
                 {
@@ -208,27 +213,76 @@ fun CodeEditorScreen(
         }
         Row(modifier = Modifier.fillMaxSize()) {
             if (isCodeEditor) {
-                Row(modifier = Modifier.weight(2f)) {
+                Row(modifier = Modifier.weight(1f)) {
                     CodeEditor(
                         textFieldValue = textFieldValue,
                         onTextChange = { textFieldValue = it },
                     )
                     LazyColumn(
                         verticalArrangement = Arrangement.spacedBy(8.dp),
-                        modifier = Modifier.width(200.dp)
+                        modifier = Modifier
+                            .padding(horizontal = 4.dp)
+                            .width(280.dp)
                     ) {
-                        itemsIndexed(uiElements) { index, item ->
+                        stickyHeader {
                             Text(
-                                text = item,
-                                modifier = Modifier
-                                    .clickable { adminViewModel.addJson(index) }
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 8.dp, vertical = 4.dp),
-                                style = MaterialTheme.typography.m20,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
+                                "Элементы UI",
+                                style = MaterialTheme.typography.h50
                             )
                         }
+                        itemsIndexed(uiElements) { index, item ->
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.clickable {
+                                    selectedItem = index
+                                    showDocumentation = true
+                                }
+                            ) {
+                                Text(
+                                    text = item.title,
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .padding(horizontal = 8.dp, vertical = 4.dp),
+                                    style = MaterialTheme.typography.m20,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                )
+                                IconButton({
+                                    clipboardManager.setText(
+                                        AnnotatedString(
+                                            item.json
+                                        )
+                                    )
+                                }) {
+                                    Icon(
+                                        painterResource(Res.drawable.ic_copy),
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.contentPrimary,
+                                        modifier = Modifier
+                                            .padding(4.dp)
+                                    )
+                                }
+                                IconButton(
+                                    {
+                                        adminViewModel.addJson(index)
+                                    }
+                                ) {
+                                    Icon(
+                                        painterResource(Res.drawable.ic_share),
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.contentPrimary,
+                                        modifier = Modifier
+                                            .padding(4.dp)
+                                    )
+                                }
+                            }
+                        }
+                    }
+                    if (showDocumentation) {
+                        Text(
+                            uiElements.getOrNull(selectedItem)?.json ?: "Выберите элемент",
+                            modifier = Modifier.width(120.dp)
+                        )
                     }
                 }
             }

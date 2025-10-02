@@ -68,12 +68,13 @@ kotlin {
                 implementation(projects.core.theme)
                 implementation(projects.core.ui)
                 implementation(projects.core.sdui)
+                implementation(projects.core.data)
+
+                implementation(libs.ktor.client.core)
             }
         }
-        androidMain {
-            dependencies {
-                implementation(libs.koin.androidx.compose)
-            }
+        androidMain.dependencies {
+            implementation(libs.koin.androidx.compose)
         }
     }
 }

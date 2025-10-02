@@ -26,6 +26,10 @@ fun SDUIViewModel.bind(
                 is UIEffect.OpenUrlEffect -> {
                     uriHandler.openUri(it.url)
                 }
+
+                is UIEffect.PopBackEffect -> {
+                    navController.popBackStack()
+                }
             }
         }
     }

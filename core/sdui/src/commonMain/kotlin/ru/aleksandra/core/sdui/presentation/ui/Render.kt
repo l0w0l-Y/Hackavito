@@ -1,40 +1,59 @@
 package ru.aleksandra.core.sdui.presentation.ui
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
+import io.github.aakira.napier.Napier
+import org.jetbrains.compose.resources.painterResource
 import ru.aleksandra.core.sdui.presentation.model.Action
+import ru.aleksandra.core.sdui.presentation.model.ColorType
+import ru.aleksandra.core.sdui.presentation.model.DrawableType
 import ru.aleksandra.core.sdui.presentation.model.ModifierProperties
 import ru.aleksandra.core.sdui.presentation.model.SDUIComponent
 import ru.aleksandra.core.sdui.presentation.model.StyleProperties
+import ru.aleksandra.core.theme.toTextStyle
+import ru.aleksandra.core.theme.toThemeColor
+import ru.aleksandra.core.ui.AvitoCartItem
 import ru.aleksandra.core.ui.AvitoCheckbox
 import ru.aleksandra.core.ui.AvitoNavBar
 import ru.aleksandra.core.ui.AvitoSelectAll
+import ru.aleksandra.core.ui.AvitoShopName
 
 //TODO: Добавить обработку изображений для Image и Icon, Iconbutton и Floatingactionbutton
 
@@ -45,12 +64,11 @@ fun Render(
 ) = when (component) {
     is SDUIComponent.Box -> SDUIBox(component)
     is SDUIComponent.Button -> SDUIButton(component) { handleAction(component.action) }
-    is SDUIComponent.Card -> SDUICard(component)
     is SDUIComponent.Column -> SDUIColumn(component)
     is SDUIComponent.Divider -> SDUIDivider(component)
     is SDUIComponent.FloatingActionButton -> SDUIFloatingActionButton(component)
     is SDUIComponent.Icon -> SDUIIcon(component)
-    is SDUIComponent.IconButton -> SDUIIconButton(component)
+    is SDUIComponent.IconButton -> SDUIIconButton(component) { handleAction(it) }
     is SDUIComponent.Image -> SDUIImage(component)
     is SDUIComponent.LazyColumn -> SDUILazyColumn(component)
     is SDUIComponent.LazyRow -> SDUILazyRow(component)
@@ -69,6 +87,36 @@ fun Render(
         isChecked = component.isChecked,
         deleteCount = component.deleteCount
     )
+
+    is SDUIComponent.AvitoShopName -> AvitoShopName(
+        isChecked = component.isChecked,
+        shopName = component.shopName,
+        rating = component.rating,
+        reviewsCount = component.reviewsCount,
+        onCheckedChange = {}
+    )
+
+    is SDUIComponent.AvitoCartItem -> AvitoCartItem(
+        isChecked = component.isChecked,
+        name = component.name,
+        priceWithoutDiscount = component.priceWithoutDiscount,
+        priceWithDiscount = component.priceWithDiscount,
+        salePercent = component.salePercent,
+        count = component.count,
+        image = component.imageUrl,
+        onCheckedChange = {},
+        onPlusItemCountClicked = {},
+        onMinusItemCountClicked = {}
+    )
+
+    is SDUIComponent.RepetitiveComponent -> RepetitiveComponent(component) { handleAction(it) }
+}
+
+@Composable
+fun RepetitiveComponent(model: SDUIComponent.RepetitiveComponent, handleAction: (Action) -> Unit) {
+    model.component.forEach {
+        Render(component = it, handleAction = handleAction)
+    }
 }
 
 @Composable
@@ -88,7 +136,9 @@ fun SDUITextField(model: SDUIComponent.TextField) {
 
 @Composable
 fun SDUISurface(model: SDUIComponent.Surface) {
-    Surface {
+    Surface(
+        buildModifier(model.modifier),
+    ) {
         model.children.forEach { child ->
             Render(child)
         }
@@ -102,7 +152,9 @@ fun SDUISpacer(model: SDUIComponent.Spacer) {
 
 @Composable
 fun SDUIScaffold(model: SDUIComponent.Scaffold) {
-    Scaffold {
+    Scaffold(
+        buildModifier(model.modifier),
+    ) {
         Render(model.content)
     }
 }
@@ -110,7 +162,8 @@ fun SDUIScaffold(model: SDUIComponent.Scaffold) {
 @Composable
 fun SDUIOutlinedButton(model: SDUIComponent.OutlinedButton) {
     Button(
-        onClick = { /* TODO: Handle button click, possibly using model.action */ }
+        onClick = { /* TODO: Handle button click, possibly using model.action */ },
+        buildModifier(model.modifier),
     ) {
         Text(
             text = model.title,
@@ -121,7 +174,9 @@ fun SDUIOutlinedButton(model: SDUIComponent.OutlinedButton) {
 
 @Composable
 fun SDUILazyRow(model: SDUIComponent.LazyRow) {
-    LazyRow {
+    LazyRow(
+        buildModifier(model.modifier),
+    ) {
         items(model.children) { child ->
             Render(child)
         }
@@ -130,7 +185,9 @@ fun SDUILazyRow(model: SDUIComponent.LazyRow) {
 
 @Composable
 fun SDUILazyColumn(model: SDUIComponent.LazyColumn) {
-    LazyColumn {
+    LazyColumn(
+        buildModifier(model.modifier),
+    ) {
         items(model.children) { child ->
             Render(child)
         }
@@ -139,28 +196,89 @@ fun SDUILazyColumn(model: SDUIComponent.LazyColumn) {
 
 @Composable
 fun SDUIImage(model: SDUIComponent.Image) {
-    Text(
-        model.url,
-        modifier = buildModifier(model.modifier)
-    )
+    model.toCompose()
 }
 
 @Composable
-fun SDUIIconButton(model: SDUIComponent.IconButton) {
-    IconButton({}) {
-        Text(model.iconUrl)
+fun SDUIComponent.Image.toCompose() {
+    //TODO: Вернуть общий элемент
+    when (this.url) {
+        is DrawableType.DynamicDrawable -> {
+            AsyncImage(
+                url.value,
+                contentDescription = this.contentDescription,
+                modifier = buildModifier(this.modifier),
+                contentScale = this.contentScale
+            )
+        }
+
+        is DrawableType.StaticDrawable -> {
+            AsyncImage(
+                url.value,
+                contentDescription = this.contentDescription,
+                modifier = buildModifier(this.modifier),
+                contentScale = this.contentScale
+            )
+        }
+
+        is DrawableType.ThemeDrawable -> {
+            androidx.compose.foundation.Image(
+                painter = painterResource(url.resource),
+                contentDescription = this.contentDescription,
+                modifier = buildModifier(this.modifier),
+                contentScale = this.contentScale
+            )
+        }
+    }
+}
+
+sealed class MyScope {
+    data class RowScope(val scope: androidx.compose.foundation.layout.RowScope) : MyScope()
+    data class ColumnScope(val scope: androidx.compose.foundation.layout.ColumnScope) : MyScope()
+    data class BoxScope(val scope: androidx.compose.foundation.layout.BoxScope) : MyScope()
+    data object None : MyScope()
+}
+
+@Composable
+fun SDUIIconButton(model: SDUIComponent.IconButton, handleAction: (Action) -> Unit) {
+    IconButton(
+        {
+            handleAction(model.action)
+        },
+        buildModifier(model.modifier),
+    ) {
+        Render(model.content)
     }
 }
 
 @Composable
 fun SDUIIcon(model: SDUIComponent.Icon) {
-    Text(model.url)
+    when (model.drawable) {
+        is DrawableType.ThemeDrawable -> {
+            Icon(
+                painterResource(model.drawable.resource),
+                contentDescription = model.contentDescription,
+                modifier = buildModifier(model.modifier),
+                tint = model.tint.toCompose(),
+            )
+        }
+
+        else -> {}
+    }
+}
+
+@Composable
+fun ColorType.toCompose(): Color {
+    return when (this) {
+        is ColorType.StaticColor -> this.value
+        is ColorType.ThemeColor -> this.name.toThemeColor()
+    }
 }
 
 @Composable
 fun SDUIFloatingActionButton(model: SDUIComponent.FloatingActionButton) {
     FloatingActionButton({}) {
-        Text(model.iconUrl)
+        //
     }
 }
 
@@ -169,13 +287,13 @@ fun SDUIDivider(model: SDUIComponent.Divider) {
     when (model.type) {
         SDUIComponent.Divider.DividerType.HORIZONTAL -> HorizontalDivider(
             modifier = buildModifier(model.modifier),
-            thickness = model.thickness?.dp ?: DividerDefaults.Thickness,
+            thickness = model.thickness ?: DividerDefaults.Thickness,
             color = model.color ?: DividerDefaults.color
         )
 
         SDUIComponent.Divider.DividerType.VERTICAL -> VerticalDivider(
             modifier = buildModifier(model.modifier),
-            thickness = model.thickness?.dp ?: DividerDefaults.Thickness,
+            thickness = model.thickness ?: DividerDefaults.Thickness,
             color = model.color ?: DividerDefaults.color
         )
     }
@@ -188,17 +306,10 @@ fun SDUIBox(model: SDUIComponent.Box) {
         contentAlignment = model.contentAlignment,
         propagateMinConstraints = model.propagateMinConstraints,
     ) {
-        model.children.forEach { child ->
-            Render(child)
-        }
-    }
-}
-
-@Composable
-fun SDUICard(model: SDUIComponent.Card) {
-    Card {
-        model.children.forEach { child ->
-            Render(child)
+        CompositionLocalProvider(LocalScopeData provides MyScope.BoxScope(this)) {
+            model.children.forEach { child ->
+                Render(child)
+            }
         }
     }
 }
@@ -210,8 +321,10 @@ fun SDUIColumn(model: SDUIComponent.Column) {
         verticalArrangement = model.verticalArrangement,
         horizontalAlignment = model.horizontalAlignment,
     ) {
-        model.children.forEach { child ->
-            Render(child, )
+        CompositionLocalProvider(LocalScopeData provides MyScope.ColumnScope(this)) {
+            model.children.forEach { child ->
+                Render(child)
+            }
         }
     }
 }
@@ -223,8 +336,10 @@ fun SDUIRow(model: SDUIComponent.Row, handleAction: (Action) -> Unit) {
         verticalAlignment = model.verticalAlignment,
         horizontalArrangement = model.horizontalArrangement,
     ) {
-        model.children.forEach { child ->
-            Render(child) { handleAction(child.action) }
+        CompositionLocalProvider(LocalScopeData provides MyScope.RowScope(this)) {
+            model.children.forEach { child ->
+                Render(child) { handleAction(child.action) }
+            }
         }
     }
 }
@@ -234,7 +349,8 @@ fun SDUIText(model: SDUIComponent.Text) {
     Text(
         text = model.text,
         modifier = buildModifier(model.modifier),
-        color = model.color,
+        color = model.color?.toCompose() ?: Color.Unspecified,
+        style = model.style?.toTextStyle() ?: LocalTextStyle.current,
         fontSize = model.fontSize,
         fontStyle = model.fontStyle,
         fontWeight = model.fontWeight,
@@ -283,47 +399,130 @@ fun SDUIButton(model: SDUIComponent.Button, handleAction: () -> Unit) {
 
 @Composable
 fun SDUICheckbox(model: SDUIComponent.Checkbox, handleAction: () -> Unit) {
-    Checkbox(
+    AvitoCheckbox(
         checked = model.checked,
         onCheckedChange = { handleAction() },
-        modifier = buildModifier(model.modifier),
-        enabled = model.enabled,
-        /* TODO: Добавить цвета */
-        colors = CheckboxDefaults.colors()
+        modifier = buildModifier(model.modifier)
     )
 }
 
+val LocalScopeData = compositionLocalOf<MyScope> { MyScope.None }
+
 @Composable
 fun buildModifier(modifierProperties: List<ModifierProperties>): Modifier {
-    var modifier = Modifier.padding(0.dp)
+    var modifier: Modifier = Modifier
+    if (modifierProperties.count { it is ModifierProperties.KK } > 0) {
+        Napier.d("Я плачу")
+    }
 
     modifierProperties.forEach { property ->
-        when (property) {
-            is ModifierProperties.Clickable -> {
-                modifier = modifier.clickable(property.value) {}
-            }
+        Napier.d(
+            property.toString()
+        )
+        modifier =
+            when (property) {
+                is ModifierProperties.KK -> {
+                    Napier.d("Приветики")
+                    modifier
+                }
 
-            is ModifierProperties.Height -> {
-                modifier = modifier.height(property.value.dp)
-            }
+                is ModifierProperties.Height -> {
+                    modifier.then(Modifier.height(property.value))
+                }
 
-            is ModifierProperties.Padding -> {
-                modifier = modifier.padding(
-                    start = property.value.start.dp,
-                    top = property.value.top.dp,
-                    end = property.value.end.dp,
-                    bottom = property.value.bottom.dp
-                )
-            }
+                is ModifierProperties.Padding -> {
+                    modifier.then(
+                        Modifier.padding(
+                            start = property.value.start,
+                            top = property.value.top,
+                            end = property.value.end,
+                            bottom = property.value.bottom
+                        )
+                    )
+                }
 
-            is ModifierProperties.Width -> {
-                modifier = modifier.width(property.value.dp)
-            }
+                is ModifierProperties.Width -> {
+                    modifier.then(Modifier.width(property.value))
+                }
 
-            is ModifierProperties.BackgroundColor -> {
-                modifier = modifier.background(property.color)
+                is ModifierProperties.Alpha -> {
+                    modifier.then(Modifier.alpha(property.alpha))
+                }
+
+                is ModifierProperties.Background -> {
+                    modifier.then(Modifier.background(property.color.toCompose(), property.shape))
+                }
+
+                is ModifierProperties.Border -> {
+                    modifier.then(Modifier.border(property.width, property.color, property.shape))
+                }
+
+                is ModifierProperties.Clip -> {
+                    modifier.then(Modifier.clip(property.shape))
+                }
+
+                is ModifierProperties.FillMaxHeight -> {
+                    modifier.then(Modifier.fillMaxHeight(property.fraction))
+                }
+
+                is ModifierProperties.FillMaxSize -> {
+                    modifier.then(Modifier.fillMaxSize(property.fraction))
+                }
+
+                is ModifierProperties.FillMaxWidth -> {
+                    modifier.then(Modifier.fillMaxWidth(property.fraction))
+                }
+
+                is ModifierProperties.Shadow -> {
+                    modifier.then(
+                        Modifier.shadow(
+                            property.elevation,
+                            property.shape,
+                            property.clip,
+                            property.ambientColor,
+                            property.spotColor
+                        )
+                    )
+                }
+
+                is ModifierProperties.Size -> {
+                    modifier.then(Modifier.size(property.size))
+                }
+
+                is ModifierProperties.WrapContentHeight -> {
+                    modifier.then(Modifier.wrapContentHeight(property.alignment))
+                }
+
+                is ModifierProperties.WrapContentWidth -> {
+                    modifier.then(Modifier.wrapContentWidth(property.alignment))
+                }
+
+                is ModifierProperties.MatchParentSize -> {
+                    if (LocalScopeData.current is MyScope.BoxScope) {
+                        with((LocalScopeData.current as MyScope.BoxScope).scope) {
+                            modifier.then(Modifier.matchParentSize())
+                        }
+                    } else modifier
+                }
+
+                is ModifierProperties.Weight -> {
+                    when (LocalScopeData.current) {
+                        is MyScope.RowScope -> {
+                            with((LocalScopeData.current as MyScope.RowScope).scope) {
+                                modifier.then(Modifier.weight(property.value))
+                            }
+                        }
+
+                        is MyScope.ColumnScope -> {
+                            with((LocalScopeData.current as MyScope.ColumnScope).scope) {
+                                modifier.then(Modifier.weight(property.value))
+                            }
+                        }
+
+                        else -> modifier
+                    }
+                }
             }
-        }
     }
 
     return modifier

@@ -8,5 +8,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform) apply false
     alias(libs.plugins.androidKotlinMultiplatformLibrary) apply false
     alias(libs.plugins.kotlinAndroid) apply false
+    alias(libs.plugins.ktor) apply false
+    alias(libs.plugins.kotlinJvm) apply false
     kotlin("plugin.serialization") version libs.versions.kotlin
 }

@@ -67,12 +67,17 @@ kotlin {
 
                 implementation(projects.core.theme)
                 implementation(projects.core.ui)
+
+                implementation(libs.coil.compose)
+                implementation(libs.coil.network.ktor3)
+                implementation(libs.ktor.client.core)
             }
         }
-        androidMain {
-            dependencies {
-                implementation(libs.koin.androidx.compose)
-            }
+        androidMain.dependencies {
+            implementation(libs.koin.androidx.compose)
+        }
+        iosMain.dependencies {
+            implementation(libs.ktor.client.darwin)
         }
     }
 }

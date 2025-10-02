@@ -5,6 +5,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontSynthesis
@@ -22,10 +24,13 @@ import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import kotlinx.serialization.json.JsonElement
 import ru.aleksandra.core.sdui.domain.model.Action
+import ru.aleksandra.core.sdui.domain.model.BindableString
+import ru.aleksandra.core.sdui.domain.model.BindableValue
 import ru.aleksandra.core.sdui.domain.model.BorderStroke
 import ru.aleksandra.core.sdui.domain.model.ButtonColors
 import ru.aleksandra.core.sdui.domain.model.ButtonElevation
 import ru.aleksandra.core.sdui.domain.model.CheckboxColors
+import ru.aleksandra.core.sdui.domain.model.ColorType
 import ru.aleksandra.core.sdui.domain.model.Offset
 import ru.aleksandra.core.sdui.domain.model.PaddingValues
 import ru.aleksandra.core.sdui.domain.model.SDUIComponentDomain
@@ -33,50 +38,375 @@ import ru.aleksandra.core.sdui.domain.model.Shadow
 import ru.aleksandra.core.sdui.domain.model.Shape
 import ru.aleksandra.core.sdui.domain.model.TextGeometricTransform
 import ru.aleksandra.core.sdui.domain.model.TextIndent
+import ru.aleksandra.core.sdui.presentation.model.DrawableType
+import ru.aleksandra.core.sdui.presentation.model.ModifierProperties
+import ru.aleksandra.core.sdui.presentation.model.PaddingProperties
 import ru.aleksandra.core.sdui.presentation.model.SDUIComponent
+import ru.aleksandra.core.ui.toDrawable
 import androidx.compose.ui.geometry.Offset as OffsetUi
 import androidx.compose.ui.text.style.TextIndent as TextIndentUi
+import ru.aleksandra.core.sdui.domain.model.ModifierProperties as ModifierPropertiesDomain
 import ru.aleksandra.core.sdui.presentation.model.Action as ActionUi
 
 //TODO: Добавить метод с data map<String, Any> для динамических данных прям с сервера
 fun SDUIComponentDomain.toUi(json: JsonElement): SDUIComponent {
     return when (this) {
-        is SDUIComponentDomain.BottomBar -> TODO()
-        is SDUIComponentDomain.Box -> TODO()
+        is SDUIComponentDomain.BottomBar -> toUi(json)
+        is SDUIComponentDomain.Box -> toUi(json)
         is SDUIComponentDomain.Button -> toUi(json)
-        is SDUIComponentDomain.Card -> TODO()
-        is SDUIComponentDomain.Checkbox -> toUi()
+        is SDUIComponentDomain.Checkbox -> toUi(json)
         is SDUIComponentDomain.Column -> toUi(json)
-        is SDUIComponentDomain.Divider -> TODO()
-        is SDUIComponentDomain.FloatingActionButton -> TODO()
-        is SDUIComponentDomain.Icon -> TODO()
-        is SDUIComponentDomain.IconButton -> TODO()
-        is SDUIComponentDomain.Image -> TODO()
+        is SDUIComponentDomain.Divider -> toUi(json)
+        is SDUIComponentDomain.FloatingActionButton -> toUi(json)
+        is SDUIComponentDomain.Icon -> toUi(json)
+        is SDUIComponentDomain.IconButton -> toUi(json)
+        is SDUIComponentDomain.Image -> toUi(json)
         is SDUIComponentDomain.LazyColumn -> TODO()
         is SDUIComponentDomain.LazyRow -> TODO()
-        is SDUIComponentDomain.OutlinedButton -> TODO()
+        is SDUIComponentDomain.OutlinedButton -> toUi(json)
         is SDUIComponentDomain.Row -> toUi(json)
         is SDUIComponentDomain.Scaffold -> TODO()
-        is SDUIComponentDomain.Spacer -> TODO()
-        is SDUIComponentDomain.Surface -> TODO()
+        is SDUIComponentDomain.Spacer -> toUi(json)
+        is SDUIComponentDomain.Surface -> toUi(json)
         is SDUIComponentDomain.Text -> toUi(json)
         is SDUIComponentDomain.TextField -> TODO()
-        is SDUIComponentDomain.AvitoCheckBox -> toUi()
+        is SDUIComponentDomain.AvitoCheckBox -> toUi(json)
         is SDUIComponentDomain.AvitoNavBar -> toUi(json)
-        is SDUIComponentDomain.AvitoSelectAll -> toUi()
+        is SDUIComponentDomain.AvitoSelectAll -> toUi(json)
+        is SDUIComponentDomain.AvitoShopName -> toUi(json)
+        is SDUIComponentDomain.AvitoCartItem -> toUi(json)
+        is SDUIComponentDomain.RepetitiveComponent -> toUi(json)
     }
-
 }
 
-fun SDUIComponentDomain.AvitoSelectAll.toUi(): SDUIComponent.AvitoSelectAll {
-    return SDUIComponent.AvitoSelectAll(
+fun SDUIComponentDomain.Surface.toUi(json: JsonElement): SDUIComponent.Surface {
+    return SDUIComponent.Surface(
+        action = action.toUi(),
+        children = children.map { it.toUi(json) },
+        modifier = modifier.map { it.toUi() }
+    )
+}
+
+fun SDUIComponentDomain.Spacer.toUi(json: JsonElement): SDUIComponent.Spacer {
+    return SDUIComponent.Spacer(
+        modifier = modifier.map { it.toUi() }
+    )
+}
+
+fun SDUIComponentDomain.OutlinedButton.toUi(json: JsonElement): SDUIComponent.OutlinedButton {
+    return SDUIComponent.OutlinedButton(
+        action = action.toUi(),
+        content = content.toUi(json),
+        title = title,
+        modifier = modifier.map { it.toUi() }
+    )
+}
+
+fun SDUIComponentDomain.Image.toUi(json: JsonElement): SDUIComponent.Image {
+    return SDUIComponent.Image(
+        action = action.toUi(),
+        url = url.toUi(json),
+        contentDescription = contentDescription,
+        contentScale = contentScale?.toContentScale() ?: ContentScale.Fit,
+        modifier = modifier.map { it.toUi() }
+    )
+}
+
+fun String.toContentScale() = when (this) {
+    "Crop" -> ContentScale.Crop
+    "Fit" -> ContentScale.Fit
+    "FillBounds" -> ContentScale.FillBounds
+    "FillHeight" -> ContentScale.FillHeight
+    "FillWidth" -> ContentScale.FillWidth
+    "Inside" -> ContentScale.Inside
+    "None" -> ContentScale.None
+    else -> ContentScale.Fit
+}
+
+fun SDUIComponentDomain.FloatingActionButton.toUi(json: JsonElement): SDUIComponent.FloatingActionButton {
+    return SDUIComponent.FloatingActionButton(
+        action = action.toUi(),
+        modifier = modifier.map { it.toUi() }
+    )
+}
+
+fun SDUIComponentDomain.Divider.toUi(json: JsonElement): SDUIComponent.Divider {
+    return SDUIComponent.Divider(
+        color = color?.toColor() ?: Color.LightGray,
+        thickness = thickness?.dp ?: 1.dp,
+        type = when (type) {
+            SDUIComponentDomain.Divider.DividerType.HORIZONTAL -> SDUIComponent.Divider.DividerType.HORIZONTAL
+            SDUIComponentDomain.Divider.DividerType.VERTICAL -> SDUIComponent.Divider.DividerType.VERTICAL
+        },
+        modifier = modifier.map { it.toUi() }
+    )
+}
+
+fun SDUIComponentDomain.Box.toUi(json: JsonElement): SDUIComponent.Box {
+    return SDUIComponent.Box(
+        action = action.toUi(),
+        children = children.map { it.toUi(json) },
+        contentAlignment = contentAlignment?.toAlignment() ?: Alignment.TopStart,
+        modifier = modifier.map { it.toUi() }
+    )
+}
+
+fun ModifierPropertiesDomain.toUi(): ModifierProperties {
+    return when (this) {
+        is ModifierPropertiesDomain.Alpha -> ModifierProperties.Alpha(alpha)
+        is ModifierPropertiesDomain.Background -> ModifierProperties.Background(
+            color.toUi(),
+            shape.toCompose()
+        )
+
+        is ModifierPropertiesDomain.Border -> ModifierProperties.Border(
+            width.dp,
+            color.toColor(),
+            shape.toCompose(),
+        )
+
+        is ModifierPropertiesDomain.Clip -> ModifierProperties.Clip(
+            shape.toCompose()
+        )
+
+        is ModifierPropertiesDomain.FillMaxHeight -> ModifierProperties.FillMaxHeight(
+            fraction = fraction
+        )
+
+        is ModifierPropertiesDomain.FillMaxSize -> ModifierProperties.FillMaxSize(
+            fraction = fraction
+        )
+
+        is ModifierPropertiesDomain.FillMaxWidth -> ModifierProperties.FillMaxWidth(
+            fraction = fraction
+        )
+
+        is ModifierPropertiesDomain.Height -> ModifierProperties.Height(
+            value = value.dp
+        )
+
+        is ModifierPropertiesDomain.Padding -> ModifierProperties.Padding(
+            PaddingProperties(
+                start = value.start.dp,
+                top = value.top.dp,
+                end = value.end.dp,
+                bottom = value.bottom.dp
+            )
+        )
+
+        is ModifierPropertiesDomain.Shadow -> ModifierProperties.Shadow(
+            elevation = elevation.dp,
+            shape = shape.toCompose(),
+            ambientColor = ambientColor?.toColor() ?: Color.Black,
+            spotColor = spotColor?.toColor() ?: Color.Black,
+        )
+
+        is ModifierPropertiesDomain.Size -> ModifierProperties.Size(
+            size = value.dp
+        )
+
+        is ModifierPropertiesDomain.Width -> ModifierProperties.Width(
+            value = value.dp
+        )
+
+        is ModifierPropertiesDomain.WrapContentHeight -> ModifierProperties.WrapContentHeight(
+            alignment = alignment.toAlignmentVertical()
+        )
+
+        is ModifierPropertiesDomain.WrapContentWidth -> ModifierProperties.WrapContentWidth(
+            alignment = alignment.toAlignmentHorizontal()
+        )
+
+        is ModifierPropertiesDomain.Weight -> ModifierProperties.Weight(value = value)
+        ModifierPropertiesDomain.MatchParentSize -> ModifierProperties.MatchParentSize
+    }
+}
+
+fun SDUIComponentDomain.BottomBar.toUi(json: JsonElement): SDUIComponent.BottomBar {
+    return SDUIComponent.BottomBar(
+        action = action.toUi(),
+        children = children.map { it.toUi(json) },
+        modifier = modifier.map { it.toUi() }
+    )
+}
+
+fun SDUIComponentDomain.IconButton.toUi(json: JsonElement): SDUIComponent.IconButton {
+    return SDUIComponent.IconButton(
+        action = action.toUi(),
+        modifier = modifier.map { it.toUi() },
+        content = content.toUi(json)
+    )
+}
+
+fun SDUIComponentDomain.Icon.toUi(json: JsonElement): SDUIComponent.Icon {
+    return SDUIComponent.Icon(
+        drawable = drawable.toUi(json),
+        tint = tint.toUi(),
+        modifier = modifier.map { it.toUi() },
+        contentDescription = contentDescription
+    )
+}
+
+fun ColorType.toUi(): ru.aleksandra.core.sdui.presentation.model.ColorType {
+    return when (this) {
+        is ColorType.StaticColor -> ru.aleksandra.core.sdui.presentation.model.ColorType.StaticColor(
+            value.toColor()
+        )
+
+        is ColorType.ThemeColor -> ru.aleksandra.core.sdui.presentation.model.ColorType.ThemeColor(
+            name
+        )
+    }
+}
+
+fun ru.aleksandra.core.sdui.domain.model.DrawableType.toUi(json: JsonElement): DrawableType {
+    return when (this) {
+        is ru.aleksandra.core.sdui.domain.model.DrawableType.DynamicDrawable -> DrawableType.DynamicDrawable(
+            value = json.getByPath<String>(path, null) ?: error("No drawable found for path: $path")
+        )
+
+        is ru.aleksandra.core.sdui.domain.model.DrawableType.ThemeDrawable -> DrawableType.ThemeDrawable(
+            resource = this.name.toDrawable() ?: error("No drawable found for name: ${this.name}")
+        )
+
+        is ru.aleksandra.core.sdui.domain.model.DrawableType.StaticDrawable -> DrawableType.StaticDrawable(
+            value = value
+        )
+    }
+}
+
+fun SDUIComponentDomain.RepetitiveComponent.toUi(json: JsonElement): SDUIComponent.RepetitiveComponent {
+    val list = mutableListOf<SDUIComponentDomain>()
+    repeat(json.countByPath(itemsPath)) {
+        list.add(content.updatePath(index = it, itemsPath = itemsPath))
+    }
+    return SDUIComponent.RepetitiveComponent(
+        component = list.map { it.toUi(json) },
+        modifier = modifier.map { it.toUi() }
+    )
+}
+
+// TODO: Пока такое решение для классов, можно улучшить
+fun SDUIComponentDomain.updatePath(index: Int, itemsPath: String): SDUIComponentDomain {
+    return when (this) {
+        is SDUIComponentDomain.Text -> {
+            return this.copy(
+                text = text.updatePathAndTransformation(index, itemsPath)
+            )
+        }
+
+        is SDUIComponentDomain.Row -> {
+            return this.copy(
+                children = children.map { it.updatePath(index, itemsPath) }
+            )
+        }
+
+        is SDUIComponentDomain.Column -> {
+            return this.copy(
+                children = children.map { it.updatePath(index, itemsPath) }
+            )
+        }
+
+        is SDUIComponentDomain.Box -> {
+            return this.copy(
+                children = children.map { it.updatePath(index, itemsPath) }
+            )
+        }
+
+        is SDUIComponentDomain.RepetitiveComponent -> {
+            return this.copy(
+                itemsPath = itemsPath.replace(
+                    "*",
+                    index.toString()
+                ) + "." + this.itemsPath,
+            )
+        }
+
+        is SDUIComponentDomain.Image -> {
+            return this.copy(
+                url = when (url) {
+                    is ru.aleksandra.core.sdui.domain.model.DrawableType.DynamicDrawable -> {
+                        url.copy(
+                            itemsPath.replace(
+                                "*",
+                                index.toString()
+                            ) + "." + this.url.path
+                        )
+                    }
+
+                    is ru.aleksandra.core.sdui.domain.model.DrawableType.ThemeDrawable -> url
+                    is ru.aleksandra.core.sdui.domain.model.DrawableType.StaticDrawable -> url
+                }
+            )
+        }
+
+        else -> this
+    }
+}
+
+fun BindableString.updatePathAndTransformation(
+    index: Int,
+    itemsPath: String
+): BindableString {
+    return when (this) {
+        is BindableValue.Dynamic -> {
+            BindableValue.Dynamic(
+                itemsPath.replace(
+                    "*",
+                    index.toString()
+                ) + "." + path,
+                transformation
+            )
+        }
+
+        is BindableValue.Static -> {
+            this
+        }
+    }
+}
+
+/*fun SDUIComponentDomain.AvitoCartItem.toUi(json: JsonElement): SDUIComponent.AvitoCartItem {
+    return SDUIComponent.AvitoCartItem(
         isChecked = isChecked,
-        deleteCount = deleteCount,
+        name = name.toValue(json),
+        priceWithDiscount = priceWithDiscount.toValue(json),
+        priceWithoutDiscount = priceWithoutDiscount.toValue(json),
+        salePercent = salePercent.toValue(json),
+        count = count.toValue(json),
+        imageUrl = imageUrl.toValue(json),
+    )
+}
+
+fun SDUIComponentDomain.AvitoShopName.toUi(json: JsonElement): SDUIComponent.AvitoShopName {
+    return SDUIComponent.AvitoShopName(
+        isChecked = isChecked,
+        shopName = shopName.toValue(json),
+        rating = rating.toValue(json),
+        reviewsCount = reviewsCount.toValue(json),
         action = action.toUi()
     )
 }
 
-fun SDUIComponentDomain.AvitoCheckBox.toUi(): SDUIComponent.AvitoCheckBox {
+fun SDUIComponentDomain.AvitoSelectAll.toUi(json: JsonElement): SDUIComponent.AvitoSelectAll {
+    return SDUIComponent.AvitoSelectAll(
+        isChecked = isChecked,
+        deleteCount = deleteCount.toValue(json),
+        action = action.toUi()
+    )
+}*/
+
+inline fun <reified T> BindableValue<T>.toValue(json: JsonElement): T {
+
+    return when (this) {
+        is BindableValue.Static -> this.value
+        is BindableValue.Dynamic -> {
+            json.getByPath<T>(this.path, this.transformation)
+                ?: error("No value found for path: ${this.path}")
+        }
+    }
+}
+
+/*fun SDUIComponentDomain.AvitoCheckBox.toUi(): SDUIComponent.AvitoCheckBox {
     return SDUIComponent.AvitoCheckBox(
         text = text,
         isChecked = isChecked,
@@ -86,22 +416,18 @@ fun SDUIComponentDomain.AvitoCheckBox.toUi(): SDUIComponent.AvitoCheckBox {
 
 fun SDUIComponentDomain.AvitoNavBar.toUi(json: JsonElement): SDUIComponent.AvitoNavBar {
     return SDUIComponent.AvitoNavBar(
-        title = when (title) {
-            is ru.aleksandra.core.sdui.domain.model.BindableValue.Static -> title.value
-            is ru.aleksandra.core.sdui.domain.model.BindableValue.Dynamic -> json.getByPath<String>(
-                title.path
-            ) ?: ""
-        },
+        title = title.toValue(json),
         action = action.toUi(),
     )
-}
+}*/
 
-fun SDUIComponentDomain.Checkbox.toUi(): SDUIComponent.Checkbox {
+fun SDUIComponentDomain.Checkbox.toUi(json: JsonElement): SDUIComponent.Checkbox {
     return SDUIComponent.Checkbox(
         checked = checked,
         action = action.toUi(),
         enabled = enabled,
         colors = colors.toUi(),
+        modifier = modifier.map { it.toUi() }
     )
 }
 
@@ -111,6 +437,7 @@ fun SDUIComponentDomain.Column.toUi(json: JsonElement): SDUIComponent.Column {
         children = children.map { it.toUi(json) },
         verticalArrangement = verticalArrangement?.toArrangementVertical() ?: Arrangement.Top,
         horizontalAlignment = horizontalAlignment?.toAlignmentHorizontal() ?: Alignment.Start,
+        modifier = modifier.map { it.toUi() }
     )
 }
 
@@ -118,21 +445,19 @@ fun SDUIComponentDomain.Row.toUi(json: JsonElement): SDUIComponent.Row {
     return SDUIComponent.Row(
         action = action.toUi(),
         children = children.map { it.toUi(json) },
-        horizontalArrangement = horizontalArrangement.toArrangementHorizontal(),
-        verticalAlignment = verticalAlignment.toAlignmentVertical(),
+        horizontalArrangement = horizontalArrangement?.toArrangementHorizontal()
+            ?: Arrangement.Start,
+        verticalAlignment = verticalAlignment?.toAlignmentVertical() ?: Alignment.Top,
+        modifier = modifier.map { it.toUi() }
     )
 }
 
 fun SDUIComponentDomain.Text.toUi(json: JsonElement): SDUIComponent.Text {
     return SDUIComponent.Text(
         action = action.toUi(),
-        text = when (text) {
-            is ru.aleksandra.core.sdui.domain.model.BindableValue.Static -> text.value
-            is ru.aleksandra.core.sdui.domain.model.BindableValue.Dynamic -> json.getByPath<String>(
-                text.path
-            ) ?: ""
-        },
-        color = color?.toColor() ?: Color.Unspecified,
+        text = text.toValue(json),
+        style = style,
+        color = color?.toUi(),
         fontSize = fontSize?.toTextUnit() ?: TextUnit.Unspecified,
         letterSpacing = letterSpacing?.toTextUnit() ?: TextUnit.Unspecified,
         fontStyle = fontStyle?.toFontStyle(),
@@ -145,6 +470,7 @@ fun SDUIComponentDomain.Text.toUi(json: JsonElement): SDUIComponent.Text {
         softWrap = softWrap,
         maxLines = maxLines,
         minLines = minLines,
+        modifier = modifier.map { it.toUi() },
     )
 }
 
@@ -157,7 +483,8 @@ fun SDUIComponentDomain.Button.toUi(json: JsonElement): SDUIComponent.Button {
         elevation = elevation?.toCompose(),
         border = border?.toCompose(),
         contentPadding = contentPadding?.toCompose(),
-        content = content.toUi(json)
+        content = content.toUi(json),
+        modifier = modifier.map { it.toUi() }
     )
 }
 
@@ -167,11 +494,13 @@ fun Action.toUi(): ActionUi =
         Action.None -> ActionUi.None
         is Action.OpenUrl -> ActionUi.OpenUrl(url)
         is Action.ShowToast -> ActionUi.ShowToast(message)
+        is Action.PopBack -> ActionUi.PopBack
     }
 
 fun Shape.toCompose() = when (this) {
     is Shape.CircleShape -> CircleShape
-    is Shape.RoundedCornerShape -> RoundedCornerShape(cornerRadius)
+    is Shape.RoundedCornerShape -> RoundedCornerShape(radius.dp)
+    Shape.RectangleShape -> RectangleShape
 }
 
 fun ButtonColors.toCompose(): ru.aleksandra.core.sdui.presentation.model.ButtonColors {
@@ -256,27 +585,44 @@ fun String.toAlignmentVertical(): Alignment.Vertical {
 }
 
 fun String.toArrangementHorizontal(): Arrangement.Horizontal {
-    return when (this) {
-        "Center" -> Arrangement.Center
-        "End" -> Arrangement.End
-        "SpaceBetween" -> Arrangement.SpaceBetween
-        "SpaceEvenly" -> Arrangement.SpaceEvenly
-        "SpaceAround" -> Arrangement.SpaceAround
-        "Start" -> Arrangement.Start
+    return when {
+        this == "Center" -> Arrangement.Center
+        this == "End" -> Arrangement.End
+        this == "SpaceBetween" -> Arrangement.SpaceBetween
+        this == "SpaceEvenly" -> Arrangement.SpaceEvenly
+        this == "SpaceAround" -> Arrangement.SpaceAround
+        this == "Start" -> Arrangement.Start
+        this.startsWith("SpacedBy") -> {
+            val value = this
+                .removePrefix("SpacedBy(")
+                .removeSuffix(")")
+                .toFloatOrNull() ?: 0f
+            Arrangement.spacedBy(value.dp)
+        }
+
         else -> Arrangement.Start
     }
 }
 
-fun String.toArrangementVertical(): Arrangement.Vertical =
-    when (this) {
-        "Center" -> Arrangement.Center
-        "SpaceBetween" -> Arrangement.SpaceBetween
-        "SpaceEvenly" -> Arrangement.SpaceEvenly
-        "SpaceAround" -> Arrangement.SpaceAround
-        "Top" -> Arrangement.Top
-        "Bottom" -> Arrangement.Bottom
+fun String.toArrangementVertical(): Arrangement.Vertical {
+    return when {
+        this == "Center" -> Arrangement.Center
+        this == "SpaceBetween" -> Arrangement.SpaceBetween
+        this == "SpaceEvenly" -> Arrangement.SpaceEvenly
+        this == "SpaceAround" -> Arrangement.SpaceAround
+        this == "Top" -> Arrangement.Top
+        this == "Bottom" -> Arrangement.Bottom
+        this.startsWith("SpacedBy") -> {
+            val value = this
+                .removePrefix("SpacedBy(")
+                .removeSuffix(")")
+                .toFloatOrNull() ?: 0f
+            Arrangement.spacedBy(value.dp)
+        }
+
         else -> Arrangement.Top
     }
+}
 
 fun String.toBaselineShift(): BaselineShift {
     return when (this) {

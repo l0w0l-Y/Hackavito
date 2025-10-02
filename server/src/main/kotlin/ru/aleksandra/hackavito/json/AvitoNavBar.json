@@ -1,0 +1,69 @@
+{
+    "type": "Row",
+    "modifier": [
+        {
+            "type": "FillMaxWidth"
+        },
+        {
+            "type": "Padding",
+            "value": {
+                "start": 12,
+                "top": 14,
+                "end": 12,
+                "bottom": 14
+            }
+        }
+    ],
+    "verticalAlignment": "CenterVertically",
+    "children": [
+        {
+            "type": "IconButton",
+            "action": {
+                "type": "Navigate",
+                "destination": "back"
+            },
+            "modifier": [
+                {
+                    "type": "Size",
+                    "value": 24
+                }
+            ],
+            "content":
+            {
+                "type": "Icon",
+                "drawable": {
+                    "type": "Theme",
+                    "name": "ic_back"
+                },
+                "tint": {
+                    "type":"Theme",
+                    "name":"controlContentPrimary"
+                },
+                "contentDescription": null
+            }
+        },
+        {
+            "type": "Text",
+            "modifier": [],
+            "style": "h50",
+            "color": {
+                "type": "Theme",
+                "name": "controlContentPrimary"
+            },
+            "textAlign": "Center",
+            "text": {
+                "type": "Static",
+                "value": "Корзина"
+            }
+        },
+        {
+            "type": "Spacer",
+            "modifier": [
+                {
+                    "type":"Width",
+                    "value":24
+                }
+            ]
+        }
+    ]
+}

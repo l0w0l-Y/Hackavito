@@ -46,6 +46,10 @@ kotlin {
 
     sourceSets {
 
+        androidMain.dependencies {
+            implementation("io.ktor:ktor-client-android:3.0.1")
+        }
+
         commonMain {
             dependencies {
                 implementation(compose.components.uiToolingPreview)
@@ -53,6 +57,9 @@ kotlin {
                 implementation(compose.components.resources)
 
                 implementation(projects.core.theme)
+
+                implementation(libs.coil.compose)
+                implementation(libs.coil.network.ktor3)
             }
         }
     }

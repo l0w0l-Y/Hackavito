@@ -8,7 +8,7 @@ import ru.aleksandra.feature.admin.di.adminViewModelModule
 
 @OptIn(ExperimentalComposeUiApi::class)
 fun main() {
-    initKoin(listOf(adminViewModelModule))
+    initKoin()
     ComposeViewport(document.body!!) {
         WebApp()
     }

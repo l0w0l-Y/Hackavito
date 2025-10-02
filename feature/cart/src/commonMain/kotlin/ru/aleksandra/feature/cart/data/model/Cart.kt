@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Cart(
     val items: List<CartItem>,
-    val count: Int,
-    val totalPrice: Int,
+    val totalItems: Int,
+    val isSelected: Boolean = false,
+    val totalPrice: Int = items.sumOf { it.items.sumOf { it.priceWithoutDiscount * it.count } },
 )

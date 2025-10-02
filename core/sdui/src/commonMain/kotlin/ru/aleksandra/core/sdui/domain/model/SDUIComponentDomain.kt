@@ -1,14 +1,11 @@
 package ru.aleksandra.core.sdui.domain.model
 
-import androidx.compose.ui.graphics.Color
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import ru.aleksandra.core.sdui.presentation.model.PaddingProperties
-import ru.aleksandra.core.sdui.presentation.model.SDUIComponent
-import ru.aleksandra.core.sdui.presentation.serializer.ColorSerializer
 import kotlin.reflect.KClass
 
 @Serializable
+@SerialName("SDUIComponentDomain")
 sealed class SDUIComponentDomain() {
     abstract val modifier: List<ModifierProperties>
 
@@ -20,7 +17,8 @@ sealed class SDUIComponentDomain() {
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
         val text: BindableString,
-        val color: String? = null,
+        val style: String? = null,
+        val color: ColorType? = null,
         val fontSize: String? = null,
         val fontStyle: String? = null,
         val fontWeight: String? = null,
@@ -67,6 +65,7 @@ sealed class SDUIComponentDomain() {
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
         val title: String,
+        val content: SDUIComponentDomain,
     ) : SDUIComponentDomain()
 
     @Serializable
@@ -74,7 +73,7 @@ sealed class SDUIComponentDomain() {
     data class IconButton(
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
-        val iconUrl: String,
+        val content: SDUIComponentDomain,
     ) : SDUIComponentDomain()
 
     @Serializable
@@ -82,7 +81,6 @@ sealed class SDUIComponentDomain() {
     data class FloatingActionButton(
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
-        val iconUrl: String,
     ) : SDUIComponentDomain()
 
     // Layout components
@@ -102,8 +100,8 @@ sealed class SDUIComponentDomain() {
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
         val children: List<SDUIComponentDomain>,
-        val horizontalArrangement: String,
-        val verticalAlignment: String,
+        val horizontalArrangement: String? = null,
+        val verticalAlignment: String? = null,
     ) : SDUIComponentDomain()
 
     @Serializable
@@ -112,7 +110,7 @@ sealed class SDUIComponentDomain() {
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
         val children: List<SDUIComponentDomain>,
-        val contentAlignment: String,
+        val contentAlignment: String? = null,
         val propagateMinConstraints: Boolean = false,
     ) : SDUIComponentDomain()
 
@@ -147,7 +145,6 @@ sealed class SDUIComponentDomain() {
     data class Spacer(
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
-        val height: Int
     ) : SDUIComponentDomain()
 
     @Serializable
@@ -170,33 +167,29 @@ sealed class SDUIComponentDomain() {
     data class Image(
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
-        val url: String
-    ) :
-        SDUIComponentDomain()
+        val url: DrawableType,
+        val contentDescription: String? = null,
+        val contentScale: String? = null,
+    ) : SDUIComponentDomain()
 
     @Serializable
     @SerialName("Icon")
     data class Icon(
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
-        val url: String
+        val drawable: DrawableType,
+        val tint: ColorType,
+        val contentDescription: String? = null,
     ) : SDUIComponentDomain()
 
     // Containers
-    @Serializable
-    @SerialName("Card")
-    data class Card(
-        override val modifier: List<ModifierProperties> = emptyList(),
-        override val action: Action = Action.None,
-        val children: List<SDUIComponent>
-    ) : SDUIComponentDomain()
 
     @Serializable
     @SerialName("Surface")
     data class Surface(
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
-        val children: List<SDUIComponent>
+        val children: List<SDUIComponentDomain>
     ) : SDUIComponentDomain()
 
     @Serializable
@@ -214,7 +207,7 @@ sealed class SDUIComponentDomain() {
     data class BottomBar(
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
-        val children: List<SDUIComponent>
+        val children: List<SDUIComponentDomain>
     ) : SDUIComponentDomain()
 
     @Serializable
@@ -238,7 +231,41 @@ sealed class SDUIComponentDomain() {
     @SerialName("AvitoSelectAll")
     data class AvitoSelectAll(
         val isChecked: Boolean = false,
-        val deleteCount: Int = 0,
+        val deleteCount: BindableInt,
+        override val modifier: List<ModifierProperties> = emptyList(),
+        override val action: Action = Action.None,
+    ) : SDUIComponentDomain()
+
+    @Serializable
+    @SerialName("AvitoShopName")
+    data class AvitoShopName(
+        val isChecked: Boolean = false,
+        val shopName: BindableString,
+        val rating: BindableFloat,
+        val reviewsCount: BindableInt,
+        override val modifier: List<ModifierProperties> = emptyList(),
+        override val action: Action = Action.None,
+    ) : SDUIComponentDomain()
+
+    @Serializable
+    @SerialName("AvitoCartItem")
+    data class AvitoCartItem(
+        val isChecked: Boolean = false,
+        val name: BindableString,
+        val priceWithoutDiscount: BindableInt,
+        val priceWithDiscount: BindableInt = BindableValue.Static(0),
+        val salePercent: BindableInt = BindableValue.Static(0),
+        val count: BindableInt,
+        val imageUrl: BindableString,
+        override val modifier: List<ModifierProperties> = emptyList(),
+        override val action: Action = Action.None,
+    ) : SDUIComponentDomain()
+
+    @Serializable
+    @SerialName("RepetitiveComponent")
+    data class RepetitiveComponent(
+        val content: SDUIComponentDomain,
+        val itemsPath: String,
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
     ) : SDUIComponentDomain()
@@ -248,7 +275,25 @@ sealed class SDUIComponentDomain() {
         val subclasses: List<KClass<out SDUIComponentDomain>> = listOf(
             Text::class,
             Button::class,
-            AvitoNavBar::class
+            AvitoNavBar::class,
+            RepetitiveComponent::class,
+            TextField::class,
+            Column::class,
+            Row::class,
+            Image::class,
+            Icon::class,
+            Spacer::class,
+            Divider::class,
+            Box::class,
+            Scaffold::class,
+            FloatingActionButton::class,
+            IconButton::class,
+            OutlinedButton::class,
+            Checkbox::class,
+            AvitoCheckBox::class,
+            AvitoSelectAll::class,
+            AvitoShopName::class,
+            AvitoCartItem::class,
         )
     }
 }
@@ -268,16 +313,70 @@ sealed class ModifierProperties {
     data class Padding(val value: PaddingProperties) : ModifierProperties()
 
     @Serializable
-    @SerialName("Clickable")
-    data class Clickable(val value: Boolean) : ModifierProperties()
+    @SerialName("Size")
+    data class Size(val value: Int) : ModifierProperties()
 
     @Serializable
-    @SerialName("BackgroundColor")
-    data class BackgroundColor(@Serializable(with = ColorSerializer::class) val color: Color) :
-        ModifierProperties()
+    @SerialName("Weight")
+    data class Weight(val value: Float) : ModifierProperties()
+
+    @Serializable
+    @SerialName("FillMaxWidth")
+    data class FillMaxWidth(val fraction: Float = 1f) : ModifierProperties()
+
+    @Serializable
+    @SerialName("FillMaxHeight")
+    data class FillMaxHeight(val fraction: Float = 1f) : ModifierProperties()
+
+    @Serializable
+    @SerialName("FillMaxSize")
+    data class FillMaxSize(val fraction: Float = 1f) : ModifierProperties()
+
+    @Serializable
+    @SerialName("WrapContentWidth")
+    data class WrapContentWidth(val alignment: String) : ModifierProperties()
+
+    @Serializable
+    @SerialName("WrapContentHeight")
+    data class WrapContentHeight(val alignment: String) : ModifierProperties()
+
+    @Serializable
+    @SerialName("MatchParentSize")
+    data object MatchParentSize : ModifierProperties()
+
+    @Serializable
+    @SerialName("Background")
+    data class Background(val color: ColorType, val shape: Shape) : ModifierProperties()
+
+    @Serializable
+    @SerialName("Border")
+    data class Border(
+        val width: Int,
+        val color: String,
+        val shape: Shape,
+    ) : ModifierProperties()
+
+    @Serializable
+    @SerialName("Clip")
+    data class Clip(val shape: Shape) : ModifierProperties()
+
+    @Serializable
+    @SerialName("Shadow")
+    data class Shadow(
+        val elevation: Int,
+        val shape: Shape = Shape.RectangleShape,
+        val clip: Boolean = false,
+        val ambientColor: String? = null,
+        val spotColor: String? = null
+    ) : ModifierProperties()
+
+    @Serializable
+    @SerialName("Alpha")
+    data class Alpha(val alpha: Float) : ModifierProperties()
 }
 
 @Serializable
+@SerialName("PaddingProperties")
 data class PaddingProperties(
     val start: Int,
     val top: Int,
@@ -303,6 +402,10 @@ sealed class Action {
     data class Navigate(val destination: String) : Action()
 
     @Serializable
+    @SerialName("PopBack")
+    data object PopBack : Action()
+
+    @Serializable
     @SerialName("None")
     data object None : Action()
 }
@@ -319,8 +422,17 @@ sealed class StyleProperties {
 
 @Serializable
 sealed class Shape() {
+    @Serializable
+    @SerialName("CircleShape")
     data object CircleShape : Shape()
-    data class RoundedCornerShape(val cornerRadius: Int) : Shape()
+
+    @Serializable
+    @SerialName("RoundedCornerShape")
+    data class RoundedCornerShape(val radius: Int) : Shape()
+
+    @Serializable
+    @SerialName("RectangleShape")
+    data object RectangleShape : Shape()
 }
 
 @Serializable
@@ -399,6 +511,7 @@ data class CheckboxColors(
 )
 
 @Serializable
+@SerialName("BindableValue")
 sealed class BindableValue<T> {
     abstract fun getValue(dataContext: Map<String, Any?>): T
 
@@ -411,12 +524,66 @@ sealed class BindableValue<T> {
     @Suppress("UNCHECKED_CAST")
     @Serializable
     @SerialName("Dynamic")
-    data class Dynamic<T>(val path: String) : BindableValue<T>() {
+    data class Dynamic<T>(
+        val path: String,
+        val transformation: Transformation? = null,
+    ) : BindableValue<T>() {
         override fun getValue(dataContext: Map<String, Any?>): T {
             return dataContext[path] as T
         }
     }
 }
+
+@Serializable
+@SerialName("Transformation")
+sealed class Transformation {
+    @Serializable
+    @SerialName("Format")
+    data class Format(val pattern: String) : Transformation()
+}
+
+@Serializable
+@SerialName("Color")
+sealed class ColorType {
+
+    @Serializable
+    @SerialName("Theme")
+    data class ThemeColor(val name: String) : ColorType()
+
+    @Serializable
+    @SerialName("Static")
+    data class StaticColor(val value: String) : ColorType()
+}
+
+@Serializable
+@SerialName("Drawable")
+sealed class DrawableType {
+
+    @Serializable
+    @SerialName("Theme")
+    data class ThemeDrawable(val name: String) : DrawableType()
+
+    @Serializable
+    @SerialName("Dynamic")
+    data class DynamicDrawable(val path: String) : DrawableType()
+
+    @Serializable
+    @SerialName("Static")
+    data class StaticDrawable(val value: String) : DrawableType()
+}
+
+/*@Serializable
+sealed class TypoType {
+
+    @Serializable
+    @SerialName("Theme")
+    data class ThemeTypo(val name: String) : TypoType()
+
+    @Serializable
+    @SerialName("Static")
+    data class StaticTypo(val value: String) : TypoType()
+}*/
+
 
 typealias BindableString = BindableValue<String>
 typealias BindableInt = BindableValue<Int>
