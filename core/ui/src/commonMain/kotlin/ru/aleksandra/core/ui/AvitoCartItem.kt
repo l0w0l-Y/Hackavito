@@ -55,11 +55,11 @@ fun AvitoCartItem(
     onPlusItemCountClicked: () -> Unit,
     onMinusItemCountClicked: () -> Unit,
 ) {
-    HorizontalDivider(
-        color = Color.Black, // цвет линии
-        thickness = 1.dp,   // толщина линии
-        modifier = Modifier.fillMaxWidth() // растягиваем по ширине
-    )
+//    HorizontalDivider(
+//        color = Color.Black, // цвет линии
+//        thickness = 1.dp,   // толщина линии
+//        modifier = Modifier.fillMaxWidth() // растягиваем по ширине
+//    )
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -167,9 +167,9 @@ fun AvitoCartItem(
         }
 
     }
-    Divider(
-        color = Color.Black, // цвет линии
-        thickness = 1.dp,   // толщина линии
-        modifier = Modifier.fillMaxWidth() // растягиваем по ширине
-    )
+//    Divider(
+//        color = Color.Black, // цвет линии
+//        thickness = 1.dp,   // толщина линии
+//        modifier = Modifier.fillMaxWidth() // растягиваем по ширине
+//    )
 }

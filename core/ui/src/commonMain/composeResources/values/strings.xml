@@ -6,4 +6,8 @@
     <string name="sale_with_percent">-%1$d %</string>
     <string name="buy_with_delivery">Купить с доставкой</string>
     <string name="add_discounted_item_before_sale">Добавьте ещё %1$d товар до скидки %2$d %</string>
+    <string name="delivery_registration">Оформление доставки</string>
+    <string name="obtaining_method">Способ получения</string>
+    <string name="for_address">Для адреса:</string>
+    <string name="from_to_days_with_comma_before">, %1$d-%2$d дня</string>
 </resources>

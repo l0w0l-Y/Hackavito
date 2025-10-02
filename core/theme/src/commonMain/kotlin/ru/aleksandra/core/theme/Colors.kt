@@ -62,6 +62,18 @@ val ColorScheme.controlBgDefault: Color
 val ColorScheme.gray4: Color
     get() = Color(0xFFF5F5F5)
 
+val ColorScheme.gray54: Color
+    get() = Color(0xFF757575)
+
+val ColorScheme.red600: Color
+    get() = Color(0xFFFF4053)
+
+val ColorScheme.green800: Color
+    get() = Color(0xFF00B253)
+
+val ColorScheme.white: Color
+    get() = Color(0xFFFFFFFF)
+
 val ColorScheme.controlContentPayPassive: Color
     get() = Color(0xFFFFFFFF)
 
