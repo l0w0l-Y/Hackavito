@@ -73,9 +73,12 @@ kotlin {
                 // Napier for logging
                 implementation(libs.napier)
                 // FileKit
-                implementation("io.github.vinceglb:filekit-core:0.11.0")
-                implementation("io.github.vinceglb:filekit-dialogs:0.11.0")
-                implementation("io.github.vinceglb:filekit-dialogs-compose:0.11.0")
+                implementation(libs.filekit.core)
+                implementation(libs.filekit.dialogs)
+                implementation(libs.filekit.dialogs.compose)
+
+                //Ktor
+                implementation(libs.ktor.client.core)
             }
         }
     }

@@ -58,6 +58,7 @@ kotlin {
             implementation(projects.core.ui)
             implementation(projects.core.sdui)
             implementation(projects.core.di)
+            implementation(projects.core.data)
 
             implementation(libs.napier)
         }

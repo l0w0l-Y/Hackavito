@@ -28,7 +28,7 @@ fun App() {
             Column(modifier = Modifier.fillMaxSize().safeDrawingPadding()) {
                 NavHost(
                     navController = navController,
-                    startDestination = NavigationDestination.SDUIScreen("cart")
+                    startDestination = NavigationDestination.SDUIScreen("/delivery/pay/cart")
                 ) {
                     composable<NavigationDestination.SDUIScreen> {
                         CartScreen(navController)

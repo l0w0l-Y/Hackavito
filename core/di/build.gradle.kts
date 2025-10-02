@@ -55,6 +55,7 @@ kotlin {
 
                 implementation(projects.core.sdui)
                 implementation(projects.feature.cart)
+                implementation(projects.core.data)
             }
         }
         androidMain {

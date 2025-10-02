@@ -69,6 +69,7 @@ kotlin {
                 implementation(projects.core.ui)
 
                 implementation(libs.coil.compose)
+                implementation(libs.ktor.client.core)
             }
         }
         androidMain {

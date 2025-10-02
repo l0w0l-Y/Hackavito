@@ -37,7 +37,7 @@ import ru.aleksandra.core.sdui.presentation.model.UIState
 import ru.aleksandra.feature.admin.model.Documentation
 
 class AdminViewModel(
-    val loadUIUseCase: LoadUIUseCase
+    private val adminApi: AdminApi,
 ) : ViewModel() {
     private var _ui = MutableStateFlow<UIState>(UIState.Init)
     val ui: StateFlow<UIState> = _ui
@@ -83,7 +83,7 @@ class AdminViewModel(
             _uiElements.value =
                 SDUIComponentDomain.subclasses.map {
                     val serializer = it.serializer() as KSerializer<SDUIComponentDomain>
-                   val jsonModel = toJsonModel(serializer, null)
+                    val jsonModel = toJsonModel(serializer, null)
                     Documentation(
                         serializer.descriptor.serialName,
                         prettyPrint(jsonModel),
@@ -227,7 +227,7 @@ class AdminViewModel(
 
     fun sendToReview(json: String) {
         viewModelScope.launch {
-            //TODO: Добавить метод отправки на сервер
+            adminApi.saveScreen("AvitoPayCart", removeComments(json))
         }
     }
 }

@@ -4,12 +4,12 @@ import androidx.lifecycle.SavedStateHandle
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.bind
 import org.koin.dsl.module
-import ru.aleksandra.feature.cart.data.LoadCartRepository
-import ru.aleksandra.feature.cart.data.LoadCartRepositoryImpl
+import ru.aleksandra.feature.cart.data.CartRepository
+import ru.aleksandra.feature.cart.data.CartRepositoryImpl
 import ru.aleksandra.feature.cart.presentation.CartViewModel
 
 val repositoryModule = module {
-    single { LoadCartRepositoryImpl() } bind LoadCartRepository::class
+    single { CartRepositoryImpl(get()) } bind CartRepository::class
 }
 
 val viewModelModule = module {
