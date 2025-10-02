@@ -3,10 +3,8 @@ package ru.aleksandra.core.sdui.presentation.ui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -32,15 +30,15 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import coil3.compose.rememberAsyncImagePainter
 import io.github.aakira.napier.Napier
 import org.jetbrains.compose.resources.painterResource
 import ru.aleksandra.core.sdui.presentation.model.Action
@@ -138,7 +136,9 @@ fun SDUITextField(model: SDUIComponent.TextField) {
 
 @Composable
 fun SDUISurface(model: SDUIComponent.Surface) {
-    Surface {
+    Surface(
+        buildModifier(model.modifier),
+    ) {
         model.children.forEach { child ->
             Render(child)
         }
@@ -152,7 +152,9 @@ fun SDUISpacer(model: SDUIComponent.Spacer) {
 
 @Composable
 fun SDUIScaffold(model: SDUIComponent.Scaffold) {
-    Scaffold {
+    Scaffold(
+        buildModifier(model.modifier),
+    ) {
         Render(model.content)
     }
 }
@@ -160,7 +162,8 @@ fun SDUIScaffold(model: SDUIComponent.Scaffold) {
 @Composable
 fun SDUIOutlinedButton(model: SDUIComponent.OutlinedButton) {
     Button(
-        onClick = { /* TODO: Handle button click, possibly using model.action */ }
+        onClick = { /* TODO: Handle button click, possibly using model.action */ },
+        buildModifier(model.modifier),
     ) {
         Text(
             text = model.title,
@@ -171,7 +174,9 @@ fun SDUIOutlinedButton(model: SDUIComponent.OutlinedButton) {
 
 @Composable
 fun SDUILazyRow(model: SDUIComponent.LazyRow) {
-    LazyRow {
+    LazyRow(
+        buildModifier(model.modifier),
+    ) {
         items(model.children) { child ->
             Render(child)
         }
@@ -180,7 +185,9 @@ fun SDUILazyRow(model: SDUIComponent.LazyRow) {
 
 @Composable
 fun SDUILazyColumn(model: SDUIComponent.LazyColumn) {
-    LazyColumn {
+    LazyColumn(
+        buildModifier(model.modifier),
+    ) {
         items(model.children) { child ->
             Render(child)
         }
@@ -225,11 +232,21 @@ fun SDUIComponent.Image.toCompose() {
     }
 }
 
+sealed class MyScope {
+    data class RowScope(val scope: androidx.compose.foundation.layout.RowScope) : MyScope()
+    data class ColumnScope(val scope: androidx.compose.foundation.layout.ColumnScope) : MyScope()
+    data class BoxScope(val scope: androidx.compose.foundation.layout.BoxScope) : MyScope()
+    data object None : MyScope()
+}
+
 @Composable
 fun SDUIIconButton(model: SDUIComponent.IconButton, handleAction: (Action) -> Unit) {
-    IconButton({
-        handleAction(model.action)
-    }) {
+    IconButton(
+        {
+            handleAction(model.action)
+        },
+        buildModifier(model.modifier),
+    ) {
         Render(model.content)
     }
 }
@@ -289,8 +306,10 @@ fun SDUIBox(model: SDUIComponent.Box) {
         contentAlignment = model.contentAlignment,
         propagateMinConstraints = model.propagateMinConstraints,
     ) {
-        model.children.forEach { child ->
-            Render(child)
+        CompositionLocalProvider(LocalScopeData provides MyScope.BoxScope(this)) {
+            model.children.forEach { child ->
+                Render(child)
+            }
         }
     }
 }
@@ -302,8 +321,10 @@ fun SDUIColumn(model: SDUIComponent.Column) {
         verticalArrangement = model.verticalArrangement,
         horizontalAlignment = model.horizontalAlignment,
     ) {
-        model.children.forEach { child ->
-            Render(child)
+        CompositionLocalProvider(LocalScopeData provides MyScope.ColumnScope(this)) {
+            model.children.forEach { child ->
+                Render(child)
+            }
         }
     }
 }
@@ -315,8 +336,10 @@ fun SDUIRow(model: SDUIComponent.Row, handleAction: (Action) -> Unit) {
         verticalAlignment = model.verticalAlignment,
         horizontalArrangement = model.horizontalArrangement,
     ) {
-        model.children.forEach { child ->
-            Render(child) { handleAction(child.action) }
+        CompositionLocalProvider(LocalScopeData provides MyScope.RowScope(this)) {
+            model.children.forEach { child ->
+                Render(child) { handleAction(child.action) }
+            }
         }
     }
 }
@@ -383,90 +406,123 @@ fun SDUICheckbox(model: SDUIComponent.Checkbox, handleAction: () -> Unit) {
     )
 }
 
-enum class ParentScope { Row, Column, Box }
+val LocalScopeData = compositionLocalOf<MyScope> { MyScope.None }
 
 @Composable
 fun buildModifier(modifierProperties: List<ModifierProperties>): Modifier {
-    var modifier = Modifier.padding(0.dp)
+    var modifier: Modifier = Modifier
+    if (modifierProperties.count { it is ModifierProperties.KK } > 0) {
+        Napier.d("Я плачу")
+    }
 
     modifierProperties.forEach { property ->
-        when (property) {
+        Napier.d(
+            property.toString()
+        )
+        modifier =
+            when (property) {
+                is ModifierProperties.KK -> {
+                    Napier.d("Приветики")
+                    modifier
+                }
 
-            is ModifierProperties.Height -> {
-                modifier = modifier.height(property.value)
-            }
+                is ModifierProperties.Height -> {
+                    modifier.then(Modifier.height(property.value))
+                }
 
-            is ModifierProperties.Padding -> {
-                modifier = modifier.padding(
-                    start = property.value.start,
-                    top = property.value.top,
-                    end = property.value.end,
-                    bottom = property.value.bottom
-                )
-            }
+                is ModifierProperties.Padding -> {
+                    modifier.then(
+                        Modifier.padding(
+                            start = property.value.start,
+                            top = property.value.top,
+                            end = property.value.end,
+                            bottom = property.value.bottom
+                        )
+                    )
+                }
 
-            is ModifierProperties.Width -> {
-                modifier = modifier.width(property.value)
-            }
+                is ModifierProperties.Width -> {
+                    modifier.then(Modifier.width(property.value))
+                }
 
-            is ModifierProperties.Alpha -> {
-                modifier = modifier.alpha(property.alpha)
-            }
+                is ModifierProperties.Alpha -> {
+                    modifier.then(Modifier.alpha(property.alpha))
+                }
 
-            is ModifierProperties.Background -> {
-                modifier = modifier.background(property.color.toCompose(), property.shape)
-            }
+                is ModifierProperties.Background -> {
+                    modifier.then(Modifier.background(property.color.toCompose(), property.shape))
+                }
 
-            is ModifierProperties.Border -> {
-                modifier = modifier.border(property.width, property.color, property.shape)
-            }
+                is ModifierProperties.Border -> {
+                    modifier.then(Modifier.border(property.width, property.color, property.shape))
+                }
 
-            is ModifierProperties.Clip -> {
-                modifier = modifier.clip(property.shape)
-            }
+                is ModifierProperties.Clip -> {
+                    modifier.then(Modifier.clip(property.shape))
+                }
 
-            is ModifierProperties.FillMaxHeight -> {
-                modifier = modifier.fillMaxHeight(property.fraction)
-            }
+                is ModifierProperties.FillMaxHeight -> {
+                    modifier.then(Modifier.fillMaxHeight(property.fraction))
+                }
 
-            is ModifierProperties.FillMaxSize -> {
-                modifier = modifier.fillMaxSize(property.fraction)
-            }
+                is ModifierProperties.FillMaxSize -> {
+                    modifier.then(Modifier.fillMaxSize(property.fraction))
+                }
 
-            is ModifierProperties.FillMaxWidth -> {
-                modifier = modifier.fillMaxWidth(property.fraction)
-            }
+                is ModifierProperties.FillMaxWidth -> {
+                    modifier.then(Modifier.fillMaxWidth(property.fraction))
+                }
 
-            is ModifierProperties.Shadow -> {
-                modifier = modifier.shadow(
-                    property.elevation,
-                    property.shape,
-                    property.clip,
-                    property.ambientColor,
-                    property.spotColor
-                )
-            }
+                is ModifierProperties.Shadow -> {
+                    modifier.then(
+                        Modifier.shadow(
+                            property.elevation,
+                            property.shape,
+                            property.clip,
+                            property.ambientColor,
+                            property.spotColor
+                        )
+                    )
+                }
 
-            is ModifierProperties.Size -> {
-                modifier = modifier.size(property.size)
-            }
+                is ModifierProperties.Size -> {
+                    modifier.then(Modifier.size(property.size))
+                }
 
-            is ModifierProperties.WrapContentHeight -> {
-                modifier = modifier.wrapContentHeight(property.alignment)
-            }
+                is ModifierProperties.WrapContentHeight -> {
+                    modifier.then(Modifier.wrapContentHeight(property.alignment))
+                }
 
-            is ModifierProperties.WrapContentWidth -> {
-                modifier = modifier.wrapContentWidth(property.alignment)
-            }
+                is ModifierProperties.WrapContentWidth -> {
+                    modifier.then(Modifier.wrapContentWidth(property.alignment))
+                }
 
-            is ModifierProperties.MatchParentSize -> {
-                //TODO:
-            }
+                is ModifierProperties.MatchParentSize -> {
+                    if (LocalScopeData.current is MyScope.BoxScope) {
+                        with((LocalScopeData.current as MyScope.BoxScope).scope) {
+                            modifier.then(Modifier.matchParentSize())
+                        }
+                    } else modifier
+                }
 
-            else -> {
-                //TODO: Подумать над скоупами
+                is ModifierProperties.Weight -> {
+                    when (LocalScopeData.current) {
+                        is MyScope.RowScope -> {
+                            with((LocalScopeData.current as MyScope.RowScope).scope) {
+                                modifier.then(Modifier.weight(property.value))
+                            }
+                        }
+
+                        is MyScope.ColumnScope -> {
+                            with((LocalScopeData.current as MyScope.ColumnScope).scope) {
+                                modifier.then(Modifier.weight(property.value))
+                            }
+                        }
+
+                        else -> modifier
+                    }
+                }
             }
-        }
     }
 
     return modifier

@@ -73,8 +73,6 @@ sealed class SDUIComponent() {
         //val style: StyleProperties.TextStyleProperties? = null,
     ) : SDUIComponent()
 
-    @Serializable
-    @SerialName("TextField")
     data class TextField(
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
@@ -94,8 +92,6 @@ sealed class SDUIComponent() {
         val contentPadding: androidx.compose.foundation.layout.PaddingValues? = null,
     ) : SDUIComponent()
 
-    @Serializable
-    @SerialName("OutlinedButton")
     data class OutlinedButton(
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
@@ -110,67 +106,50 @@ sealed class SDUIComponent() {
         val content: SDUIComponent,
     ) : SDUIComponent()
 
-    @Serializable
-    @SerialName("FloatingActionButton")
     data class FloatingActionButton(
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
     ) : SDUIComponent()
 
     // Layout components
-    @Serializable
-    @SerialName("Column")
     data class Column(
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
         val children: List<SDUIComponent>,
-        @Serializable(with = ArrangementVerticalSerializer::class)
         val verticalArrangement: Arrangement.Vertical = Arrangement.Top,
-        @Serializable(with = AlignmentHorizontalSerializer::class)
         val horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     ) : SDUIComponent()
 
-    @Serializable
-    @SerialName("Row")
     data class Row(
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
         val children: List<SDUIComponent>,
-        @Serializable(with = ArrangementHorizontalSerializer::class)
+
         val horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
-        @Serializable(with = AlignmentVerticalSerializer::class)
+
         val verticalAlignment: Alignment.Vertical = Alignment.Top,
     ) : SDUIComponent()
 
-    @Serializable
-    @SerialName("Box")
     data class Box(
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
         val children: List<SDUIComponent>,
-        @Serializable(with = AlignmentSerializer::class)
         val contentAlignment: Alignment = Alignment.TopStart,
         val propagateMinConstraints: Boolean = false,
     ) : SDUIComponent()
 
-    @Serializable
-    @SerialName("LazyColumn")
     data class LazyColumn(
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
         val children: List<SDUIComponent>
     ) : SDUIComponent()
 
-    @Serializable
-    @SerialName("LazyRow")
     data class LazyRow(
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
         val children: List<SDUIComponent>
     ) : SDUIComponent()
 
-    @Serializable
-    @SerialName("Scaffold")
     data class Scaffold(
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
@@ -218,8 +197,6 @@ sealed class SDUIComponent() {
 
     // Containers
 
-    @Serializable
-    @SerialName("Surface")
     data class Surface(
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
@@ -235,22 +212,18 @@ sealed class SDUIComponent() {
         //interactionSource: MutableInteractionSource? = null
     ) : SDUIComponent()
 
-    @Serializable
-    @SerialName("BottomBar")
     data class BottomBar(
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
         val children: List<SDUIComponent>
     ) : SDUIComponent()
 
-    @Serializable
     data class AvitoNavBar(
         val title: String,
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
     ) : SDUIComponent()
 
-    @Serializable
     data class AvitoCheckBox(
         val text: String,
         val isChecked: Boolean = false,
@@ -258,7 +231,6 @@ sealed class SDUIComponent() {
         override val action: Action = Action.None,
     ) : SDUIComponent()
 
-    @Serializable
     data class AvitoSelectAll(
         val isChecked: Boolean = false,
         val deleteCount: Int,
@@ -266,7 +238,6 @@ sealed class SDUIComponent() {
         override val action: Action = Action.None,
     ) : SDUIComponent()
 
-    @Serializable
     data class AvitoShopName(
         val isChecked: Boolean = false,
         val shopName: String,
@@ -276,7 +247,6 @@ sealed class SDUIComponent() {
         override val action: Action = Action.None,
     ) : SDUIComponent()
 
-    @Serializable
     data class AvitoCartItem(
         val isChecked: Boolean = false,
         val name: String,
@@ -289,8 +259,6 @@ sealed class SDUIComponent() {
         override val action: Action = Action.None,
     ) : SDUIComponent()
 
-    @Serializable
-    @SerialName("RepetitiveComponent")
     data class RepetitiveComponent(
         val component: List<SDUIComponent>,
         override val modifier: List<ModifierProperties> = emptyList(),
@@ -298,7 +266,6 @@ sealed class SDUIComponent() {
     ) : SDUIComponent()
 }
 
-@Serializable
 sealed class ModifierProperties {
     data class Width(val value: Dp) : ModifierProperties()
 
@@ -343,6 +310,8 @@ sealed class ModifierProperties {
     data class Alpha(val alpha: Float) : ModifierProperties()
 
     data object MatchParentSize : ModifierProperties()
+
+    data class KK(val value: String) : ModifierProperties()
 }
 
 

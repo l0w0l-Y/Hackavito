@@ -10,6 +10,7 @@ import kotlinx.serialization.json.encodeToJsonElement
 import ru.aleksandra.core.sdui.domain.usecase.LoadUIUseCase
 import ru.aleksandra.core.sdui.presentation.SDUIViewModel
 import ru.aleksandra.core.sdui.presentation.mapper.toUi
+import ru.aleksandra.core.sdui.presentation.model.ModifierProperties
 import ru.aleksandra.core.sdui.presentation.model.UIState
 import ru.aleksandra.feature.cart.data.LoadCartRepository
 

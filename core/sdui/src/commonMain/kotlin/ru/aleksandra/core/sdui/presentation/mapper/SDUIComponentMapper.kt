@@ -470,6 +470,7 @@ fun SDUIComponentDomain.Text.toUi(json: JsonElement): SDUIComponent.Text {
         softWrap = softWrap,
         maxLines = maxLines,
         minLines = minLines,
+        modifier = modifier.map { it.toUi() },
     )
 }
 

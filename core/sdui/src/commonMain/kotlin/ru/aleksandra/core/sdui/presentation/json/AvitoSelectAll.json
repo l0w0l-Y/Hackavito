@@ -45,7 +45,11 @@
         },
         {
           "type": "Text",
-          "modifier": [],
+          "modifier": [
+            {
+              "type": "Weight",
+              "value": 1.0
+            }],
           "style": "h50",
           "color": {
             "type": "Theme",
@@ -78,9 +82,9 @@
           "type": "Padding",
           "value": {
             "start": 16,
-            "top": 0,
+            "top": 12,
             "end": 16,
-            "bottom": 0
+            "bottom": 8
           }
         }
       ],
@@ -140,13 +144,8 @@
           "type": "Text",
           "modifier": [
             {
-              "type": "Padding",
-              "value": {
-                "start": 8,
-                "top": 0,
-                "end": 0,
-                "bottom": 0
-              }
+              "type": "Weight",
+              "value": 1.0
             }
           ],
           "style": "b20",
@@ -157,7 +156,7 @@
           "textAlign": null,
           "text": {
             "type": "Static",
-            "value": "Выбрать все"
+            "value": "Выбрать всё"
           }
         },
         {
@@ -200,6 +199,7 @@
                 }
               }
             ],
+            "verticalAlignment": "Bottom",
             "children": [
               {
                 "type": "Box",
@@ -345,6 +345,7 @@
             "itemsPath": "items.*",
             "content": {
               "type": "Row",
+              "modifier": [],
               "children": [
                 {
                   "type": "Icon",
@@ -418,6 +419,7 @@
                       "children": [
                         {
                           "type": "Box",
+                          "contentAlignment": "Center",
                           "children": [
                             {
                               "type": "Text",
@@ -453,11 +455,7 @@
                                 "name": "strike"
                               },
                               "contentDescription": null,
-                              "modifier": [
-                                {
-                                  "type": "FillMaxSize"
-                                }
-                              ]
+                              "modifier": []
                             }
                           ]
                         },
