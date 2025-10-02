@@ -57,6 +57,7 @@ import ru.aleksandra.core.theme.controlContentPrimary
 import ru.aleksandra.core.theme.h30
 import ru.aleksandra.core.theme.h50
 import ru.aleksandra.core.theme.m20
+import ru.aleksandra.feature.admin.model.AdminUIEffect
 
 @Composable
 fun CodeEditorScreen(
@@ -217,7 +218,7 @@ fun CodeEditorScreen(
                         textFieldValue = textFieldValue,
                         onTextChange = { textFieldValue = it },
                     )
-                    /*LazyColumn(
+                    LazyColumn(
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                         modifier = Modifier
                             .padding(horizontal = 4.dp)
@@ -276,7 +277,7 @@ fun CodeEditorScreen(
                                 }
                             }
                         }
-                    }*/
+                    }
                     if (showDocumentation) {
                         Text(
                             uiElements.getOrNull(selectedItem)?.json ?: "Выберите элемент",

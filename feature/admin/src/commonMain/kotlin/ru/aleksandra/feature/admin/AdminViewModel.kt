@@ -34,6 +34,8 @@ import ru.aleksandra.core.sdui.presentation.mapper.toUi
 import ru.aleksandra.core.sdui.presentation.model.Action
 import ru.aleksandra.core.sdui.presentation.model.UIEffect
 import ru.aleksandra.core.sdui.presentation.model.UIState
+import ru.aleksandra.feature.admin.data.AdminApi
+import ru.aleksandra.feature.admin.model.AdminUIEffect
 import ru.aleksandra.feature.admin.model.Documentation
 
 class AdminViewModel(

@@ -345,7 +345,17 @@
             "itemsPath": "items.*",
             "content": {
               "type": "Row",
-              "modifier": [],
+              "modifier": [
+                {
+                  "type": "Padding",
+                    "value": {
+                        "start": 0,
+                        "top": 24,
+                        "end": 0,
+                        "bottom": 0
+                    }
+                }
+              ],
               "children": [
                 {
                   "type": "Icon",

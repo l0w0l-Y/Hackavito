@@ -73,10 +73,8 @@ kotlin {
                 implementation(libs.ktor.client.core)
             }
         }
-        androidMain {
-            dependencies {
-                implementation(libs.koin.androidx.compose)
-            }
+        androidMain.dependencies {
+            implementation(libs.koin.androidx.compose)
         }
     }
 }

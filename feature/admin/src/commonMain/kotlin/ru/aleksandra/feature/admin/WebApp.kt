@@ -52,7 +52,7 @@ fun WebApp() {
                 horizontalArrangement = Arrangement.spacedBy(20.dp)
             ) {
                 val navController = rememberNavController()
-                //AdminNavigation { navController.navigate(it.route) }
+                AdminNavigation { navController.navigate(it.route) }
                 AdminNavHost(navController)
             }
         }
