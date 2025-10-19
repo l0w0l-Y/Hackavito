@@ -1,3 +1,6 @@
+### Ссылка на демо:
+https://drive.google.com/drive/folders/1RLnBfBbNcZ7cr478rKTnyDRxyZSAi-zQ?usp=sharing
+
 ### Как запустить:
 1. Запустить локальный ktor сервер ru.aleksandra.hackavito.ApplicationKt из модуля server
 2. Запустить composeApp для android, iosApp для iOS.

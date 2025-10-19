@@ -37,16 +37,15 @@ fun App() {
                     startDestination = NavigationDestination.SDUIScreen("/delivery/pay/cart")
                 ) {
                     composable<NavigationDestination.SDUIScreen> { entry ->
-//                        val args = entry.toRoute<NavigationDestination.SDUIScreen>()
-//
-//                        when (args.screenId) {
-//                            "/delivery/pay/cart" -> CartScreen(navController)
-//                            "/delivery/pay/checkout" -> DeliveryScreen(navController)
-//                        }
-                        DeliveryScreen(navController)
+                        val args = entry.toRoute<NavigationDestination.SDUIScreen>()
+
+                        when (args.screenId) {
+                            "/delivery/pay/cart" -> CartScreen(navController)
+                            "/delivery/pay/checkout" -> DeliveryScreen(navController)
+                        }
                     }
                     composable<NavigationDestination.PostScreen> {
-                        DeliveryMethodsScreen()
+                        DeliveryMethodsScreen(navController)
                     }
                 }
             }

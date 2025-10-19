@@ -12,33 +12,10 @@ import androidx.compose.ui.unit.dp
 import ru.aleksandra.core.theme.controlBgDefault
 import ru.aleksandra.core.ui.model.ShopWithItemForDelivery
 
-//@Composable
-//fun AvitoDeliveryShop(
-//    shopWithItemsForDeliveryList: List<ShopWithItemForDelivery>
-//) {
-//    LazyColumn(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .background(color = MaterialTheme.colorScheme.controlBgDefault)
-//            .padding(bottom = 16.dp),
-//    ) {
-//        items(shopWithItemsForDeliveryList.size) { index ->
-//            AvitoDeliveryShopItem(
-//                itemName = shopWithItemsForDeliveryList[index].item.name,
-//                itemImage = shopWithItemsForDeliveryList[index].item.image,
-//                itemCount = shopWithItemsForDeliveryList[index].item.count,
-//                shopName = shopWithItemsForDeliveryList[index].name,
-//                address = shopWithItemsForDeliveryList[index].address,
-//                deliveryVariant = shopWithItemsForDeliveryList[index].choosenDeliveryVariant
-//            )
-//        }
-//
-//
-//    }
-//}
 @Composable
 fun AvitoDeliveryShop(
-    shopWithItemsForDeliveryList: List<ShopWithItemForDelivery>
+    shopWithItemsForDeliveryList: List<ShopWithItemForDelivery>,
+    onClick: () -> Unit = {}
 ) {
     Column(
         modifier = Modifier
@@ -54,7 +31,8 @@ fun AvitoDeliveryShop(
                 itemCount = shopWithItem.item.count,
                 shopName = shopWithItem.name,
                 address = shopWithItem.address,
-                deliveryVariant = shopWithItem.choosenDeliveryVariant
+                deliveryVariant = shopWithItem.choosenDeliveryVariant,
+                onClick = onClick
             )
         }
     }

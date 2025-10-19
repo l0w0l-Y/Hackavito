@@ -1,6 +1,7 @@
 package ru.aleksandra.core.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -53,10 +54,12 @@ fun AvitoDeliveryShopItem(
     itemCount: Int,
     shopName: String,
     address: String,
-    deliveryVariant: DeliveryVariant
+    deliveryVariant: DeliveryVariant,
+    onClick: () -> Unit = {}
 ) {
     Column(
         modifier = Modifier
+            .clickable() { onClick() }
             .background(color = MaterialTheme.colorScheme.controlBgDefault)
             .padding(start = 16.dp, top = 16.dp, end = 16.dp)
             .background(color = MaterialTheme.colorScheme.bgPage, shape = RoundedCornerShape(16.dp))
