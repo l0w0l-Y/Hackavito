@@ -1,36 +1,25 @@
 package ru.aleksandra.core.ui
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import hackavito.core.ui.generated.resources.Res
-import hackavito.core.ui.generated.resources.delete
-import hackavito.core.ui.generated.resources.ic_check
 import hackavito.core.ui.generated.resources.ic_star
-import hackavito.core.ui.generated.resources.select_all
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import ru.aleksandra.core.theme.contentPrimary
 import ru.aleksandra.core.theme.gray36
 import ru.aleksandra.core.theme.h30
 import ru.aleksandra.core.theme.m10
 import ru.aleksandra.core.theme.orange500
-import ru.aleksandra.core.theme.otherLink
 import kotlin.math.floor
 
 @Composable

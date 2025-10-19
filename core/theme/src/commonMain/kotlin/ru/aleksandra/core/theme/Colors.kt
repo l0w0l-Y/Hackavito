@@ -1,10 +1,12 @@
 package ru.aleksandra.core.theme
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 
 val LightColorScheme = lightColorScheme()
@@ -15,40 +17,50 @@ val DarkColorScheme = darkColorScheme()
 https://www.figma.com/design/tWqMXCBEc0AGoJ7YrW0pWe/001-Семантические-цвета?node-id=7865-29204&p=f */
 
 val ColorScheme.contentPrimary: Color
-    get() = Color(0xFF000000)
+    @Composable
+    get() = if (isSystemInDarkTheme()) Color(0xFF000000) else Color(0xFFFFFFFF)
 
 val ColorScheme.controlContentPrimary: Color
-    get() = Color(0xFF000000)
+    @Composable
+    get() = if (isSystemInDarkTheme()) Color(0xFF000000) else Color(0xFFFFFFFF)
 
 val ColorScheme.bgPage: Color
-    get() = Color(0xFFFFFFFF)
+    @Composable
+    get() = if (isSystemInDarkTheme()) Color(0xFFFFFFFF) else Color(0xFF000000)
 
 val ColorScheme.controlBgCheck: Color
-    get() = Color(0xFF141414)
+    @Composable
+    get() = if (isSystemInDarkTheme()) Color(0xFF141414) else Color(0xFFFFFFFF)
 
 val ColorScheme.controlBgFaint: Color
-    get() = Color(0xFFFFFFFF)
+    @Composable
+    get() = if (isSystemInDarkTheme()) Color(0xFFFFFFFF) else Color(0xFF1E1E1E)
 
 val ColorScheme.contentSecondary: Color
-    get() = Color(0xFF757575)
+    @Composable
+    get() = if (isSystemInDarkTheme()) Color(0xFF757575) else Color(0xFFA3A3A3)
 
 val ColorScheme.controlContentError: Color
     get() = Color(0xFFFF4053)
 
 val ColorScheme.bgBase: Color
-    get() = Color(0xFFFFFFFF)
+    @Composable
+    get() = if (isSystemInDarkTheme()) Color(0xFFFFFFFF) else Color(0xFF121212)
 
 val ColorScheme.controlContentMasterPrimary: Color
-    get() = Color(0xFF000000)
+    @Composable
+    get() = if (isSystemInDarkTheme()) Color(0xFF000000) else Color(0xFFFFFFFF)
 
 val ColorScheme.gray36: Color
-    get() = Color(0xFFA3A3A3)
+    @Composable
+    get() = if (isSystemInDarkTheme()) Color(0xFFA3A3A3) else Color(0xFF757575)
 
 val ColorScheme.orange500: Color
     get() = Color(0xFFFFB021)
 
 val ColorScheme.controlBgMasterDefault: Color
-    get() = Color(0xFFFFFFFF)
+    @Composable
+    get() = if (isSystemInDarkTheme()) Color(0xFFFFFFFF) else Color(0xFF1E1E1E)
 
 val ColorScheme.otherLink: Color
     get() = Color(0xFF0099F7)
@@ -57,13 +69,16 @@ val ColorScheme.controlBgPayPrimary: Color
     get() = Color(0xFF965EEB)
 
 val ColorScheme.controlBgDefault: Color
-    get() = Color(0xFFF2F1F0)
+    @Composable
+    get() = if (isSystemInDarkTheme()) Color(0xFFF2F1F0) else Color(0xFF2C2C2C)
 
 val ColorScheme.gray4: Color
-    get() = Color(0xFFF5F5F5)
+    @Composable
+    get() = if (isSystemInDarkTheme()) Color(0xFFF5F5F5) else Color(0xFF262624)
 
 val ColorScheme.gray54: Color
-    get() = Color(0xFF757575)
+    @Composable
+    get() = if (isSystemInDarkTheme()) Color(0xFF757575) else Color(0xFFA3A3A3)
 
 val ColorScheme.red600: Color
     get() = Color(0xFFFF4053)
@@ -78,27 +93,33 @@ val ColorScheme.controlContentPayPassive: Color
     get() = Color(0xFFFFFFFF)
 
 val ColorScheme.controlContentMasterPassive: Color
-    get() = Color(0xFFFFFFFF)
+    @Composable
+    get() = if (isSystemInDarkTheme()) Color(0xFFFFFFFF) else Color(0xFF141414)
 
 val ColorScheme.controlBgMasterPrimary: Color
-    get() = Color(0xFF141414)
+    @Composable
+    get() = if (isSystemInDarkTheme()) Color(0xFF141414) else Color(0xFFFFFFFF)
 
 val ColorScheme.violet500: Color
     get() = Color(0xFFA168F7)
 
-val ColorScheme.controlBgUncheck : Color
-    get() = Color(0xFFE3E2E1)
+val ColorScheme.controlBgUncheck: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) Color(0xFFE3E2E1) else Color(0xFF2A2A2A)
 
-val ColorScheme.dayBlack : Color
-    get() = Color(0xFF000000)
-val ColorScheme.warmgray4 : Color
-    get() = Color(0xFFF2F1F0)
-
-val ColorScheme.black : Color
+val ColorScheme.dayBlack: Color
     get() = Color(0xFF000000)
 
-val ColorScheme.gray92 : Color
-    get() = Color(0xFF141414)
+val ColorScheme.warmgray4: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) Color(0xFFF2F1F0) else Color(0xFF1C1C1C)
+
+val ColorScheme.black: Color
+    get() = Color(0xFF000000)
+
+val ColorScheme.gray92: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) Color(0xFF141414) else Color(0xFFF2F1F0)
 
 val ColorScheme.buttonTextSecondary : Color
     get() = Color(0xFF000000)

@@ -1,6 +1,5 @@
 package ru.aleksandra.feature.cart.presentation
 
-import androidx.compose.runtime.MutableState
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import io.github.aakira.napier.Napier
@@ -13,13 +12,12 @@ import ru.aleksandra.core.sdui.domain.model.SDUIComponentDomain
 import ru.aleksandra.core.sdui.domain.usecase.LoadUIUseCase
 import ru.aleksandra.core.sdui.presentation.SDUIViewModel
 import ru.aleksandra.core.sdui.presentation.mapper.toUi
-import ru.aleksandra.core.sdui.presentation.model.SDUIComponent
 import ru.aleksandra.core.sdui.presentation.model.UIState
 import ru.aleksandra.feature.cart.domain.CartUseCase
 
 class CartViewModel(
     savedStateHandle: SavedStateHandle,
-    loadUIUseCase: LoadUIUseCase,
+    val loadUIUseCase: LoadUIUseCase,
     val loadCartUseCase: CartUseCase,
 ) : SDUIViewModel(savedStateHandle) {
 
@@ -27,18 +25,22 @@ class CartViewModel(
 
     init {
         viewModelScope.launch {
-            _ui.value = UIState.Loading
-            combine(
-                loadUIUseCase.loadUI(screenId),
-                loadCartUseCase.loadCart()
-            ) { ui, cart ->
-                screen.value = ui
-                val json = Json.encodeToJsonElement(cart)
-                Napier.d(json.toString())
-                ui.toUi(json)
-            }.collect {
-                _ui.value = UIState.Loaded(it)
-            }
+            loadScreen()
+        }
+    }
+
+    suspend fun loadScreen() {
+        _ui.value = UIState.Loading
+        combine(
+            loadUIUseCase.loadUI(screenId),
+            loadCartUseCase.loadCart()
+        ) { ui, cart ->
+            screen.value = ui
+            val json = Json.encodeToJsonElement(cart)
+            Napier.d(json.toString())
+            ui.toUi(json)
+        }.collect {
+            _ui.value = UIState.Loaded(it)
         }
     }
 

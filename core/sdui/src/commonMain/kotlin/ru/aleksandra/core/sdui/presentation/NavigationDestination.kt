@@ -6,4 +6,7 @@ import kotlinx.serialization.Serializable
 sealed class NavigationDestination {
     @Serializable
     data class SDUIScreen(val screenId: String) : NavigationDestination()
+
+    @Serializable
+    data object PostScreen
 }

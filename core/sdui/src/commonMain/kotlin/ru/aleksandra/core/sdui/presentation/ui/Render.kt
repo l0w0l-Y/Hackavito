@@ -37,11 +37,9 @@ import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import coil3.compose.AsyncImage
-import io.github.aakira.napier.Napier
 import org.jetbrains.compose.resources.painterResource
 import ru.aleksandra.core.sdui.presentation.model.Action
 import ru.aleksandra.core.sdui.presentation.model.ButtonColors
@@ -483,15 +481,7 @@ fun buildModifier(
                 }
 
                 is ModifierProperties.Shadow -> {
-                    modifier.then(
-                        Modifier.shadow(
-                            property.elevation,
-                            property.shape,
-                            property.clip,
-                            property.ambientColor,
-                            property.spotColor
-                        )
-                    )
+                    modifier
                 }
 
                 is ModifierProperties.Size -> {

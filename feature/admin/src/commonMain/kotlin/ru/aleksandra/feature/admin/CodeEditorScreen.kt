@@ -1,5 +1,6 @@
 package ru.aleksandra.feature.admin
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilterChip
@@ -20,7 +22,12 @@ import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -45,6 +52,7 @@ import hackavito.feature.admin.generated.resources.ic_share
 import hackavito.feature.admin.generated.resources.ic_upload
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
+import ru.aleksandra.core.sdui.domain.model.Shape
 import ru.aleksandra.core.sdui.presentation.model.UIState
 import ru.aleksandra.core.sdui.presentation.ui.Renderer
 import ru.aleksandra.core.theme.bgPage
@@ -66,10 +74,7 @@ fun CodeEditorScreen(
     var name by remember { mutableStateOf("") }
     var textFieldValue by remember { mutableStateOf(TextFieldValue("")) }
     val screenSize = listOf(
-        Pair(700, 840),
         Pair(412, 917),
-        Pair(393, 852),
-        Pair(390, 844),
     )
     var selectedPlatform by remember { mutableStateOf(0) }
     val platformList = listOf<String>(
@@ -85,6 +90,7 @@ fun CodeEditorScreen(
     var isPreview by remember { mutableStateOf(false) }
     val clipboardManager = LocalClipboardManager.current
     var showDocumentation by remember { mutableStateOf(false) }
+    var showType by remember { mutableStateOf(false) }
     var selectedItem by remember { mutableStateOf(0) }
 
     LaunchedEffect(Unit) {
@@ -103,6 +109,13 @@ fun CodeEditorScreen(
                     textFieldValue = textFieldValue.copy(
                         text = newText,
                         selection = TextRange(newCursor)
+                    )
+                }
+
+                is AdminUIEffect.SetJson -> {
+                    textFieldValue = textFieldValue.copy(
+                        text = it.json,
+                        selection = TextRange(0)
                     )
                 }
             }
@@ -211,6 +224,45 @@ fun CodeEditorScreen(
                 )
             }
         }
+        var prompt by remember { mutableStateOf("") }
+        Row(
+            modifier = Modifier.padding(
+                vertical = 12.dp
+            ),
+            horizontalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            OutlinedTextField(
+                prompt,
+                shape = RoundedCornerShape(12.dp),
+                onValueChange = { prompt = it },
+                modifier = Modifier.weight(1f),
+                placeholder = {
+                    Text(
+                        "Опишите, какой экран вы хотите сгенерировать",
+                        style = MaterialTheme.typography.m20,
+                        color = MaterialTheme.colorScheme.contentPrimary
+                    )
+                },
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedTextColor = MaterialTheme.colorScheme.contentPrimary
+                )
+            )
+            Button(
+                {
+                    adminViewModel.getJsonByPrompt(prompt)
+                    prompt = ""
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.controlBgPayPrimary
+                ),
+            ) {
+                Text(
+                    "Сейчас произойдет магия!",
+                    color = MaterialTheme.colorScheme.controlContentMasterPassive,
+                    style = MaterialTheme.typography.m20
+                )
+            }
+        }
         Row(modifier = Modifier.fillMaxSize()) {
             if (isCodeEditor) {
                 Row(modifier = Modifier.weight(1f)) {
@@ -222,73 +274,83 @@ fun CodeEditorScreen(
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                         modifier = Modifier
                             .padding(horizontal = 4.dp)
-                            .width(280.dp)
                     ) {
                         stickyHeader {
                             Text(
                                 "Элементы UI",
+                                modifier = Modifier
+                                    .background(Color.White)
+                                    .clickable(onClick = { showType = !showType }),
                                 style = MaterialTheme.typography.h50
                             )
                         }
-                        itemsIndexed(uiElements) { index, item ->
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.clickable {
-                                    selectedItem = index
-                                    showDocumentation = true
-                                }
-                            ) {
-                                Text(
-                                    text = item.title,
+                        if (showType) {
+                            itemsIndexed(uiElements) { index, item ->
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
                                     modifier = Modifier
-                                        .weight(1f)
-                                        .padding(horizontal = 8.dp, vertical = 4.dp),
-                                    style = MaterialTheme.typography.m20,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
-                                )
-                                IconButton({
-                                    clipboardManager.setText(
-                                        AnnotatedString(
-                                            item.json
-                                        )
-                                    )
-                                }) {
-                                    Icon(
-                                        painterResource(Res.drawable.ic_copy),
-                                        contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.contentPrimary,
-                                        modifier = Modifier
-                                            .padding(4.dp)
-                                    )
-                                }
-                                IconButton(
-                                    {
-                                        adminViewModel.addJson(index)
-                                    }
+                                        .clickable {
+                                            selectedItem = index
+                                            showDocumentation = true
+                                        }
+                                        .width(280.dp)
                                 ) {
-                                    Icon(
-                                        painterResource(Res.drawable.ic_share),
-                                        contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.contentPrimary,
+                                    Text(
+                                        text = item.title,
                                         modifier = Modifier
-                                            .padding(4.dp)
+                                            .weight(1f)
+                                            .padding(horizontal = 8.dp, vertical = 4.dp),
+                                        style = MaterialTheme.typography.m20,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
                                     )
+                                    IconButton({
+                                        clipboardManager.setText(
+                                            AnnotatedString(
+                                                item.json
+                                            )
+                                        )
+                                    }) {
+                                        Icon(
+                                            painterResource(Res.drawable.ic_copy),
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.contentPrimary,
+                                            modifier = Modifier
+                                                .padding(4.dp)
+                                        )
+                                    }
+                                    IconButton(
+                                        {
+                                            adminViewModel.addJson(index)
+                                        }
+                                    ) {
+                                        Icon(
+                                            painterResource(Res.drawable.ic_share),
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.contentPrimary,
+                                            modifier = Modifier
+                                                .padding(4.dp)
+                                        )
+                                    }
                                 }
                             }
                         }
                     }
-                    if (showDocumentation) {
+                    /*if (showDocumentation) {
                         Text(
                             uiElements.getOrNull(selectedItem)?.json ?: "Выберите элемент",
                             modifier = Modifier.width(120.dp)
                         )
-                    }
+                    }*/
                 }
             }
             if (isPreview) {
-                Column(modifier = Modifier.weight(1f)) {
-                    FlowRow(
+                Column(
+                    modifier = Modifier
+                        .width(screenSize[0].first.dp)
+                        .height(screenSize[0].second.dp)
+                ) {
+                    /*FlowRow(
                         horizontalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
                         platformList.forEachIndexed { index, str ->
@@ -309,7 +371,7 @@ fun CodeEditorScreen(
                                 border = null,
                             )
                         }
-                    }
+                    }*/
                     //TODO: Добавить обработку action
                     when (state) {
                         is UIState.Init -> {
@@ -325,8 +387,6 @@ fun CodeEditorScreen(
                             Column(
                                 modifier = Modifier
                                     .border(1.dp, Color.LightGray)
-                                    .width(screenSize[selectedPlatform].first.dp)
-                                    .height(screenSize[selectedPlatform].second.dp)
                             ) {
                                 Renderer(uiState = state, handleAction = { _ -> })
                             }
