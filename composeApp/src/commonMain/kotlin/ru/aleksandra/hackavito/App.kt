@@ -31,7 +31,8 @@ fun App() {
                     startDestination = NavigationDestination.SDUIScreen("/delivery/pay/cart")
                 ) {
                     composable<NavigationDestination.SDUIScreen> {
-                        CartScreen(navController)
+//                        CartScreen(navController)
+                        ru.aleksandra.feature.cart.DeliveryScreen()
                     }
                 }
             }
