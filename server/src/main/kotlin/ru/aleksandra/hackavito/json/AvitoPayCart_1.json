@@ -49,7 +49,8 @@
             {
               "type": "Weight",
               "value": 1.0
-            }],
+            }
+          ],
           "style": "h50",
           "color": {
             "type": "Theme",
@@ -182,6 +183,17 @@
       "itemsPath": "items.*",
       "content": {
         "type": "Column",
+        "modifier": [
+          {
+            "type": "Padding",
+            "value": {
+              "start": 0,
+              "top": 0,
+              "end": 0,
+              "bottom": 24
+            }
+          }
+        ],
         "children": [
           {
             "type": "Row",
@@ -204,6 +216,15 @@
               {
                 "type": "Box",
                 "modifier": [
+                  {
+                    "type": "Padding",
+                    "value": {
+                      "start": 0,
+                      "top": 0,
+                      "end": 0,
+                      "bottom": 4
+                    }
+                  },
                   {
                     "type": "Size",
                     "value": 18
@@ -232,22 +253,7 @@
                     "tint": {
                       "type": "Theme",
                       "name": "controlBgFaint"
-                    },
-                    "modifier": [
-                      {
-                        "type": "Size",
-                        "value": 20
-                      },
-                      {
-                        "type": "Padding",
-                        "value": {
-                          "start": 3,
-                          "top": 4,
-                          "end": 3,
-                          "bottom": 4
-                        }
-                      }
-                    ]
+                    }
                   }
                 ]
               },
@@ -271,6 +277,15 @@
                   "type": "Theme",
                   "name": "contentPrimary"
                 }
+              },
+              {
+                "type": "Spacer",
+                "modifier": [
+                  {
+                    "type": "Width",
+                    "value": 5
+                  }
+                ]
               },
               {
                 "type": "Icon",
@@ -341,131 +356,192 @@
             ]
           },
           {
-            "type": "RepetitiveComponent",
-            "itemsPath": "items.*",
-            "content": {
-              "type": "Row",
-              "modifier": [
-                {
-                  "type": "Padding",
-                    "value": {
-                        "start": 0,
-                        "top": 24,
-                        "end": 0,
-                        "bottom": 0
-                    }
+            "type": "Spacer",
+            "modifier": [
+              {
+                "type": "Height",
+                "value": 16
+              }
+            ]
+          },
+          {
+            "type": "Column",
+            "modifier": [
+              {
+                "type": "Background",
+                "color": {
+                  "type": "Theme",
+                  "name": "gray4"
+                },
+                "shape": {
+                  "type": "RoundedCornerShape",
+                  "radius": 24
                 }
-              ],
-              "children": [
-                {
-                  "type": "Icon",
-                  "drawable": {
-                    "type": "Theme",
-                    "name": "ic_check"
-                  },
-                  "contentDescription": "Чекбокс",
-                  "tint": {
-                    "type": "Theme",
-                    "name": "controlBgFaint"
-                  },
+              },
+              {
+                "type": "Padding",
+                "value": {
+                  "start": 0,
+                  "top": 24,
+                  "end": 0,
+                  "bottom": 0
+                }
+              }
+            ],
+            "children": [
+              {
+                "type": "RepetitiveComponent",
+                "itemsPath": "items.*",
+                "content": {
+                  "type": "Row",
                   "modifier": [
-                    {
-                      "type": "Size",
-                      "value": 20
-                    },
                     {
                       "type": "Padding",
                       "value": {
-                        "start": 3,
-                        "top": 4,
-                        "end": 3,
-                        "bottom": 4
-                      }
-                    }
-                  ]
-                },
-                {
-                  "type": "Image",
-                  "url": {
-                    "type": "Dynamic",
-                    "path": "imageUrl"
-                  },
-                  "modifier": [
-                    {
-                      "type": "Size",
-                      "value": 96
-                    },
-                    {
-                      "type": "Clip",
-                      "shape": {
-                        "type": "RoundedCornerShape",
-                        "radius": 12
+                        "start": 0,
+                        "top": 0,
+                        "end": 0,
+                        "bottom": 24
                       }
                     }
                   ],
-                  "contentScale": "FillWidth"
-                },
-                {
-                  "type": "Column",
                   "children": [
                     {
-                      "type": "Text",
-                      "text": {
-                        "type": "Dynamic",
-                        "path": "priceWithDiscount",
-                        "transformation": {
-                          "type": "Format",
-                          "pattern": "%s ₽"
-                        }
-                      },
-                      "style": "h40",
-                      "color": {
+                      "type": "Icon",
+                      "drawable": {
                         "type": "Theme",
-                        "name": "contentPrimary"
-                      }
+                        "name": "ic_check"
+                      },
+                      "contentDescription": "Чекбокс",
+                      "tint": {
+                        "type": "Theme",
+                        "name": "controlBgFaint"
+                      },
+                      "modifier": [
+                        {
+                          "type": "Size",
+                          "value": 20
+                        },
+                        {
+                          "type": "Padding",
+                          "value": {
+                            "start": 3,
+                            "top": 4,
+                            "end": 3,
+                            "bottom": 4
+                          }
+                        }
+                      ]
                     },
                     {
-                      "type": "Row",
+                      "type": "Image",
+                      "url": {
+                        "type": "Dynamic",
+                        "path": "imageUrl"
+                      },
+                      "modifier": [
+                        {
+                          "type": "Size",
+                          "value": 96
+                        },
+                        {
+                          "type": "Clip",
+                          "shape": {
+                            "type": "RoundedCornerShape",
+                            "radius": 12
+                          }
+                        }
+                      ],
+                      "contentScale": "FillWidth"
+                    },
+                    {
+                      "type": "Spacer",
+                      "modifier": [
+                        {
+                          "type": "Width",
+                          "value": 12
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Column",
                       "children": [
                         {
-                          "type": "Box",
-                          "contentAlignment": "Center",
+                          "type": "Text",
+                          "text": {
+                            "type": "Dynamic",
+                            "path": "priceWithDiscount",
+                            "transformation": {
+                              "type": "Format",
+                              "pattern": "%s ₽"
+                            }
+                          },
+                          "style": "h40",
+                          "color": {
+                            "type": "Theme",
+                            "name": "contentPrimary"
+                          }
+                        },
+                        {
+                          "type": "Row",
                           "children": [
+                            {
+                              "type": "Box",
+                              "contentAlignment": "Center",
+                              "children": [
+                                {
+                                  "type": "Text",
+                                  "text": {
+                                    "type": "Dynamic",
+                                    "path": "priceWithoutDiscount",
+                                    "transformation": {
+                                      "type": "Format",
+                                      "pattern": "%s ₽"
+                                    }
+                                  },
+                                  "style": "m20",
+                                  "color": {
+                                    "type": "Theme",
+                                    "name": "contentPrimary"
+                                  },
+                                  "modifier": [
+                                    {
+                                      "type": "Padding",
+                                      "value": {
+                                        "start": 0,
+                                        "top": 0,
+                                        "end": 4,
+                                        "bottom": 0
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "Image",
+                                  "url": {
+                                    "type": "Theme",
+                                    "name": "strike"
+                                  },
+                                  "contentDescription": null,
+                                  "modifier": []
+                                }
+                              ]
+                            },
                             {
                               "type": "Text",
                               "text": {
                                 "type": "Dynamic",
-                                "path": "priceWithoutDiscount",
+                                "path": "salePercent",
                                 "transformation": {
                                   "type": "Format",
-                                  "pattern": "%s ₽"
+                                  "pattern": "-%s%"
                                 }
                               },
                               "style": "m20",
                               "color": {
                                 "type": "Theme",
-                                "name": "contentPrimary"
-                              },
-                              "modifier": [
-                                {
-                                  "type": "Padding",
-                                  "value": {
-                                    "start": 0,
-                                    "top": 0,
-                                    "end": 4,
-                                    "bottom": 0
-                                  }
-                                }
-                              ]
-                            },
-                            {
-                              "type": "Image",
-                              "url": {
-                                "type": "Theme",
-                                "name": "strike"
-                              },
-                              "contentDescription": null,
-                              "modifier": []
+                                "name": "controlContentError"
+                              }
                             }
                           ]
                         },
@@ -473,31 +549,15 @@
                           "type": "Text",
                           "text": {
                             "type": "Dynamic",
-                            "path": "salePercent",
-                            "transformation": {
-                              "type": "Format",
-                              "pattern": "-%s%"
-                            }
-                          },
-                          "style": "m20",
-                          "color": {
-                            "type": "Theme",
-                            "name": "controlContentError"
+                            "path": "name"
                           }
                         }
                       ]
-                    },
-                    {
-                      "type": "Text",
-                      "text": {
-                        "type": "Dynamic",
-                        "path": "name"
-                      }
                     }
                   ]
                 }
-              ]
-            }
+              }
+            ]
           }
         ]
       }

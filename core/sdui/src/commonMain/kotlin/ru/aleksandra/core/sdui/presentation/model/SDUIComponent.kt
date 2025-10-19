@@ -116,18 +116,16 @@ sealed class SDUIComponent() {
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
         val children: List<SDUIComponent>,
-        val verticalArrangement: Arrangement.Vertical = Arrangement.Top,
-        val horizontalAlignment: Alignment.Horizontal = Alignment.Start,
+        val verticalArrangement: Arrangement.Vertical,
+        val horizontalAlignment: Alignment.Horizontal,
     ) : SDUIComponent()
 
     data class Row(
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
         val children: List<SDUIComponent>,
-
-        val horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
-
-        val verticalAlignment: Alignment.Vertical = Alignment.Top,
+        val horizontalArrangement: Arrangement.Horizontal,
+        val verticalAlignment: Alignment.Vertical,
     ) : SDUIComponent()
 
     data class Box(
