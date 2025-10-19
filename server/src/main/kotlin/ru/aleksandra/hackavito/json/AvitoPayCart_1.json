@@ -553,6 +553,12 @@
                         },
                         {
                           "type": "Column",
+                          "modifier": [
+                            {
+                              "type": "Weight",
+                              "value": 1.0
+                            }
+                          ],
                           "children": [
                             {
                               "type": "Text",
@@ -639,6 +645,114 @@
                                 "type": "Dynamic",
                                 "path": "name"
                               }
+                            },
+                            {
+                                "type": "Spacer",
+                                "modifier": [
+                                    {
+                                    "type": "Height",
+                                    "value": 10
+                                    }
+                                ]
+                            },
+                            {
+                              "type": "Text",
+                              "text": {
+                                "type": "Static",
+                                "value": "Купить с доставкой"
+                              },
+                              "style": "s10",
+                              "color": {
+                                "type": "Theme",
+                                "name": "violet500"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "Spacer",
+                          "modifier": [
+                            {
+                              "type": "Width",
+                              "value": 16
+                            }
+                          ]
+                        },
+                        {
+                          "type": "Column",
+                          "modifier": [
+                            {
+                              "type": "Align",
+                              "alignment": "TopStart"
+                            },
+                            {
+                              "type": "Width",
+                              "value": 28
+                            }
+                          ],
+                          "children": [
+                            {
+                              "type": "Icon",
+                              "drawable": {
+                                "type": "Theme",
+                                "name": "ic_favorite"
+                              },
+                              "contentDescription": null,
+                              "tint": {
+                                "type": "Theme",
+                                "name": "contentPrimary"
+                              },
+                              "modifier": [
+                                {
+                                  "type": "Size",
+                                  "value": 28
+                                },
+                                {
+                                  "type": "Padding",
+                                  "value": {
+                                    "start": 4,
+                                    "top": 4,
+                                    "end": 4,
+                                    "bottom": 4
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "Spacer",
+                              "modifier": [
+                                {
+                                  "type": "Height",
+                                  "value": 4
+                                }
+                              ]
+                            },
+                            {
+                              "type": "Icon",
+                              "drawable": {
+                                "type": "Theme",
+                                "name": "ic_delete"
+                              },
+                              "contentDescription": null,
+                              "tint": {
+                                "type": "Theme",
+                                "name": "contentPrimary"
+                              },
+                              "modifier": [
+                                {
+                                  "type": "Size",
+                                  "value": 28
+                                },
+                                {
+                                  "type": "Padding",
+                                  "value": {
+                                    "start": 4,
+                                    "top": 4,
+                                    "end": 4,
+                                    "bottom": 4
+                                  }
+                                }
+                              ]
                             }
                           ]
                         }
@@ -658,6 +772,21 @@
         {
           "type": "Align",
           "alignment": "BottomStart"
+        },
+        {
+          "type": "Shadow",
+          "elevation": 8,
+          "shape": {
+            "type": "RoundedCornerShape",
+            "radius": 16
+          }
+        },
+        {
+          "type": "Clip",
+          "shape": {
+            "type": "RoundedCornerShape",
+            "radius": 16
+          }
         },
         {
           "type": "FillMaxWidth"

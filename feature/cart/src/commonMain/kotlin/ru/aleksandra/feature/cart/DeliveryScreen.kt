@@ -40,7 +40,7 @@ fun DeliveryScreen(navController: NavController) {
             .verticalScroll(rememberScrollState())
 
     ) {
-        AvitoCheckoutNavBar()
+        AvitoCheckoutNavBar { navController.popBackStack() }
         AvitoDeliveryMethod(
             delivery = Delivery(
                 "Москва, ул. Лесная, 7", deliveryVariant = listOf(
