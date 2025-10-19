@@ -2,6 +2,7 @@ package ru.aleksandra.core.sdui.presentation.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -117,7 +118,7 @@ fun Render(
 @Composable
 fun RepetitiveComponent(model: SDUIComponent.RepetitiveComponent, handleAction: (Action) -> Unit) {
     model.component.forEach {
-        Render(component = it, handleAction = { handleAction((it as SDUIComponent).action) })
+        Render(component = it, handleAction = handleAction)
     }
 }
 
@@ -304,7 +305,7 @@ fun SDUIDivider(model: SDUIComponent.Divider) {
 @Composable
 fun SDUIBox(model: SDUIComponent.Box, handleAction: (Action) -> Unit) {
     Box(
-        modifier = buildModifier(model.modifier),
+        modifier = buildModifier(model.modifier, handleAction),
         contentAlignment = model.contentAlignment,
         propagateMinConstraints = model.propagateMinConstraints,
     ) {
@@ -424,7 +425,10 @@ fun SDUICheckbox(model: SDUIComponent.Checkbox, handleAction: () -> Unit) {
 val LocalScopeData = compositionLocalOf<MyScope> { MyScope.None }
 
 @Composable
-fun buildModifier(modifierProperties: List<ModifierProperties>): Modifier {
+fun buildModifier(
+    modifierProperties: List<ModifierProperties>,
+    handleAction: (Action) -> Unit = {}
+): Modifier {
     var modifier: Modifier = Modifier
 
     modifierProperties.forEach { property ->
@@ -539,6 +543,14 @@ fun buildModifier(modifierProperties: List<ModifierProperties>): Modifier {
 
                         else -> modifier
                     }
+                }
+
+                is ModifierProperties.Clickable -> {
+                    modifier.then(
+                        Modifier.clickable {
+                            handleAction(property.action)
+                        }
+                    )
                 }
             }
     }

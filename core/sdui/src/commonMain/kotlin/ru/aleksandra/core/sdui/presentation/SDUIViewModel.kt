@@ -48,9 +48,13 @@ abstract class SDUIViewModel(
                 }
             }
 
-            else -> {
-
+            is Action.Custom -> {
+                viewModelScope.launch {
+                    _sideEffects.emit(UIEffect.CustomEffect(action.name))
+                }
             }
+
+            else -> {}
         }
     }
 }

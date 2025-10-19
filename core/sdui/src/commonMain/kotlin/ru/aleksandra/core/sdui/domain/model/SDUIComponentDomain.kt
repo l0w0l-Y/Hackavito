@@ -377,6 +377,10 @@ sealed class ModifierProperties {
     @Serializable
     @SerialName("Align")
     data class Align(val alignment: String) : ModifierProperties()
+
+    @Serializable
+    @SerialName("Clickable")
+    data class Clickable(val action: Action) : ModifierProperties()
 }
 
 @Serializable
@@ -408,6 +412,10 @@ sealed class Action {
     @Serializable
     @SerialName("PopBack")
     data object PopBack : Action()
+
+    @Serializable
+    @SerialName("Custom")
+    data class Custom(val name: String) : Action()
 
     @Serializable
     @SerialName("None")

@@ -107,6 +107,13 @@
                   "value": 18
                 },
                 {
+                  "type": "Clickable",
+                  "action": {
+                    "type": "Custom",
+                    "name": "selectAll"
+                  }
+                },
+                {
                   "type": "Background",
                   "color": {
                     "type": "Boolean",
@@ -235,6 +242,13 @@
                   {
                     "type": "Box",
                     "modifier": [
+                      {
+                        "type": "Clickable",
+                        "action": {
+                          "type": "Custom",
+                          "name": "selectStore"
+                        }
+                      },
                       {
                         "type": "Padding",
                         "value": {
@@ -428,38 +442,82 @@
                         {
                           "type": "Padding",
                           "value": {
-                            "start": 0,
+                            "start": 16,
                             "top": 0,
-                            "end": 0,
+                            "end": 16,
                             "bottom": 24
                           }
                         }
                       ],
                       "children": [
                         {
-                          "type": "Icon",
-                          "drawable": {
-                            "type": "Theme",
-                            "name": "ic_check"
-                          },
-                          "contentDescription": "Чекбокс",
-                          "tint": {
-                            "type": "Theme",
-                            "name": "controlBgFaint"
-                          },
+                          "type": "Box",
                           "modifier": [
                             {
-                              "type": "Size",
-                              "value": 20
+                              "type": "Clickable",
+                              "action": {
+                                "type": "Custom",
+                                "name": "selectStore"
+                              }
                             },
                             {
                               "type": "Padding",
                               "value": {
-                                "start": 3,
-                                "top": 4,
-                                "end": 3,
+                                "start": 0,
+                                "top": 0,
+                                "end": 0,
                                 "bottom": 4
                               }
+                            },
+                            {
+                              "type": "Size",
+                              "value": 18
+                            },
+                            {
+                              "type": "Background",
+                              "color": {
+                                "type": "Boolean",
+                                "trueColor": {
+                                  "type": "Theme",
+                                  "name": "controlContentPrimary"
+                                },
+                                "falseColor": {
+                                  "type": "Theme",
+                                  "name": "bgPage"
+                                },
+                                "isTrue": {
+                                  "type": "Dynamic",
+                                  "path": "isSelected"
+                                }
+                              },
+                              "shape": {
+                                "type": "RoundedCornerShape",
+                                "radius": 4
+                              }
+                            }
+                          ],
+                          "contentAlignment": "Center",
+                          "children": [
+                            {
+                              "type": "Icon",
+                              "drawable": {
+                                "type": "Theme",
+                                "name": "ic_check"
+                              },
+                              "contentDescription": "Чекбокс",
+                              "tint": {
+                                "type": "Theme",
+                                "name": "controlBgFaint"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "Spacer",
+                          "modifier": [
+                            {
+                              "type": "Width",
+                              "value": 12
                             }
                           ]
                         },

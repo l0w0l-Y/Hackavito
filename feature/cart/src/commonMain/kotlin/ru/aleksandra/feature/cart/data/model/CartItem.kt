@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 data class CartItem(
     val store: Store,
     val items: List<Item>,
-    val isSelected: Boolean = false,
+    val isSelected: Boolean,
 )

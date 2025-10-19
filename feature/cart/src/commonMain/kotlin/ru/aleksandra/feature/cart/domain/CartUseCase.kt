@@ -10,8 +10,18 @@ class CartUseCaseImpl(
     override suspend fun loadCart(): Flow<Cart> {
         return repository.loadCart()
     }
+
+    override suspend fun selectStore(storeId: String): Flow<Cart> {
+        return repository.selectStore(storeId)
+    }
+
+    override suspend fun selectAll(): Flow<Cart> {
+        return repository.selectAll()
+    }
 }
 
 interface CartUseCase {
     suspend fun loadCart(): Flow<Cart>
+    suspend fun selectStore(storeId: String): Flow<Cart>
+    suspend fun selectAll(): Flow<Cart>
 }

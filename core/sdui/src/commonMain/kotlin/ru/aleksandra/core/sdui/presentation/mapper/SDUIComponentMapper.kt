@@ -222,6 +222,10 @@ fun ModifierPropertiesDomain.toUi(json: JsonElement): ModifierProperties {
         is ModifierPropertiesDomain.Align -> ModifierProperties.Align(
             alignment = alignment.toAlignment()
         )
+
+        is ModifierPropertiesDomain.Clickable -> ModifierProperties.Clickable(
+            action = action.toUi()
+        )
     }
 }
 
@@ -525,6 +529,7 @@ fun Action.toUi(): ActionUi =
         is Action.OpenUrl -> ActionUi.OpenUrl(url)
         is Action.ShowToast -> ActionUi.ShowToast(message)
         is Action.PopBack -> ActionUi.PopBack
+        is Action.Custom -> ActionUi.Custom(name)
     }
 
 fun Shape.toCompose() = when (this) {
