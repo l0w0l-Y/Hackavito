@@ -1,12 +1,10 @@
 package ru.aleksandra.core.ui
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -26,7 +24,6 @@ import ru.aleksandra.core.theme.h30
 import ru.aleksandra.core.theme.m10
 import ru.aleksandra.core.theme.m20
 import ru.aleksandra.core.ui.model.Recipient
-import ru.aleksandra.core.ui.model.ShopWithItemForDelivery
 
 @Composable
 fun AvitoDeliveryRecipient(
@@ -65,7 +62,7 @@ fun AvitoDeliveryRecipient(
                 modifier = Modifier.padding(end = 4.dp)
             )
             Text(
-                text = recipient.mail,
+                text = recipient.email,
                 style = MaterialTheme.typography.m20,
                 color = MaterialTheme.colorScheme.contentPrimary,
             )

@@ -100,6 +100,27 @@ val ColorScheme.black : Color
 val ColorScheme.gray92 : Color
     get() = Color(0xFF141414)
 
+val ColorScheme.buttonTextSecondary : Color
+    get() = Color(0xFF000000)
+
+val ColorScheme.buttonTextPrimary : Color
+    get() = Color(0xFFFFFFFF)
+
+val ColorScheme.controlTextPrimary : Color
+    get() = Color(0xFF000000)
+
+val ColorScheme.controlTextSecondary : Color
+    get() = Color(0xFF757575)
+
+val ColorScheme.buttonBgPrimary : Color
+    get() = Color(0xFF141414)
+
+val ColorScheme.bgElevation2 : Color
+    get() = Color(0xFFFFFFFF)
+
+val ColorScheme.bgElevation1 : Color
+    get() = Color(0xFFFFFFFF)
+
 // Эх, грустим, что в kmp нет рефлексии и добавляем сюда все новые цвета :(
 @Composable
 fun String.toThemeColor(): Color {

@@ -30,4 +30,10 @@
     <string name="all">Все</string>
     <string name="at_pick_up_points">В пунктах выдачи</string>
     <string name="avito_delivery_in_moscow">Авито Доставка по Москве</string>
+    <string name="phone">Телефон</string>
+    <string name="mail">Почта</string>
+    <string name="full_name">ФИО</string>
+    <string name="save_recipient">Сохранить получателя</string>
+    <string name="we_will_send_the_order_pickup_code_to_this_number">Отправим на этот номер код выдачи заказа</string>
+    <string name="check_will_be_sent_to_this_address">На этот адрес придёт чек</string>
 </resources>
