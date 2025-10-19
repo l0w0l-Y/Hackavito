@@ -5,6 +5,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -12,6 +13,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import hackavito.core.ui.generated.resources.Res
@@ -69,7 +71,7 @@ fun AvitoDeliveryMethodItem(
                 )
             }
             Text(
-                modifier = Modifier.padding(if (deliveryVariant.description != null && deliveryVariant.descriptionColor != null) 2.dp else 16.dp),
+                modifier = Modifier.padding(top = if (deliveryVariant.description != null && deliveryVariant.descriptionColor != null) 2.dp else 16.dp),
                 text = deliveryVariant.name,
                 style = MaterialTheme.typography.s20,
                 color = MaterialTheme.colorScheme.gray54
@@ -100,7 +102,11 @@ fun AvitoDeliveryMethodItem(
                     )
                 } else {
                     Box(
-                        modifier = Modifier.size(width = 45.dp, height = 16.dp)
+                        modifier = Modifier
+                            .height(height = 16.dp)
+                            .padding(top = 2.dp)
+                        ,
+                        contentAlignment = Alignment.BottomCenter
                     ) {
                         Text(
                             text = stringResource(
@@ -115,7 +121,7 @@ fun AvitoDeliveryMethodItem(
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.red600,
                             modifier = Modifier
-//                                .padding(top = 7.97.dp, bottom = 4.9.dp)
+                                .padding(bottom = 2.dp)
 //                                .size(width = 44.92.dp, height = 4.1.dp)
                             )
                     }
