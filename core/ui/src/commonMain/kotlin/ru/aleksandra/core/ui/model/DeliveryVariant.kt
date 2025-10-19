@@ -9,6 +9,6 @@ data class DeliveryVariant(
     val priceWithoutDiscount: Int?,
     val fromDays: Int,
     val toDays: Int,
-    val description: String,
-    val descriptionColor: Color
+    val description: String?,
+    val descriptionColor: Color?
 )

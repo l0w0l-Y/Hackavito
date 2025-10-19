@@ -64,14 +64,15 @@ import ru.aleksandra.core.ui.model.ShopWithItemForDelivery
 
 @Composable
 fun AvitoDeliveryPayment(
+    selectedIndex: Int,
+    onSelectedIndexChange: (Int) -> Unit,
     onOpenAllClick: () -> Unit
 ) {
-    var selectedIndex by remember { mutableStateOf(0) }
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 16.dp, top = 24.dp, end = 16.dp, bottom = 24.dp),
+            .padding(start = 16.dp, top = 24.dp, end = 16.dp, bottom = 22.dp),
     ) {
         Text(
             text = stringResource(Res.string.payment_method),
@@ -130,7 +131,7 @@ fun AvitoDeliveryPayment(
                     .background(
                         if (selectedIndex == 0) MaterialTheme.colorScheme.controlBgCheck else MaterialTheme.colorScheme.controlBgUncheck
                     )
-                    .clickable { selectedIndex = 0 },
+                    .clickable { onSelectedIndexChange(0) },
                 contentAlignment = Alignment.Center
             ) {
                 if (selectedIndex == 0) {
@@ -145,7 +146,7 @@ fun AvitoDeliveryPayment(
         }
         Row(
             modifier = Modifier
-                .padding(top = 19.dp)
+                .padding(top = 22.dp)
         ) {
             Image(
                 painter = painterResource(Res.drawable.image_bank_tbank),
@@ -178,7 +179,7 @@ fun AvitoDeliveryPayment(
                     .background(
                         if (selectedIndex == 1) MaterialTheme.colorScheme.controlBgCheck else MaterialTheme.colorScheme.controlBgUncheck
                     )
-                    .clickable { selectedIndex = 1 },
+                    .clickable { onSelectedIndexChange(1) },
                 contentAlignment = Alignment.Center
             ) {
                 if (selectedIndex == 1) {
@@ -193,7 +194,7 @@ fun AvitoDeliveryPayment(
         }
         Row(
             modifier = Modifier
-                .padding(top = 22.dp)
+                .padding(top = 19.dp)
         ) {
             Image(
                 painter = painterResource(Res.drawable.image_bank_sbp),
@@ -226,7 +227,7 @@ fun AvitoDeliveryPayment(
                     .background(
                         if (selectedIndex == 2) MaterialTheme.colorScheme.controlBgCheck else MaterialTheme.colorScheme.controlBgUncheck
                     )
-                    .clickable { selectedIndex = 2 },
+                    .clickable { onSelectedIndexChange(2) },
                 contentAlignment = Alignment.Center
             ) {
                 if (selectedIndex == 2) {

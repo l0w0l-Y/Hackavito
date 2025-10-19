@@ -13,19 +13,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import hackavito.core.ui.generated.resources.Res
 import hackavito.core.ui.generated.resources.amount_with_ruble
 import hackavito.core.ui.generated.resources.from_to_days_with_comma_before
 import hackavito.core.ui.generated.resources.ic_checkmark
 import hackavito.core.ui.generated.resources.ic_crossing_price
-import io.ktor.http.hostIsIp
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.aleksandra.core.theme.contentPrimary
 import ru.aleksandra.core.theme.controlBgDefault
-import ru.aleksandra.core.theme.gray36
 import ru.aleksandra.core.theme.gray54
 import ru.aleksandra.core.theme.h70
 import ru.aleksandra.core.theme.red600
@@ -34,7 +31,7 @@ import ru.aleksandra.core.theme.xs10
 import ru.aleksandra.core.ui.model.DeliveryVariant
 
 @Composable
-fun DeliveryMethodItem(
+fun AvitoDeliveryMethodItem(
     deliveryVariant: DeliveryVariant,
     isSelected: Boolean = false,
 ) {
@@ -64,13 +61,15 @@ fun DeliveryMethodItem(
                     end = if (isSelected) 8.dp else 26.dp
                 )
         ) {
+            if (deliveryVariant.description != null && deliveryVariant.descriptionColor != null){
+                Text(
+                    text = deliveryVariant.description,
+                    style = MaterialTheme.typography.xs10,
+                    color = deliveryVariant.descriptionColor
+                )
+            }
             Text(
-                text = deliveryVariant.description,
-                style = MaterialTheme.typography.xs10,
-                color = deliveryVariant.descriptionColor
-            )
-            Text(
-                modifier = Modifier.padding(top = 2.dp),
+                modifier = Modifier.padding(if (deliveryVariant.description != null && deliveryVariant.descriptionColor != null) 2.dp else 16.dp),
                 text = deliveryVariant.name,
                 style = MaterialTheme.typography.s20,
                 color = MaterialTheme.colorScheme.gray54

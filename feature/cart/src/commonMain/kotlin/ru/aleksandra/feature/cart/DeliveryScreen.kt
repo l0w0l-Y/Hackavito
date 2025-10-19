@@ -10,6 +10,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import ru.aleksandra.core.theme.green800
 import ru.aleksandra.core.theme.violet500
@@ -19,6 +23,7 @@ import ru.aleksandra.core.ui.AvitoDeliveryPayment
 import ru.aleksandra.core.ui.AvitoDeliveryRecipient
 import ru.aleksandra.core.ui.AvitoDeliveryShop
 import ru.aleksandra.core.ui.AvitoDeliveryShopItem
+import ru.aleksandra.core.ui.AvitoDeliveryTotal
 import ru.aleksandra.core.ui.model.Delivery
 import ru.aleksandra.core.ui.model.DeliveryVariant
 import ru.aleksandra.core.ui.model.Item
@@ -27,18 +32,14 @@ import ru.aleksandra.core.ui.model.ShopWithItemForDelivery
 
 @Composable
 fun DeliveryScreen() {
+    var selectedIndex by remember { mutableStateOf(0) }
+
     Column(
         modifier = Modifier
             .safeDrawingPadding()
             .fillMaxSize()
-            .scrollable(
-                state = rememberScrollState(),
-                orientation = Orientation.Vertical,
-                enabled = true,
-//                reverseDirection = TODO(),
-//                flingBehavior = TODO(),
-//                interactionSource = TODO()
-            )
+            .verticalScroll(rememberScrollState())
+
     ) {
         AvitoCheckoutNavBar()
         AvitoDeliveryMethod(
@@ -76,17 +77,6 @@ fun DeliveryScreen() {
             ),
             selectedDeliveryVariantIndex = 1
         )
-        AvitoDeliveryRecipient(
-            recipient = Recipient(
-                name = "Князева Екатерина",
-                number = "+7 800 555-35-35",
-                mail = "catherineu@gmail.com"
-            ),
-            onChangeRecipientClick = { }
-        )
-        AvitoDeliveryPayment(
-            onOpenAllClick = {}
-        )
 
         AvitoDeliveryShop(
             shopWithItemsForDeliveryList = listOf(
@@ -94,8 +84,8 @@ fun DeliveryScreen() {
                     name = "Pear Store",
                     item = Item(
                         name = "Зарядка MagSafe Charger 15W 1 метр",
-                        priceWithDiscount = 9900f,
-                        priceWithoutDiscount = 9405f,
+                        priceWithDiscount = 9900,
+                        priceWithoutDiscount = 9405,
                         salePercent = 5,
                         count = 2,
                         image = "https://90.img.avito.st/image/1/1.8BdQwLa4XP5maZ77PKvbCgRhXvjuYd72JmRe_OBpVPTm.7KxTjDbuHfpowy8-e-ZVx1Teq5MCi7g6EVTDMtXPLjA",
@@ -115,8 +105,8 @@ fun DeliveryScreen() {
                     name = "TECHNO ZONE",
                     item = Item(
                         name = "iPhone 16 Pro, 256 ГБ",
-                        priceWithDiscount = 9900f,
-                        priceWithoutDiscount = 9405f,
+                        priceWithDiscount = 9900,
+                        priceWithoutDiscount = 9405,
                         salePercent = 5,
                         count = 1,
                         image = "https://40.img.avito.st/image/1/1.5OF5HLa4SAhPtYoNPXec7iu9Sg7HvcoAD7hKCsm1QALP.ay7_c0Y3iqTLLPAHw_hJ_jjJo9qz_7ew5_j6fd8zjos",
@@ -133,6 +123,24 @@ fun DeliveryScreen() {
                     )
                 ),
             )
+        )
+        AvitoDeliveryRecipient(
+            recipient = Recipient(
+                name = "Князева Екатерина",
+                number = "+7 800 555-35-35",
+                mail = "catherineu@gmail.com"
+            ),
+            onChangeRecipientClick = { }
+        )
+        AvitoDeliveryPayment(
+            onOpenAllClick = {},
+            selectedIndex = selectedIndex,
+            onSelectedIndexChange = {selectedIndex = it}
+        )
+        AvitoDeliveryTotal(
+            selectedIndex = selectedIndex,
+            totalPrice = 110687,
+            onProceedToPaymentClick = { }
         )
     }
 }

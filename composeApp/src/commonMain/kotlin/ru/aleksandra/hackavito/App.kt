@@ -32,7 +32,7 @@ fun App() {
                 ) {
                     composable<NavigationDestination.SDUIScreen> {
 //                        CartScreen(navController)
-                        ru.aleksandra.feature.cart.DeliveryScreen()
+                        ru.aleksandra.feature.cart.DeliveryMethodsScreen()
                     }
                 }
             }

@@ -86,9 +86,19 @@ val ColorScheme.controlBgMasterPrimary: Color
 val ColorScheme.violet500: Color
     get() = Color(0xFFA168F7)
 
-val ColorScheme.controlBgUncheck: Color
-    get() = Color(0xFFFFFFFF)
+val ColorScheme.controlBgUncheck : Color
+    get() = Color(0xFFE3E2E1)
 
+val ColorScheme.dayBlack : Color
+    get() = Color(0xFF000000)
+val ColorScheme.warmgray4 : Color
+    get() = Color(0xFFF2F1F0)
+
+val ColorScheme.black : Color
+    get() = Color(0xFF000000)
+
+val ColorScheme.gray92 : Color
+    get() = Color(0xFF141414)
 
 // Эх, грустим, что в kmp нет рефлексии и добавляем сюда все новые цвета :(
 @Composable
