@@ -1,11 +1,8 @@
 package ru.aleksandra.feature.cart
 
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
@@ -15,14 +12,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
 import ru.aleksandra.core.theme.green800
 import ru.aleksandra.core.theme.violet500
 import ru.aleksandra.core.ui.AvitoCheckoutNavBar
 import ru.aleksandra.core.ui.AvitoDeliveryMethod
 import ru.aleksandra.core.ui.AvitoDeliveryPayment
 import ru.aleksandra.core.ui.AvitoDeliveryRecipient
+import ru.aleksandra.core.ui.AvitoDeliveryRecipientBottomSheet
 import ru.aleksandra.core.ui.AvitoDeliveryShop
-import ru.aleksandra.core.ui.AvitoDeliveryShopItem
 import ru.aleksandra.core.ui.AvitoDeliveryTotal
 import ru.aleksandra.core.ui.model.Delivery
 import ru.aleksandra.core.ui.model.DeliveryVariant
@@ -31,8 +29,9 @@ import ru.aleksandra.core.ui.model.Recipient
 import ru.aleksandra.core.ui.model.ShopWithItemForDelivery
 
 @Composable
-fun DeliveryScreen() {
+fun DeliveryScreen(navController: NavController) {
     var selectedIndex by remember { mutableStateOf(0) }
+    var bottomSheet by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -128,14 +127,25 @@ fun DeliveryScreen() {
             recipient = Recipient(
                 name = "Князева Екатерина",
                 number = "+7 800 555-35-35",
-                mail = "catherineu@gmail.com"
+                email = "catherineu@gmail.com"
             ),
-            onChangeRecipientClick = { }
+            onChangeRecipientClick = { bottomSheet = true }
         )
+        if (bottomSheet) {
+            AvitoDeliveryRecipientBottomSheet(
+                onDismiss = { bottomSheet = false },
+                onSave = {_, _, _ -> } ,
+                recipient = Recipient(
+                    name = "Князева Екатерина",
+                    number = "+7 800 555-35-35",
+                    email = "catherineu@gmail.com"
+                ),
+            )
+        }
         AvitoDeliveryPayment(
             onOpenAllClick = {},
             selectedIndex = selectedIndex,
-            onSelectedIndexChange = {selectedIndex = it}
+            onSelectedIndexChange = { selectedIndex = it }
         )
         AvitoDeliveryTotal(
             selectedIndex = selectedIndex,

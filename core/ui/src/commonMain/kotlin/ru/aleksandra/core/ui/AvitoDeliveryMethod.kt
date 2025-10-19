@@ -1,11 +1,13 @@
 package ru.aleksandra.core.ui
 
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -74,17 +76,29 @@ fun AvitoDeliveryMethod(
                     .size(width = 10.dp, height = 20.dp)
             )
         }
-        LazyRow (
-            modifier = Modifier.padding(top = 12.dp)
+//        LazyRow (
+//            modifier = Modifier.padding(top = 12.dp)
+//        ) {
+//            items(delivery.deliveryVariant.size) { index ->
+//                AvitoDeliveryMethodItem(
+//                    deliveryVariant = delivery.deliveryVariant[index],
+//                    isSelected = if (selectedDeliveryVariantIndex != null) {
+//                        selectedDeliveryVariantIndex == index
+//                    } else {
+//                        false
+//                    }
+//                )
+//            }
+//        }
+        Row(
+            modifier = Modifier
+                .padding(top = 12.dp)
+                .horizontalScroll(rememberScrollState())
         ) {
-            items(delivery.deliveryVariant.size) { index ->
+            delivery.deliveryVariant.forEachIndexed { index, variant ->
                 AvitoDeliveryMethodItem(
-                    deliveryVariant = delivery.deliveryVariant[index],
-                    isSelected = if (selectedDeliveryVariantIndex != null) {
-                        selectedDeliveryVariantIndex == index
-                    } else {
-                        false
-                    }
+                    deliveryVariant = variant,
+                    isSelected = selectedDeliveryVariantIndex == index
                 )
             }
         }
