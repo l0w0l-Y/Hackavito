@@ -10,6 +10,7 @@
     <string name="obtaining_method">Способ получения</string>
     <string name="for_address">Для адреса:</string>
     <string name="from_to_days_with_comma_before">, %1$d-%2$d дня</string>
+    <string name="from_to_days">%1$d-%2$d дня</string>
     <string name="recipient">Получатель</string>
     <string name="change_recipient">Изменить получателя</string>
     <string name="payment_method">Способ оплаты</string>
@@ -21,4 +22,12 @@
     <string name="instantly_via_sbp">Мгновенно через СБП</string>
     <string name="pay_in_your_banks_app">Оплата в приложении вашего банка</string>
     <string name="open_all">Открыть все</string>
+    <string name="total_with_delivery">Итого с доставкой:</string>
+    <string name="proceed_to_payment">Перейти к оплате</string>
+    <string name="delivery_methods">Способы доставки</string>
+    <string name="from_amount_with_ruble">от %1$d ₽</string>
+    <string name="courier">Курьер</string>
+    <string name="all">Все</string>
+    <string name="at_pick_up_points">В пунктах выдачи</string>
+    <string name="avito_delivery_in_moscow">Авито Доставка по Москве</string>
 </resources>

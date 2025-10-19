@@ -1,6 +1,5 @@
 package ru.aleksandra.core.ui
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,7 +20,6 @@ import hackavito.core.ui.generated.resources.ic_location
 import hackavito.core.ui.generated.resources.ic_expand_more
 import org.jetbrains.compose.resources.painterResource
 
-import ru.aleksandra.core.theme.bgBase
 import ru.aleksandra.core.theme.contentPrimary
 import ru.aleksandra.core.theme.h30
 import ru.aleksandra.core.theme.m20
@@ -80,7 +78,7 @@ fun AvitoDeliveryMethod(
             modifier = Modifier.padding(top = 12.dp)
         ) {
             items(delivery.deliveryVariant.size) { index ->
-                DeliveryMethodItem(
+                AvitoDeliveryMethodItem(
                     deliveryVariant = delivery.deliveryVariant[index],
                     isSelected = if (selectedDeliveryVariantIndex != null) {
                         selectedDeliveryVariantIndex == index
