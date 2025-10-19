@@ -1,0 +1,69 @@
+{
+  "items": [
+    {
+      "store": {
+        "id": "1",
+        "name": "Pear Store",
+        "rating": 4.8,
+        "reviewsCount": 643
+      },
+      "items": [
+        {
+          "id": "1",
+          "name": "Зарядка MagSafe Charger 15W 1 метр",
+          "priceWithoutDiscount": 9481,
+          "salePercent": 5,
+          "priceWithDiscount": 4990,
+          "count": 1,
+          "imageUrl": "https://image.kazanexpress.ru/ce1555j2fmcqfdjtaulg/t_product_high.jpg",
+          "isSelected": false
+        },
+        {
+          "id": "2",
+          "name": "AirPods Pro 2",
+          "priceWithoutDiscount": 15990,
+          "salePercent": 5,
+          "priceWithDiscount": 15191,
+          "count": 1,
+          "imageUrl": "https://image.kazanexpress.ru/ce1555j2fmcqfdjtaulg/t_product_high.jpg",
+          "isSelected": false
+        }
+      ],
+      "isSelected": false
+    },
+    {
+      "store": {
+        "id": "2",
+        "name": "TECHNO ZONE",
+        "rating": 5.0,
+        "reviewsCount": 916
+      },
+      "items": [
+        {
+          "id": "1",
+          "name": "Зарядка MagSafe Charger 15W 1 метр",
+          "priceWithoutDiscount": 9481,
+          "salePercent": 5,
+          "priceWithDiscount": 4990,
+          "count": 1,
+          "imageUrl": "https://image.kazanexpress.ru/ce1555j2fmcqfdjtaulg/t_product_high.jpg",
+          "isSelected": false
+        },
+        {
+          "id": "2",
+          "name": "AirPods Pro 2",
+          "priceWithoutDiscount": 15990,
+          "salePercent": 5,
+          "priceWithDiscount": 15191,
+          "count": 1,
+          "imageUrl": "https://image.kazanexpress.ru/ce1555j2fmcqfdjtaulg/t_product_high.jpg",
+          "isSelected": false
+        }
+      ],
+      "isSelected": true
+    }
+  ],
+  "totalItems": 3,
+  "isSelected": true,
+  "totalPrice": 120979
+}

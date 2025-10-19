@@ -373,6 +373,14 @@ sealed class ModifierProperties {
     @Serializable
     @SerialName("Alpha")
     data class Alpha(val alpha: Float) : ModifierProperties()
+
+    @Serializable
+    @SerialName("Align")
+    data class Align(val alignment: String) : ModifierProperties()
+
+    @Serializable
+    @SerialName("Clickable")
+    data class Clickable(val action: Action) : ModifierProperties()
 }
 
 @Serializable
@@ -406,6 +414,10 @@ sealed class Action {
     data object PopBack : Action()
 
     @Serializable
+    @SerialName("Custom")
+    data class Custom(val name: String) : Action()
+
+    @Serializable
     @SerialName("None")
     data object None : Action()
 }
@@ -436,11 +448,12 @@ sealed class Shape() {
 }
 
 @Serializable
+@SerialName("ButtonColors")
 data class ButtonColors(
-    val containerColor: String? = null,
-    val contentColor: String? = null,
-    val disabledContainerColor: String? = null,
-    val disabledContentColor: String? = null,
+    val containerColor: ColorType? = null,
+    val contentColor: ColorType? = null,
+    val disabledContainerColor: ColorType? = null,
+    val disabledContentColor: ColorType? = null,
 )
 
 @Serializable
@@ -553,6 +566,14 @@ sealed class ColorType {
     @Serializable
     @SerialName("Static")
     data class StaticColor(val value: String) : ColorType()
+
+    @Serializable
+    @SerialName("Boolean")
+    data class BooleanColor(
+        val trueColor: ColorType,
+        val falseColor: ColorType,
+        val isTrue: BindableBoolean,
+    ) : ColorType()
 }
 
 @Serializable

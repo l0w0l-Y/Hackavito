@@ -1,0 +1,18 @@
+{
+  "type": "Box",
+  "modifier": [
+    {
+      "type": "FillMaxSize"
+    }
+  ],
+  "children": [
+    {
+      "type": "Text",
+      "text": {
+        "type": "Static",
+        "value": "Checkout Screen"
+      },
+      "style": "h40"
+    }
+  ]
+}

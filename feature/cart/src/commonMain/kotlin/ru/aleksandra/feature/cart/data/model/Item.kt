@@ -11,4 +11,5 @@ data class Item(
     val priceWithDiscount: Int?,
     val count: Int,
     val imageUrl: String,
+    val isSelected: Boolean,
 )

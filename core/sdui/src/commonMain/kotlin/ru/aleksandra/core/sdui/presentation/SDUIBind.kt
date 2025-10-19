@@ -6,12 +6,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.navigation.NavController
+import ru.aleksandra.core.sdui.presentation.NavigationDestination.*
 import ru.aleksandra.core.sdui.presentation.model.UIEffect
 import ru.aleksandra.core.sdui.presentation.ui.Renderer
 
 @Composable
 fun SDUIViewModel.bind(
     navController: NavController,
+    handleCustomEffect: (UIEffect.CustomEffect) -> Unit = {}
 ) {
     val uriHandler = LocalUriHandler.current
     val state by ui.collectAsState()
@@ -20,7 +22,7 @@ fun SDUIViewModel.bind(
         sideEffects.collect {
             when (it) {
                 is UIEffect.NavigateEffect -> {
-                    navController.navigate(NavigationDestination.SDUIScreen(it.destination))
+                    navController.navigate(SDUIScreen(it.destination))
                 }
 
                 is UIEffect.OpenUrlEffect -> {
@@ -29,6 +31,10 @@ fun SDUIViewModel.bind(
 
                 is UIEffect.PopBackEffect -> {
                     navController.popBackStack()
+                }
+
+                is UIEffect.CustomEffect -> {
+                    handleCustomEffect(it)
                 }
             }
         }

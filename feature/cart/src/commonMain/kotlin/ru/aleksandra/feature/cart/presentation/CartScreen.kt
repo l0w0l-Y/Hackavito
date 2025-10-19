@@ -10,5 +10,15 @@ fun CartScreen(
     navController: NavController,
     cartViewModel: CartViewModel = koinViewModel(),
 ) {
-    cartViewModel.bind(navController)
+    cartViewModel.bind(navController) {
+        when (it.name) {
+            "selectStore" -> {
+                cartViewModel.selectStore("1")
+            }
+
+            "selectAll" -> {
+                cartViewModel.selectAll()
+            }
+        }
+    }
 }

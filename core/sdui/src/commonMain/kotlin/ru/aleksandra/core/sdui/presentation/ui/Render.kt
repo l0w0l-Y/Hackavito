@@ -2,6 +2,7 @@ package ru.aleksandra.core.sdui.presentation.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,6 +20,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
@@ -42,6 +44,7 @@ import coil3.compose.AsyncImage
 import io.github.aakira.napier.Napier
 import org.jetbrains.compose.resources.painterResource
 import ru.aleksandra.core.sdui.presentation.model.Action
+import ru.aleksandra.core.sdui.presentation.model.ButtonColors
 import ru.aleksandra.core.sdui.presentation.model.ColorType
 import ru.aleksandra.core.sdui.presentation.model.DrawableType
 import ru.aleksandra.core.sdui.presentation.model.ModifierProperties
@@ -62,13 +65,13 @@ fun Render(
     component: SDUIComponent,
     handleAction: (Action) -> Unit = {}
 ) = when (component) {
-    is SDUIComponent.Box -> SDUIBox(component)
+    is SDUIComponent.Box -> SDUIBox(component, handleAction)
     is SDUIComponent.Button -> SDUIButton(component) { handleAction(component.action) }
-    is SDUIComponent.Column -> SDUIColumn(component)
+    is SDUIComponent.Column -> SDUIColumn(component, handleAction)
     is SDUIComponent.Divider -> SDUIDivider(component)
     is SDUIComponent.FloatingActionButton -> SDUIFloatingActionButton(component)
     is SDUIComponent.Icon -> SDUIIcon(component)
-    is SDUIComponent.IconButton -> SDUIIconButton(component) { handleAction(it) }
+    is SDUIComponent.IconButton -> SDUIIconButton(component) { handleAction(component.action) }
     is SDUIComponent.Image -> SDUIImage(component)
     is SDUIComponent.LazyColumn -> SDUILazyColumn(component)
     is SDUIComponent.LazyRow -> SDUILazyRow(component)
@@ -300,22 +303,22 @@ fun SDUIDivider(model: SDUIComponent.Divider) {
 }
 
 @Composable
-fun SDUIBox(model: SDUIComponent.Box) {
+fun SDUIBox(model: SDUIComponent.Box, handleAction: (Action) -> Unit) {
     Box(
-        modifier = buildModifier(model.modifier),
+        modifier = buildModifier(model.modifier, handleAction),
         contentAlignment = model.contentAlignment,
         propagateMinConstraints = model.propagateMinConstraints,
     ) {
         CompositionLocalProvider(LocalScopeData provides MyScope.BoxScope(this)) {
             model.children.forEach { child ->
-                Render(child)
+                Render(child, handleAction)
             }
         }
     }
 }
 
 @Composable
-fun SDUIColumn(model: SDUIComponent.Column) {
+fun SDUIColumn(model: SDUIComponent.Column, handleAction: (Action) -> Unit) {
     Column(
         modifier = buildModifier(model.modifier),
         verticalArrangement = model.verticalArrangement,
@@ -323,7 +326,7 @@ fun SDUIColumn(model: SDUIComponent.Column) {
     ) {
         CompositionLocalProvider(LocalScopeData provides MyScope.ColumnScope(this)) {
             model.children.forEach { child ->
-                Render(child)
+                Render(child, handleAction)
             }
         }
     }
@@ -338,7 +341,7 @@ fun SDUIRow(model: SDUIComponent.Row, handleAction: (Action) -> Unit) {
     ) {
         CompositionLocalProvider(LocalScopeData provides MyScope.RowScope(this)) {
             model.children.forEach { child ->
-                Render(child) { handleAction(child.action) }
+                Render(child, handleAction)
             }
         }
     }
@@ -391,10 +394,23 @@ fun StyleProperties.TextStyleProperties.toTextStyle(): TextStyle {
 fun SDUIButton(model: SDUIComponent.Button, handleAction: () -> Unit) {
     Button(
         onClick = { handleAction() },
+        shape = model.shape ?: ButtonDefaults.shape,
+        colors = model.colors?.toCompose() ?: ButtonDefaults.buttonColors(),
+        contentPadding = model.contentPadding ?: ButtonDefaults.ContentPadding,
         modifier = buildModifier(model.modifier)
     ) {
         Render(model.content)
     }
+}
+
+@Composable
+fun ButtonColors.toCompose(): androidx.compose.material3.ButtonColors {
+    return ButtonDefaults.buttonColors(
+        containerColor = this.containerColor?.toCompose() ?: Color.Unspecified,
+        contentColor = this.contentColor?.toCompose() ?: Color.Unspecified,
+        disabledContainerColor = this.disabledContainerColor?.toCompose() ?: Color.Unspecified,
+        disabledContentColor = this.disabledContentColor?.toCompose() ?: Color.Unspecified
+    )
 }
 
 @Composable
@@ -409,22 +425,15 @@ fun SDUICheckbox(model: SDUIComponent.Checkbox, handleAction: () -> Unit) {
 val LocalScopeData = compositionLocalOf<MyScope> { MyScope.None }
 
 @Composable
-fun buildModifier(modifierProperties: List<ModifierProperties>): Modifier {
+fun buildModifier(
+    modifierProperties: List<ModifierProperties>,
+    handleAction: (Action) -> Unit = {}
+): Modifier {
     var modifier: Modifier = Modifier
-    if (modifierProperties.count { it is ModifierProperties.KK } > 0) {
-        Napier.d("Я плачу")
-    }
 
     modifierProperties.forEach { property ->
-        Napier.d(
-            property.toString()
-        )
         modifier =
             when (property) {
-                is ModifierProperties.KK -> {
-                    Napier.d("Приветики")
-                    modifier
-                }
 
                 is ModifierProperties.Height -> {
                     modifier.then(Modifier.height(property.value))
@@ -521,6 +530,27 @@ fun buildModifier(modifierProperties: List<ModifierProperties>): Modifier {
 
                         else -> modifier
                     }
+                }
+
+                is ModifierProperties.Align -> {
+                    when (LocalScopeData.current) {
+
+                        is MyScope.BoxScope -> {
+                            with((LocalScopeData.current as MyScope.BoxScope).scope) {
+                                modifier.then(Modifier.align(property.alignment))
+                            }
+                        }
+
+                        else -> modifier
+                    }
+                }
+
+                is ModifierProperties.Clickable -> {
+                    modifier.then(
+                        Modifier.clickable {
+                            handleAction(property.action)
+                        }
+                    )
                 }
             }
     }

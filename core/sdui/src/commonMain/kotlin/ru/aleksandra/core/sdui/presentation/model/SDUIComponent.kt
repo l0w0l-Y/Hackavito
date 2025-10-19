@@ -116,18 +116,16 @@ sealed class SDUIComponent() {
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
         val children: List<SDUIComponent>,
-        val verticalArrangement: Arrangement.Vertical = Arrangement.Top,
-        val horizontalAlignment: Alignment.Horizontal = Alignment.Start,
+        val verticalArrangement: Arrangement.Vertical,
+        val horizontalAlignment: Alignment.Horizontal,
     ) : SDUIComponent()
 
     data class Row(
         override val modifier: List<ModifierProperties> = emptyList(),
         override val action: Action = Action.None,
         val children: List<SDUIComponent>,
-
-        val horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
-
-        val verticalAlignment: Alignment.Vertical = Alignment.Top,
+        val horizontalArrangement: Arrangement.Horizontal,
+        val verticalAlignment: Alignment.Vertical,
     ) : SDUIComponent()
 
     data class Box(
@@ -311,7 +309,9 @@ sealed class ModifierProperties {
 
     data object MatchParentSize : ModifierProperties()
 
-    data class KK(val value: String) : ModifierProperties()
+    data class Align(val alignment: Alignment) : ModifierProperties()
+
+    data class Clickable(val action: Action) : ModifierProperties()
 }
 
 
@@ -353,15 +353,19 @@ sealed class Action {
     data object PopBack : Action()
 
     @Serializable
+    @SerialName("Custom")
+    data class Custom(val name: String) : Action()
+
+    @Serializable
     @SerialName("None")
     data object None : Action()
 }
 
 data class ButtonColors(
-    val containerColor: Color? = null,
-    val contentColor: Color? = null,
-    val disabledContainerColor: Color? = null,
-    val disabledContentColor: Color? = null,
+    val containerColor: ColorType? = null,
+    val contentColor: ColorType? = null,
+    val disabledContainerColor: ColorType? = null,
+    val disabledContentColor: ColorType? = null,
 )
 
 data class ButtonElevation(
