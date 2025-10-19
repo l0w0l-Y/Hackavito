@@ -10,4 +10,15 @@
     <string name="obtaining_method">Способ получения</string>
     <string name="for_address">Для адреса:</string>
     <string name="from_to_days_with_comma_before">, %1$d-%2$d дня</string>
+    <string name="recipient">Получатель</string>
+    <string name="change_recipient">Изменить получателя</string>
+    <string name="payment_method">Способ оплаты</string>
+    <string name="wallet">Кошелёк </string>
+    <string name="tbank">Т-Банк</string>
+    <string name="sbp">СБП</string>
+    <string name="minus_hundred_rubles">−100 ₽</string>
+    <string name="quickly_top_up_via_sbp">Быстро пополнить через СБП</string>
+    <string name="instantly_via_sbp">Мгновенно через СБП</string>
+    <string name="pay_in_your_banks_app">Оплата в приложении вашего банка</string>
+    <string name="open_all">Открыть все</string>
 </resources>
