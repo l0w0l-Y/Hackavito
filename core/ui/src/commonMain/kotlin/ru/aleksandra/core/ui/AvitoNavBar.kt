@@ -14,7 +14,9 @@ import ru.aleksandra.core.theme.controlContentPrimary
 import ru.aleksandra.core.theme.h50
 
 @Composable
-fun AvitoNavBar(title: String) {
+fun AvitoNavBar(
+    title: String,
+) {
     Row(
         modifier = Modifier
 //            .safeDrawingPadding()

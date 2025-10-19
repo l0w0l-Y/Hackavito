@@ -373,6 +373,10 @@ sealed class ModifierProperties {
     @Serializable
     @SerialName("Alpha")
     data class Alpha(val alpha: Float) : ModifierProperties()
+
+    @Serializable
+    @SerialName("Align")
+    data class Align(val alignment: String) : ModifierProperties()
 }
 
 @Serializable
@@ -436,11 +440,12 @@ sealed class Shape() {
 }
 
 @Serializable
+@SerialName("ButtonColors")
 data class ButtonColors(
-    val containerColor: String? = null,
-    val contentColor: String? = null,
-    val disabledContainerColor: String? = null,
-    val disabledContentColor: String? = null,
+    val containerColor: ColorType? = null,
+    val contentColor: ColorType? = null,
+    val disabledContainerColor: ColorType? = null,
+    val disabledContentColor: ColorType? = null,
 )
 
 @Serializable
@@ -553,6 +558,14 @@ sealed class ColorType {
     @Serializable
     @SerialName("Static")
     data class StaticColor(val value: String) : ColorType()
+
+    @Serializable
+    @SerialName("Boolean")
+    data class BooleanColor(
+        val trueColor: ColorType,
+        val falseColor: ColorType,
+        val isTrue: BindableBoolean,
+    ) : ColorType()
 }
 
 @Serializable

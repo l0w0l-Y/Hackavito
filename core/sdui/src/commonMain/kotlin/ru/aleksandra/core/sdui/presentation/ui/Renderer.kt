@@ -9,7 +9,7 @@ import ru.aleksandra.core.sdui.presentation.model.UIState
 @Composable
 fun Renderer(
     uiState: UIState,
-    handleAction: (Action) -> Unit = {},
+    handleAction: (Action) -> Unit,
     showLoading: Boolean = true,
     loadingIndicator: @Composable () -> Unit = { },
 ) {
@@ -21,7 +21,7 @@ fun Renderer(
         UIState.Init -> {}
 
         is UIState.Loaded -> {
-                Render(uiState.ui, handleAction)
+            Render(uiState.ui, handleAction)
         }
 
         UIState.Loading -> {

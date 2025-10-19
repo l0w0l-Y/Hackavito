@@ -309,7 +309,7 @@ sealed class ModifierProperties {
 
     data object MatchParentSize : ModifierProperties()
 
-    data class KK(val value: String) : ModifierProperties()
+    data class Align(val alignment: Alignment) : ModifierProperties()
 }
 
 
@@ -356,10 +356,10 @@ sealed class Action {
 }
 
 data class ButtonColors(
-    val containerColor: Color? = null,
-    val contentColor: Color? = null,
-    val disabledContainerColor: Color? = null,
-    val disabledContentColor: Color? = null,
+    val containerColor: ColorType? = null,
+    val contentColor: ColorType? = null,
+    val disabledContainerColor: ColorType? = null,
+    val disabledContentColor: ColorType? = null,
 )
 
 data class ButtonElevation(

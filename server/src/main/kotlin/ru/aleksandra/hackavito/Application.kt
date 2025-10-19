@@ -63,6 +63,7 @@ fun Application.module() {
                                     rating = 4.8f,
                                     643
                                 ),
+                                isSelected = true,
                                 items = listOf(
                                     Item(
                                         id = "1",
@@ -71,7 +72,8 @@ fun Application.module() {
                                         salePercent = 5,
                                         priceWithoutDiscount = 9481,
                                         count = 1,
-                                        imageUrl = "https://image.kazanexpress.ru/ce1555j2fmcqfdjtaulg/t_product_high.jpg"
+                                        imageUrl = "https://image.kazanexpress.ru/ce1555j2fmcqfdjtaulg/t_product_high.jpg",
+                                        isSelected = false
                                     ),
                                     Item(
                                         id = "2",
@@ -80,7 +82,8 @@ fun Application.module() {
                                         salePercent = 5,
                                         priceWithoutDiscount = 15990,
                                         count = 1,
-                                        imageUrl = "https://image.kazanexpress.ru/ce1555j2fmcqfdjtaulg/t_product_high.jpg"
+                                        imageUrl = "https://image.kazanexpress.ru/ce1555j2fmcqfdjtaulg/t_product_high.jpg",
+                                        isSelected = false
                                     )
                                 )
                             ),
@@ -91,6 +94,7 @@ fun Application.module() {
                                     rating = 5.0f,
                                     916
                                 ),
+                                isSelected = true,
                                 items = listOf(
                                     Item(
                                         id = "1",
@@ -99,7 +103,8 @@ fun Application.module() {
                                         salePercent = 5,
                                         priceWithoutDiscount = 9481,
                                         count = 1,
-                                        imageUrl = "https://image.kazanexpress.ru/ce1555j2fmcqfdjtaulg/t_product_high.jpg"
+                                        imageUrl = "https://image.kazanexpress.ru/ce1555j2fmcqfdjtaulg/t_product_high.jpg",
+                                        isSelected = false
                                     ),
                                     Item(
                                         id = "2",
@@ -108,14 +113,15 @@ fun Application.module() {
                                         salePercent = 5,
                                         priceWithoutDiscount = 15990,
                                         count = 1,
-                                        imageUrl = "https://image.kazanexpress.ru/ce1555j2fmcqfdjtaulg/t_product_high.jpg"
+                                        imageUrl = "https://image.kazanexpress.ru/ce1555j2fmcqfdjtaulg/t_product_high.jpg",
+                                        isSelected = false
                                     )
                                 )
                             )
                         ),
-                        isSelected = false,
+                        isSelected = true,
                         totalItems = 3,
-                        totalPrice = 0
+                        totalPrice = 120979
                     )
                 ),
                 contentType = ContentType.Application.Json

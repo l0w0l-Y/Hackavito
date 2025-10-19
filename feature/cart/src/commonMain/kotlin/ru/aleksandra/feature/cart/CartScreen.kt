@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
 import ru.aleksandra.core.ui.AvitoAddItem
 import ru.aleksandra.core.ui.AvitoCartItem
 import ru.aleksandra.core.ui.AvitoNavBar

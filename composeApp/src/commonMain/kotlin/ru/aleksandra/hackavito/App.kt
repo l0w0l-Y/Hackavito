@@ -13,10 +13,13 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import ru.aleksandra.core.sdui.presentation.NavigationDestination
 import ru.aleksandra.core.theme.AvitoTheme
 import ru.aleksandra.core.theme.bgPage
+import ru.aleksandra.core.ui.AvitoCheckoutNavBar
+import ru.aleksandra.feature.cart.DeliveryScreen
 import ru.aleksandra.feature.cart.presentation.CartScreen
 
 @Composable
@@ -36,9 +39,13 @@ fun App() {
                     navController = navController,
                     startDestination = NavigationDestination.SDUIScreen("/delivery/pay/cart")
                 ) {
-                    composable<NavigationDestination.SDUIScreen> {
-                        CartScreen(navController)
-                       // ru.aleksandra.feature.cart.DeliveryScreen()
+                    composable<NavigationDestination.SDUIScreen> { entry ->
+                        val args = entry.toRoute<NavigationDestination.SDUIScreen>()
+
+                        when (args.screenId) {
+                            "/delivery/pay/cart" -> CartScreen(navController)
+                            "/delivery/pay/checkout" -> DeliveryScreen(navController)
+                        }
                     }
                 }
             }
