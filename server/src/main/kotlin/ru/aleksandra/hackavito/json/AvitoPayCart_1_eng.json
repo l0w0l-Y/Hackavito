@@ -67,7 +67,7 @@
               "textAlign": "Center",
               "text": {
                 "type": "Static",
-                "value": "Корзина"
+                "value": "Cart"
               }
             },
             {
@@ -111,13 +111,6 @@
                   "action": {
                     "type": "Custom",
                     "name": "selectAll"
-                  }
-                },
-                {
-                  "type": "Clip",
-                  "shape": {
-                    "type": "RoundedCornerShape",
-                    "radius": 4
                   }
                 },
                 {
@@ -190,7 +183,7 @@
               "textAlign": null,
               "text": {
                 "type": "Static",
-                "value": "Выбрать всё"
+                "value": "Select all"
               }
             },
             {
@@ -200,7 +193,7 @@
                 "path": "totalItems",
                 "transformation": {
                   "type": "Format",
-                  "pattern": "Удалить (%s)"
+                  "pattern": "Delete (%s)"
                 }
               },
               "style": "m10",
@@ -249,16 +242,6 @@
                   {
                     "type": "Box",
                     "modifier": [
-
-                      {
-                        "type": "Padding",
-                        "value": {
-                          "start": 0,
-                          "top": 0,
-                          "end": 0,
-                          "bottom": 4
-                        }
-                      },
                       {
                         "type": "Clickable",
                         "action": {
@@ -267,10 +250,12 @@
                         }
                       },
                       {
-                        "type": "Clip",
-                        "shape": {
-                          "type": "RoundedCornerShape",
-                          "radius": 4
+                        "type": "Padding",
+                        "value": {
+                          "start": 0,
+                          "top": 0,
+                          "end": 0,
+                          "bottom": 4
                         }
                       },
                       {
@@ -478,15 +463,6 @@
                           "type": "Box",
                           "modifier": [
                             {
-                              "type": "Padding",
-                              "value": {
-                                "start": 0,
-                                "top": 0,
-                                "end": 0,
-                                "bottom": 4
-                              }
-                            },
-                            {
                               "type": "Clickable",
                               "action": {
                                 "type": "Custom",
@@ -494,10 +470,12 @@
                               }
                             },
                             {
-                              "type": "Clip",
-                              "shape": {
-                                "type": "RoundedCornerShape",
-                                "radius": 4
+                              "type": "Padding",
+                              "value": {
+                                "start": 0,
+                                "top": 0,
+                                "end": 0,
+                                "bottom": 4
                               }
                             },
                             {
@@ -695,7 +673,7 @@
                               "type": "Text",
                               "text": {
                                 "type": "Static",
-                                "value": "Купить с доставкой"
+                                "value": "Buy with delivery"
                               },
                               "style": "s10",
                               "color": {
@@ -873,7 +851,7 @@
                 "path": "totalItems",
                 "transformation": {
                   "type": "Format",
-                  "pattern": "%s товара"
+                  "pattern": "%s products"
                 }
               },
               "style": "xs10"
@@ -927,7 +905,7 @@
             "type": "Text",
             "text": {
               "type": "Static",
-              "value": "Оформить доставку"
+              "value": "Arrange delivery"
             },
             "style": "m20",
             "color": {

@@ -175,6 +175,9 @@ class AdminViewModel(
                 classDiscriminator = "type"
                 prettyPrint = true
             }
+
+            _effect.emit(AdminUIEffect.SetJson(prettyPrint(Json.parseToJsonElement(removeComments(newJson)) as JsonObject)))
+
             runCatching { json.decodeFromString<SDUIComponentDomain>(removeComments(newJson)) }
                 .onSuccess { _ui.value = UIState.Loaded(it.toUi(JsonObject(emptyMap()))) }
                 .onFailure { _ui.value = UIState.Error(it.message ?: "Неизвестная ошибка") }
@@ -230,6 +233,19 @@ class AdminViewModel(
     fun sendToReview(json: String) {
         viewModelScope.launch {
             adminApi.saveScreen("AvitoPayCart", removeComments(json))
+        }
+    }
+
+    fun getJsonByPrompt(prompt: String) {
+        viewModelScope.launch {
+            _ui.value = UIState.Loading
+            runCatching {
+                adminApi.getScreenJson(prompt)
+            }.onSuccess { json ->
+                loadFromJson(json)
+            }.onFailure { error ->
+                _ui.value = UIState.Error(error.message ?: "Неизвестная ошибка")
+            }
         }
     }
 }

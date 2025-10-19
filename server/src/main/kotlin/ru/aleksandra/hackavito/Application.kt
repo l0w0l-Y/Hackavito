@@ -117,7 +117,7 @@ fun Application.module() {
 
     routing {
         get("/delivery/pay/cart") {
-            call.respondText(readJson("server/src/main/kotlin/ru/aleksandra/hackavito/json/AvitoPayCart_$version.json"))
+            call.respondText(readJson("server/src/main/kotlin/ru/aleksandra/hackavito/json/AvitoPayCart_${version}.json"))
         }
 
         post("/data/selectStore") {
@@ -154,6 +154,10 @@ fun Application.module() {
                 Json.encodeToString(cart.updatePrice()),
                 contentType = ContentType.Application.Json
             )
+        }
+
+        post("generate") {
+            // Код обращения к модели генерации экрана удален в целях конфиденциальности ключа доступа к API
         }
 
         get("/data/cart") {

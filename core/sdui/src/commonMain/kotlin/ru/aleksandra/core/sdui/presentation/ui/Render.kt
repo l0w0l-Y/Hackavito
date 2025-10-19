@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DividerDefaults
@@ -38,17 +37,10 @@ import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.dropShadow
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.unit.DpOffset
-import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import io.github.aakira.napier.Napier
 import org.jetbrains.compose.resources.painterResource
-import ru.aleksandra.core.sdui.domain.model.Shape
 import ru.aleksandra.core.sdui.presentation.model.Action
 import ru.aleksandra.core.sdui.presentation.model.ButtonColors
 import ru.aleksandra.core.sdui.presentation.model.ColorType
@@ -489,17 +481,7 @@ fun buildModifier(
                 }
 
                 is ModifierProperties.Shadow -> {
-                    modifier.then(
-                        Modifier.dropShadow(
-                            shape = RoundedCornerShape(16.dp),
-                            shadow = Shadow(
-                                radius = 16.dp,
-                                spread = 3.dp,
-                                color = Color.Black.copy(alpha = 0.05f),
-                                offset = DpOffset(x = 0.dp, 1.dp)
-                            )
-                        )
-                    )
+                    modifier
                 }
 
                 is ModifierProperties.Size -> {
