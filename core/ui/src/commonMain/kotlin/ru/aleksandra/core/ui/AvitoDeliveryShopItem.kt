@@ -179,7 +179,7 @@ fun AvitoDeliveryShopItem(
                         )
                     } else {
                         Box(
-                            modifier = Modifier.size(width = 40.dp, height = 10.dp)
+                            modifier = Modifier.size(width = 40.dp, height = 20.dp)
                         ) {
                             Text(
                                 text = stringResource(
@@ -194,7 +194,7 @@ fun AvitoDeliveryShopItem(
                                 contentDescription = null,
                                 tint = MaterialTheme.colorScheme.red600,
                                 modifier = Modifier
-//                                .padding(top = 7.97.dp, bottom = 4.9.dp)
+                                .padding(top = 8.dp)
 //                                .size(width = 44.92.dp, height = 4.1.dp)
                             )
                         }
